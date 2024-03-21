@@ -5,27 +5,42 @@ export default function Home(props) {
   const sentenceList = props?.satoriData;
   return (
     <div>
-      <ul>
+      <ul style={{ listStyleType: 'none' }}>
         {sentenceList?.map((sentenceData, index) => {
           const sentence = sentenceData[0];
           const textWithKanji = sentenceData[1];
           const textZeroKanji = sentenceData[2];
           const audioUrl = sentenceData[3];
+          const definition = sentenceData[4];
           const formattedSentence = sentence.replace(
             new RegExp(textWithKanji, 'g'),
             `<span style="font-weight: bold; text-decoration: underline;">${textWithKanji}</span>`,
           );
 
           return (
-            <li key={index}>
-              <p dangerouslySetInnerHTML={{ __html: formattedSentence }} />
-              <span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
-                {textWithKanji} AKA {textZeroKanji}
-              </span>
-              <audio controls>
-                <source src={audioUrl} type='audio/mpeg' />
-                Your browser does not support the audio element.
-              </audio>
+            <li key={index} style={{ borderBottom: '1px solid black' }}>
+              <div>
+                <p dangerouslySetInnerHTML={{ __html: formattedSentence }} />
+                <span
+                  style={{ fontWeight: 'bold', textDecoration: 'underline' }}
+                >
+                  {textWithKanji}
+                </span>
+                <br />
+                <span>{textZeroKanji}</span>
+                <br />
+                <span
+                  style={{ fontWeight: 'bold', textDecoration: 'underline' }}
+                >
+                  Eng: {definition}
+                </span>
+              </div>
+              <div>
+                <audio controls>
+                  <source src={audioUrl} type='audio/mpeg' />
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
             </li>
           );
         })}
@@ -40,11 +55,6 @@ export async function getStaticProps() {
     const getPathToWord = (inArrIndex) => {
       const thisWordsData = satoriData[inArrIndex];
       const expression = JSON.parse(thisWordsData.expression);
-
-      console.log(
-        '## parts',
-        expression.paragraphs[0].sentences[0].runs[0].parts[0].parts,
-      );
 
       const textParts =
         expression.paragraphs[0].sentences[0].runs[0].parts[0].parts;
@@ -69,6 +79,7 @@ export async function getStaticProps() {
         const firstNestedParagraph = paragraphs[0];
         const nestedSentences = firstNestedParagraph.sentences;
         const allParts = nestedSentences[0].runs[0].parts;
+        const definition = JSON.parse(grandItem.definition).senses[0].glosses;
 
         const [textWithKanji, textZeroKanji] = getPathToWord(index);
 
@@ -86,6 +97,7 @@ export async function getStaticProps() {
           textWithKanji,
           textZeroKanji,
           audioData?.url,
+          definition,
         ];
       }),
     );
