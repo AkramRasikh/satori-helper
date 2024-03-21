@@ -27,8 +27,12 @@ export default function Home(props) {
                   {textWithKanji}
                 </span>
                 <br />
-                <span>{textZeroKanji}</span>
-                <br />
+                {textWithKanji !== textZeroKanji && (
+                  <>
+                    <span>{textZeroKanji}</span>
+                    <br />
+                  </>
+                )}
                 <span
                   style={{ fontWeight: 'bold', textDecoration: 'underline' }}
                 >
