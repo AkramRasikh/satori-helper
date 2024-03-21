@@ -8,18 +8,19 @@ export default function Home(props) {
       <ul>
         {sentenceList?.map((sentenceData, index) => {
           const sentence = sentenceData[0];
-          const wordInQuestion = sentenceData[1];
-          const audioUrl = sentenceData[2];
+          const textWithKanji = sentenceData[1];
+          const textZeroKanji = sentenceData[2];
+          const audioUrl = sentenceData[3];
           const formattedSentence = sentence.replace(
-            new RegExp(wordInQuestion, 'g'),
-            `<span style="font-weight: bold; text-decoration: underline;">${wordInQuestion}</span>`,
+            new RegExp(textWithKanji, 'g'),
+            `<span style="font-weight: bold; text-decoration: underline;">${textWithKanji}</span>`,
           );
 
           return (
             <li key={index}>
               <p dangerouslySetInnerHTML={{ __html: formattedSentence }} />
               <span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
-                {wordInQuestion}
+                {textWithKanji} AKA {textZeroKanji}
               </span>
               <audio controls>
                 <source src={audioUrl} type='audio/mpeg' />
@@ -40,9 +41,19 @@ export async function getStaticProps() {
       const thisWordsData = satoriData[inArrIndex];
       const expression = JSON.parse(thisWordsData.expression);
 
-      return expression.paragraphs[0].sentences[0].runs[0].parts[0].parts
-        .map((part) => part.text)
+      console.log(
+        '## parts',
+        expression.paragraphs[0].sentences[0].runs[0].parts[0].parts,
+      );
+
+      const textParts =
+        expression.paragraphs[0].sentences[0].runs[0].parts[0].parts;
+
+      const textWithKanji = textParts.map((part) => part.text).join('');
+      const textZeroKanji = textParts
+        .map((part) => part?.reading || part.text)
         .join('');
+      return [textWithKanji, textZeroKanji];
     };
 
     const satoriDataPlus = await Promise.all(
@@ -59,7 +70,7 @@ export async function getStaticProps() {
         const nestedSentences = firstNestedParagraph.sentences;
         const allParts = nestedSentences[0].runs[0].parts;
 
-        const pathToWordStudied = getPathToWord(index);
+        const [textWithKanji, textZeroKanji] = getPathToWord(index);
 
         const audioData = await getSentenceAudio(articleCode, sentenceId);
 
@@ -72,7 +83,8 @@ export async function getStaticProps() {
               return item?.parts[0].text;
             })
             .join(''),
-          pathToWordStudied,
+          textWithKanji,
+          textZeroKanji,
           audioData?.url,
         ];
       }),
