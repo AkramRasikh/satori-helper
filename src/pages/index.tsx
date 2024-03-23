@@ -12,6 +12,7 @@ export default function Home(props) {
           const textZeroKanji = sentenceData[2];
           const audioUrl = sentenceData[3];
           const definition = sentenceData[4];
+          const engTranslation = sentenceData[5];
           const formattedSentence = sentence.replace(
             new RegExp(textWithKanji, 'g'),
             `<span style="font-weight: bold; text-decoration: underline;">${textWithKanji}</span>`,
@@ -37,6 +38,11 @@ export default function Home(props) {
                   style={{ fontWeight: 'bold', textDecoration: 'underline' }}
                 >
                   Eng: {definition}
+                </span>
+              </div>
+              <div>
+                <span>
+                  <i> Eng: {engTranslation}</i>
                 </span>
               </div>
               <div>
@@ -84,6 +90,7 @@ export async function getStaticProps() {
         const nestedSentences = firstNestedParagraph.sentences;
         const allParts = nestedSentences[0].runs[0].parts;
         const definition = JSON.parse(grandItem.definition).senses[0].glosses;
+        const engTranslation = expression.notes[0].discussion;
 
         const [textWithKanji, textZeroKanji] = getPathToWord(index);
 
@@ -102,6 +109,7 @@ export async function getStaticProps() {
           textZeroKanji,
           audioData?.url,
           definition,
+          engTranslation,
         ];
       }),
     );
