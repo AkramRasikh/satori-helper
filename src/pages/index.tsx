@@ -1,5 +1,5 @@
 import getSentenceAudio from '@/api/audio';
-import satoriPendinghandler from '../api/pending';
+import { satoriPendinghandler } from '../api/pending';
 import TopSection from '@/components/TopSection';
 import { useRef } from 'react';
 

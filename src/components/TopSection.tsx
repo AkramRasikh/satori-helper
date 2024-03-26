@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import NestedStatus from './NestedStatus';
 
 const TopSection = ({ sentenceList, listRefs }) => {
   const scrollToFullCard = (indexPassed) => {
@@ -10,11 +11,10 @@ const TopSection = ({ sentenceList, listRefs }) => {
     }
   };
   return (
-    <div>
+    <div style={{ borderBottom: '5px solid grey' }}>
       <ul
         style={{
-          borderBottom: '5px solid grey',
-          textAlign: 'center',
+          marginLeft: '30%',
           listStyleType: 'none',
         }}
       >
@@ -22,8 +22,17 @@ const TopSection = ({ sentenceList, listRefs }) => {
           const textWithKanji = sentenceSnippet[1];
           return (
             <li key={index} style={{ padding: '5px' }}>
-              <span style={{ marginRight: '5px' }}>{textWithKanji}</span>
-              <button onClick={() => scrollToFullCard(index)}>more</button>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  maxWidth: '300px',
+                }}
+              >
+                <span style={{ marginRight: '5px' }}>{textWithKanji}</span>
+                <button onClick={() => scrollToFullCard(index)}>more</button>
+                <NestedStatus />
+              </div>
             </li>
           );
         })}
