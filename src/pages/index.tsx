@@ -8,7 +8,7 @@ export default function Home(props) {
   const listRef = useRef([]);
 
   return (
-    <div>
+    <div style={{ paddingBottom: '40px' }}>
       <TopSection sentenceList={sentenceList} listRefs={listRef} />
       <ul style={{ listStyleType: 'none', padding: '5px' }}>
         {sentenceList?.map((sentenceData, index) => {
