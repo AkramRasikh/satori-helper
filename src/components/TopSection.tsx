@@ -13,8 +13,9 @@ const TopSection = ({ sentenceList }) => {
         {sentenceList?.map((sentenceSnippet, index) => {
           const textWithKanji = sentenceSnippet[1];
           return (
-            <li key={index}>
-              <span>{textWithKanji}</span>
+            <li key={index} style={{ padding: '5px' }}>
+              <span style={{ marginRight: '5px' }}>{textWithKanji}</span>
+              <button>more</button>
             </li>
           );
         })}
