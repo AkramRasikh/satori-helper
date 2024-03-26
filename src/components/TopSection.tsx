@@ -1,6 +1,14 @@
 import React from 'react';
 
-const TopSection = ({ sentenceList }) => {
+const TopSection = ({ sentenceList, listRefs }) => {
+  const scrollToFullCard = (indexPassed) => {
+    if (listRefs?.current?.length > 0) {
+      listRefs.current[indexPassed].scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
   return (
     <div>
       <ul
@@ -15,7 +23,7 @@ const TopSection = ({ sentenceList }) => {
           return (
             <li key={index} style={{ padding: '5px' }}>
               <span style={{ marginRight: '5px' }}>{textWithKanji}</span>
-              <button>more</button>
+              <button onClick={() => scrollToFullCard(index)}>more</button>
             </li>
           );
         })}

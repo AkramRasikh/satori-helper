@@ -1,13 +1,15 @@
 import getSentenceAudio from '@/api/audio';
 import satoriPendinghandler from '../api/pending';
 import TopSection from '@/components/TopSection';
+import { useRef } from 'react';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
+  const listRef = useRef([]);
 
   return (
     <div>
-      <TopSection sentenceList={sentenceList} />
+      <TopSection sentenceList={sentenceList} listRefs={listRef} />
       <ul style={{ listStyleType: 'none', padding: '5px' }}>
         {sentenceList?.map((sentenceData, index) => {
           const sentence = sentenceData[0];
@@ -22,7 +24,11 @@ export default function Home(props) {
           );
 
           return (
-            <li key={index} style={{ borderBottom: '1px solid black' }}>
+            <li
+              key={index}
+              style={{ borderBottom: '1px solid black' }}
+              ref={(ref) => (listRef.current[index] = ref)}
+            >
               <div>
                 <p dangerouslySetInnerHTML={{ __html: formattedSentence }} />
                 <span
