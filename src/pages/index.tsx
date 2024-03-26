@@ -1,10 +1,13 @@
 import getSentenceAudio from '@/api/audio';
 import satoriPendinghandler from '../api/pending';
+import TopSection from '@/components/TopSection';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
+
   return (
     <div>
+      <TopSection sentenceList={sentenceList} />
       <ul style={{ listStyleType: 'none', padding: '5px' }}>
         {sentenceList?.map((sentenceData, index) => {
           const sentence = sentenceData[0];
