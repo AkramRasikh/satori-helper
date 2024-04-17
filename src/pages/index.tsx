@@ -4,6 +4,20 @@ import TopSection from '@/components/TopSection';
 import { useRef, useState } from 'react';
 import chatGptAPI from './api/chatgpt';
 
+const storyPrompt = `
+  Make the following words make sense together in as short few lined 
+  story in Japanese. Note the word context is there to help make sense
+  of the words
+`;
+
+const combinePrompt = `
+  I am studying these words. I have given context to them too. Give me simple sentences and ideally combine them where possible. Of course in Japanese. Also if you are using other words, try to make them simple
+  I also want them in the format as follows:
+  
+  [JP] 妹は小さめの靴を履いて、全速力で公園を走っています。
+  [EN] My younger sister is wearing small shoes and running at full speed in the park.
+`;
+
 export default function Home(props) {
   const sentenceList = props?.satoriData;
   const listRef = useRef([]);
@@ -21,7 +35,7 @@ export default function Home(props) {
     }
   };
 
-  const handleChatGPTRes = async () => {
+  const handleChatGPTRes = async (prompt) => {
     try {
       let finalPrompt;
 
@@ -31,7 +45,7 @@ export default function Home(props) {
         elements.forEach((element) => {
           text += element.textContent + ' ';
         });
-        finalPrompt = text.trim();
+        finalPrompt = prompt + text.trim();
       }
 
       if (!finalPrompt) return;
@@ -50,22 +64,26 @@ export default function Home(props) {
         listRefs={listRef}
         handleAddToWordBank={handleAddToWordBank}
       />
-      <ul ref={wordBankRef}>
-        <p>
-          Make the following words make sense together in as short few lined
-          story in Japanese. Note the word context is there to help make sense
-          of the words
-        </p>
-        {wordBank?.map((word, index) => {
-          return (
-            <li key={index}>
-              {word.word} context: {word.context}
-            </li>
-          );
-        })}
-      </ul>
-      {wordBank.length && (
-        <button onClick={handleChatGPTRes}>Get a story!</button>
+      {wordBank?.length > 0 && (
+        <ul ref={wordBankRef}>
+          {wordBank?.map((word, index) => {
+            return (
+              <li key={index}>
+                {word.word} context: {word.context}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      {wordBank?.length && (
+        <div>
+          <button onClick={() => handleChatGPTRes(storyPrompt)}>
+            Get a story!
+          </button>
+          <button onClick={() => handleChatGPTRes(combinePrompt)}>
+            Combine words
+          </button>
+        </div>
       )}
     </div>
   );
