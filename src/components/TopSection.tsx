@@ -30,8 +30,14 @@ const TopSection = ({ sentenceList, listRefs, handleAddToWordBank }) => {
                 }}
               >
                 <span style={{ marginRight: '5px' }}>{textWithKanji}</span>
-                <button onClick={() => scrollToFullCard(index)}>more</button>
                 <button
+                  style={{ border: 'none', background: 'none' }}
+                  onClick={() => scrollToFullCard(index)}
+                >
+                  🧐
+                </button>
+                <button
+                  style={{ border: 'none', background: 'none' }}
                   onClick={() =>
                     handleAddToWordBank({
                       word: sentenceSnippet[1],
@@ -40,7 +46,7 @@ const TopSection = ({ sentenceList, listRefs, handleAddToWordBank }) => {
                     })
                   }
                 >
-                  Add to 🧺
+                  🧺
                 </button>
 
                 <NestedStatus />

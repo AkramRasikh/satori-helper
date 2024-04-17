@@ -55,9 +55,6 @@ export default function Home(props) {
       />
       <ul ref={wordBankRef}>
         <p>
-          {/* Make a small japanese dialogue using the following words. Note:
-          "context" is only there as a helper, not something to take creative
-          inspiration from */}
           Make the following words make sense together in as short few lined
           story in Japanese. Note the word context is there to help make sense
           of the words
