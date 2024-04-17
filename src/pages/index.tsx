@@ -15,10 +15,6 @@ export default function Home(props) {
 
   const [response, setResponse] = useState('');
 
-  console.log('## wordBank: ', wordBank);
-
-  console.log('## wordBankRef: ', wordBankRef);
-
   const handleAddToWordBank = (wordData) => {
     const isWordInWord = wordBank.find(
       (wordObj) => wordObj.word === wordData.word,
@@ -43,9 +39,7 @@ export default function Home(props) {
 
       if (!finalPrompt) return;
       const res = await chatGptAPI(finalPrompt);
-      // console.log('## res: ', res);
 
-      // Assuming completion.choices[0] contains the response
       setResponse(res);
     } catch (error) {
       console.error('Error fetching response:', error);
