@@ -3,9 +3,7 @@ import { satoriPendinghandler } from '../api/pending';
 import TopSection from '@/components/TopSection';
 import { useRef, useState } from 'react';
 import chatGptAPI from './api/chatgpt';
-
-const promptText =
-  'Make a small japanese dialogue using the following words. Note: context is only there as a helper, not something to take creative inspiration from.';
+import WordDetail from '@/components/WordDetail';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -83,58 +81,9 @@ export default function Home(props) {
         </ul>
       </div>
       <ul style={{ listStyleType: 'none', padding: '5px' }}>
-        {sentenceList?.map((sentenceData, index) => {
-          const sentence = sentenceData[0];
-          const textWithKanji = sentenceData[1];
-          const textZeroKanji = sentenceData[2];
-          const audioUrl = sentenceData[3];
-          const definition = sentenceData[4];
-          const engTranslation = sentenceData[5];
-          const formattedSentence = sentence.replace(
-            new RegExp(textWithKanji, 'g'),
-            `<span style="font-weight: bold; text-decoration: underline;">${textWithKanji}</span>`,
-          );
-
-          return (
-            <li
-              key={index}
-              style={{ borderBottom: '1px solid black' }}
-              ref={(ref) => (listRef.current[index] = ref)}
-            >
-              <div>
-                <p dangerouslySetInnerHTML={{ __html: formattedSentence }} />
-                <span
-                  style={{ fontWeight: 'bold', textDecoration: 'underline' }}
-                >
-                  {textWithKanji}
-                </span>
-                <br />
-                {textWithKanji !== textZeroKanji && (
-                  <>
-                    <span>{textZeroKanji}</span>
-                    <br />
-                  </>
-                )}
-                <span
-                  style={{ fontWeight: 'bold', textDecoration: 'underline' }}
-                >
-                  Eng: {definition}
-                </span>
-              </div>
-              <div>
-                <span>
-                  <i> Eng: {engTranslation}</i>
-                </span>
-              </div>
-              <div>
-                <audio controls>
-                  <source src={audioUrl} type='audio/mpeg' />
-                  Your browser does not support the audio element.
-                </audio>
-              </div>
-            </li>
-          );
-        })}
+        {sentenceList?.map((sentenceData, index) => (
+          <WordDetail key={index} sentenceData={sentenceData} />
+        ))}
       </ul>
     </div>
   );
