@@ -35,6 +35,14 @@ export default function Home(props) {
     }
   };
 
+  const handleRemoveFromBank = (wordToDelete) => {
+    const filteredWordBank = wordBank.filter(
+      (wordData) => wordData.word !== wordToDelete,
+    );
+
+    setWordBank(filteredWordBank);
+  };
+
   const handleChatGPTRes = async (prompt) => {
     try {
       let finalPrompt;
@@ -69,7 +77,12 @@ export default function Home(props) {
           {wordBank?.map((word, index) => {
             return (
               <li key={index}>
-                {word.word} context: {word.context}
+                <button onClick={() => handleRemoveFromBank(word.word)}>
+                  ❌
+                </button>
+                <span>
+                  {word.word} context: {word.context}
+                </span>
               </li>
             );
           })}
