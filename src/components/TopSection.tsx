@@ -1,5 +1,21 @@
-import React from 'react';
-import NestedStatus from './NestedStatus';
+import React, { useState } from 'react';
+
+import WordDetail from './WordDetail';
+
+const WordDetailContainer = ({ sentenceSnippet }) => {
+  const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false);
+
+  const handleMoreInfo = () => {
+    setIsMoreInfoOpen(!isMoreInfoOpen);
+  };
+
+  return (
+    <div>
+      <button onClick={handleMoreInfo}>Click for Info</button>
+      {isMoreInfoOpen && <WordDetail sentenceData={sentenceSnippet} />}
+    </div>
+  );
+};
 
 const TopSection = ({ sentenceList, listRefs, handleAddToWordBank }) => {
   const scrollToFullCard = (indexPassed) => {
@@ -10,32 +26,32 @@ const TopSection = ({ sentenceList, listRefs, handleAddToWordBank }) => {
       });
     }
   };
+
   return (
-    <div style={{ borderBottom: '5px solid grey' }}>
+    <div
+      style={{
+        borderBottom: '5px solid grey',
+        width: 'fit-content',
+      }}
+    >
       <ul
         style={{
-          marginLeft: '30%',
           listStyleType: 'none',
+          width: 'fit-content',
         }}
       >
         {sentenceList?.map((sentenceSnippet, index) => {
           const textWithKanji = sentenceSnippet[1];
           return (
-            <li key={index} style={{ padding: '5px' }}>
+            <li
+              key={index}
+              style={{ padding: '10px', borderBottom: '1px solid grey' }}
+            >
               <div
                 style={{
                   display: 'flex',
-                  justifyContent: 'space-between',
-                  maxWidth: '300px',
                 }}
               >
-                <span style={{ marginRight: '5px' }}>{textWithKanji}</span>
-                <button
-                  style={{ border: 'none', background: 'none' }}
-                  onClick={() => scrollToFullCard(index)}
-                >
-                  🧐
-                </button>
                 <button
                   style={{ border: 'none', background: 'none' }}
                   onClick={() =>
@@ -48,9 +64,9 @@ const TopSection = ({ sentenceList, listRefs, handleAddToWordBank }) => {
                 >
                   🧺
                 </button>
-
-                <NestedStatus />
+                <span style={{ margin: '0 10px' }}>{textWithKanji}</span>
               </div>
+              <WordDetailContainer sentenceSnippet={sentenceSnippet} />
             </li>
           );
         })}
