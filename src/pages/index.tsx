@@ -1,15 +1,96 @@
 import getSentenceAudio from '@/api/audio';
 import { satoriPendinghandler } from '../api/pending';
 import TopSection from '@/components/TopSection';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import chatGptAPI from './api/chatgpt';
+
+const promptText =
+  'Make a small japanese dialogue using the following words. Note: context is only there as a helper, not something to take creative inspiration from.';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
   const listRef = useRef([]);
+  const wordBankRef = useRef([]);
+  const [wordBank, setWordBank] = useState([]);
+
+  const [response, setResponse] = useState('');
+
+  console.log('## wordBank: ', wordBank);
+
+  console.log('## wordBankRef: ', wordBankRef);
+
+  const handleAddToWordBank = (wordData) => {
+    const isWordInWord = wordBank.find(
+      (wordObj) => wordObj.word === wordData.word,
+    );
+    if (!isWordInWord) {
+      setWordBank((prev) => [...prev, wordData]);
+    }
+  };
+
+  const handleChatGPTRes = async () => {
+    try {
+      let finalPrompt;
+
+      if (wordBankRef.current) {
+        const elements = wordBankRef.current?.querySelectorAll('*');
+        let text = '';
+        elements.forEach((element) => {
+          text += element.textContent + ' ';
+        });
+        finalPrompt = text.trim();
+      }
+
+      if (!finalPrompt) return;
+      const res = await chatGptAPI(finalPrompt);
+      // console.log('## res: ', res);
+
+      // Assuming completion.choices[0] contains the response
+      setResponse(res);
+    } catch (error) {
+      console.error('Error fetching response:', error);
+    }
+  };
 
   return (
     <div style={{ paddingBottom: '40px' }}>
-      <TopSection sentenceList={sentenceList} listRefs={listRef} />
+      <TopSection
+        sentenceList={sentenceList}
+        listRefs={listRef}
+        handleAddToWordBank={handleAddToWordBank}
+      />
+      <ul ref={wordBankRef}>
+        <p>
+          {/* Make a small japanese dialogue using the following words. Note:
+          "context" is only there as a helper, not something to take creative
+          inspiration from */}
+          Make the following words make sense together in as short few lined
+          story in Japanese. Note the word context is there to help make sense
+          of the words
+        </p>
+        {wordBank?.map((word, index) => {
+          return (
+            <li key={index}>
+              {word.word} context: {word.context}
+            </li>
+          );
+        })}
+      </ul>
+      {wordBank.length && (
+        <button onClick={handleChatGPTRes}>Get a story!</button>
+      )}
+      <div>
+        <ul>
+          {response &&
+            response.split('\n').map((detail, index) => {
+              return (
+                <li key={index}>
+                  <p>{detail}</p>
+                </li>
+              );
+            })}
+        </ul>
+      </div>
       <ul style={{ listStyleType: 'none', padding: '5px' }}>
         {sentenceList?.map((sentenceData, index) => {
           const sentence = sentenceData[0];
