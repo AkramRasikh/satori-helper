@@ -3,7 +3,7 @@ const ResponseItem = ({ responseItem }) => {
     <div style={{ borderTop: '1px solid grey' }}>
       {responseItem.split('\n').map((detail, index) => {
         if (!detail) {
-          return <br key={index} />;
+          return null;
         }
         return (
           <li key={index}>
