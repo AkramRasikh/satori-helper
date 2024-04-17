@@ -3,6 +3,7 @@ import { satoriPendinghandler } from '../api/pending';
 import TopSection from '@/components/TopSection';
 import { useRef, useState } from 'react';
 import chatGptAPI from './api/chatgpt';
+import ResponseSection from '@/components/ResponseSection';
 
 const storyPrompt = `
   Make the following words make sense together in as short few lined 
@@ -52,6 +53,7 @@ export default function Home(props) {
         let text = '';
         elements.forEach((element) => {
           text += element.textContent + ' ';
+          text = text.replace(/❌/g, '');
         });
         finalPrompt = prompt + text.trim();
       }
@@ -78,7 +80,7 @@ export default function Home(props) {
             return (
               <li key={index}>
                 <button onClick={() => handleRemoveFromBank(word.word)}>
-                  ❌
+                  <span>❌</span>
                 </button>
                 <span>
                   {word.word} context: {word.context}
@@ -88,7 +90,7 @@ export default function Home(props) {
           })}
         </ul>
       )}
-      {wordBank?.length && (
+      {wordBank?.length > 0 && (
         <div>
           <button onClick={() => handleChatGPTRes(storyPrompt)}>
             Get a story!
@@ -98,6 +100,7 @@ export default function Home(props) {
           </button>
         </div>
       )}
+      {response && <ResponseSection response={response} />}
     </div>
   );
 }
