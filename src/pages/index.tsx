@@ -3,7 +3,6 @@ import { satoriPendinghandler } from '../api/pending';
 import TopSection from '@/components/TopSection';
 import { useRef, useState } from 'react';
 import chatGptAPI from './api/chatgpt';
-import WordDetail from '@/components/WordDetail';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -68,23 +67,6 @@ export default function Home(props) {
       {wordBank.length && (
         <button onClick={handleChatGPTRes}>Get a story!</button>
       )}
-      <div>
-        <ul>
-          {response &&
-            response.split('\n').map((detail, index) => {
-              return (
-                <li key={index}>
-                  <p>{detail}</p>
-                </li>
-              );
-            })}
-        </ul>
-      </div>
-      <ul style={{ listStyleType: 'none', padding: '5px' }}>
-        {sentenceList?.map((sentenceData, index) => (
-          <WordDetail key={index} sentenceData={sentenceData} />
-        ))}
-      </ul>
     </div>
   );
 }
