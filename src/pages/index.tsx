@@ -4,6 +4,7 @@ import TopSection from '@/components/TopSection';
 import { useRef, useState } from 'react';
 import chatGptAPI from './api/chatgpt';
 import ResponseSection from '@/components/ResponseSection';
+import WordBankSection from '@/components/WordBankSection';
 
 const storyPrompt = `
   Make the following words make sense together in as short few lined 
@@ -44,6 +45,10 @@ export default function Home(props) {
     setWordBank(filteredWordBank);
   };
 
+  const handleClearWordBank = () => {
+    setWordBank([]);
+  };
+
   const handleChatGPTRes = async (prompt) => {
     try {
       let finalPrompt;
@@ -75,20 +80,12 @@ export default function Home(props) {
         handleAddToWordBank={handleAddToWordBank}
       />
       {wordBank?.length > 0 && (
-        <ul ref={wordBankRef}>
-          {wordBank?.map((word, index) => {
-            return (
-              <li key={index}>
-                <button onClick={() => handleRemoveFromBank(word.word)}>
-                  <span>❌</span>
-                </button>
-                <span>
-                  {word.word} context: {word.context}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
+        <WordBankSection
+          wordBankRef={wordBankRef}
+          wordBank={wordBank}
+          handleRemoveFromBank={handleRemoveFromBank}
+          handleClearWordBank={handleClearWordBank}
+        />
       )}
       {wordBank?.length > 0 && (
         <div>
