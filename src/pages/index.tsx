@@ -30,6 +30,7 @@ export default function Home(props) {
   const [wordBank, setWordBank] = useState([]);
 
   const [response, setResponse] = useState([]);
+  const [isLoadingResponse, setLoadingResponse] = useState(false);
 
   const handleAddToWordBank = (wordData) => {
     const isWordInWord = wordBank.find(
@@ -54,6 +55,7 @@ export default function Home(props) {
 
   const handleChatGPTRes = async (prompt) => {
     try {
+      setLoadingResponse(true);
       let finalPrompt;
 
       if (wordBankRef.current) {
@@ -72,6 +74,8 @@ export default function Home(props) {
       setResponse((prev) => [...prev, res]);
     } catch (error) {
       console.error('Error fetching response:', error);
+    } finally {
+      setLoadingResponse(false);
     }
   };
 
@@ -92,12 +96,19 @@ export default function Home(props) {
       )}
       {wordBank?.length > 0 && (
         <div>
-          <button onClick={() => handleChatGPTRes(storyPrompt)}>
+          <button
+            onClick={() => handleChatGPTRes(storyPrompt)}
+            disabled={isLoadingResponse}
+          >
             Get a story!
           </button>
-          <button onClick={() => handleChatGPTRes(combinePrompt)}>
+          <button
+            onClick={() => handleChatGPTRes(combinePrompt)}
+            disabled={isLoadingResponse}
+          >
             Combine words
           </button>
+          {isLoadingResponse && <span>Loading response!</span>}
         </div>
       )}
       {response?.length > 0 ? <ResponseSection response={response} /> : null}
