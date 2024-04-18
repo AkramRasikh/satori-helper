@@ -1,21 +1,44 @@
 import { combinePrompt, storyPrompt } from '@/prompts';
 
-const GetContentCTAs = ({ handleChatGPTRes, isLoadingResponse }) => {
+const GetContentCTAs = ({
+  handleChatGPTRes,
+  isLoadingResponse,
+  handleClearWordBank,
+}) => {
   return (
-    <div>
+    <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
       <button
+        style={{
+          border: 'none',
+          borderRadius: '15px',
+          padding: '10px',
+        }}
+        onClick={handleClearWordBank}
+      >
+        Clear word bank 🏦!
+      </button>
+      <button
+        style={{
+          border: 'none',
+          borderRadius: '15px',
+          padding: '10px',
+        }}
         onClick={() => handleChatGPTRes(storyPrompt)}
         disabled={isLoadingResponse}
       >
         Get a story!
       </button>
       <button
+        style={{
+          border: 'none',
+          borderRadius: '15px',
+          padding: '10px',
+        }}
         onClick={() => handleChatGPTRes(combinePrompt)}
         disabled={isLoadingResponse}
       >
         Combine words
       </button>
-      {isLoadingResponse && <span>Loading response!</span>}
     </div>
   );
 };

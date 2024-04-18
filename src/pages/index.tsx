@@ -6,6 +6,7 @@ import chatGptAPI from './api/chatgpt';
 import ResponseSection from '@/components/ResponseSection';
 import WordBankSection from '@/components/WordBankSection';
 import GetContentCTAs from '@/components/GetContentCTAs';
+import LoadingStatus from '@/components/LoadingStatus';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -76,13 +77,14 @@ export default function Home(props) {
           wordBankRef={wordBankRef}
           wordBank={wordBank}
           handleRemoveFromBank={handleRemoveFromBank}
-          handleClearWordBank={handleClearWordBank}
         />
       )}
+      {isLoadingResponse && <LoadingStatus />}
       {wordBank?.length > 0 && (
         <GetContentCTAs
           handleChatGPTRes={handleChatGPTRes}
           isLoadingResponse={isLoadingResponse}
+          handleClearWordBank={handleClearWordBank}
         />
       )}
       {response?.length > 0 ? <ResponseSection response={response} /> : null}

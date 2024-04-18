@@ -1,16 +1,20 @@
-const WordBankSection = ({
-  wordBankRef,
-  wordBank,
-  handleRemoveFromBank,
-  handleClearWordBank,
-}) => {
+const WordBankSection = ({ wordBankRef, wordBank, handleRemoveFromBank }) => {
   return (
     <div>
-      <ul ref={wordBankRef}>
+      <ol ref={wordBankRef}>
         {wordBank.map((word, index) => {
           return (
             <li key={index}>
-              <button onClick={() => handleRemoveFromBank(word.word)}>
+              <button
+                onClick={() => handleRemoveFromBank(word.word)}
+                style={{
+                  border: 'grey',
+                  fontSize: '15px',
+                  borderRadius: '15%',
+                  cursor: 'pointer',
+                  marginRight: '10px',
+                }}
+              >
                 <span>❌</span>
               </button>
               <span>
@@ -19,8 +23,7 @@ const WordBankSection = ({
             </li>
           );
         })}
-      </ul>
-      <button onClick={handleClearWordBank}>Clear word bank 🏦!</button>
+      </ol>
     </div>
   );
 };
