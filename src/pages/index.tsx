@@ -25,7 +25,6 @@ I also want them in the format as follows (Japanese and English translation):
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
-  const listRef = useRef([]);
   const wordBankRef = useRef([]);
   const [wordBank, setWordBank] = useState([]);
 
@@ -83,7 +82,6 @@ export default function Home(props) {
     <div style={{ paddingBottom: '40px' }}>
       <TopSection
         sentenceList={sentenceList}
-        listRefs={listRef}
         handleAddToWordBank={handleAddToWordBank}
       />
       {wordBank?.length > 0 && (

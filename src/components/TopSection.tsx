@@ -19,16 +19,7 @@ const WordDetailContainer = ({ sentenceSnippet }) => {
   );
 };
 
-const TopSection = ({ sentenceList, listRefs, handleAddToWordBank }) => {
-  const scrollToFullCard = (indexPassed) => {
-    if (listRefs?.current?.length > 0) {
-      listRefs.current[indexPassed].scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  };
-
+const TopSection = ({ sentenceList, handleAddToWordBank }) => {
   return (
     <div
       style={{
