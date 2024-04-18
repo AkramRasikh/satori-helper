@@ -13,7 +13,17 @@ const WordDetailContainer = ({ sentenceSnippet }) => {
 
   return (
     <div>
-      <button onClick={handleMoreInfo}>{text}</button>
+      <button
+        onClick={handleMoreInfo}
+        style={{
+          border: 'none',
+          padding: '5px',
+          borderRadius: '15%',
+          marginTop: isMoreInfoOpen ? '10px' : 'auto',
+        }}
+      >
+        {text}
+      </button>
       {isMoreInfoOpen && <WordDetail sentenceData={sentenceSnippet} />}
     </div>
   );
@@ -46,6 +56,7 @@ const TopSection = ({ sentenceList, handleAddToWordBank }) => {
                 border: '1px solid grey',
                 display: 'flex',
                 flexWrap: 'wrap' /* Allow items to wrap within the list */,
+                borderRadius: '20px',
               }}
             >
               <div
@@ -58,6 +69,7 @@ const TopSection = ({ sentenceList, handleAddToWordBank }) => {
                     border: 'grey',
                     fontSize: '15px',
                     borderRadius: '15%',
+                    cursor: 'pointer',
                   }}
                   onClick={() =>
                     handleAddToWordBank({

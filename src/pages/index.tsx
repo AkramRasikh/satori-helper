@@ -80,10 +80,13 @@ export default function Home(props) {
 
   return (
     <div style={{ paddingBottom: '40px' }}>
-      <TopSection
-        sentenceList={sentenceList}
-        handleAddToWordBank={handleAddToWordBank}
-      />
+      <details open>
+        <summary>Word list</summary>
+        <TopSection
+          sentenceList={sentenceList}
+          handleAddToWordBank={handleAddToWordBank}
+        />
+      </details>
       {wordBank?.length > 0 && (
         <WordBankSection
           wordBankRef={wordBankRef}

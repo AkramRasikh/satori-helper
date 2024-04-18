@@ -11,7 +11,7 @@ const WordDetail = ({ sentenceData }) => {
   );
 
   return (
-    <li style={{ borderBottom: '1px solid black' }}>
+    <li>
       <div>
         <p dangerouslySetInnerHTML={{ __html: formattedSentence }} />
         <span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
