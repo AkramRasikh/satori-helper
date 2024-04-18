@@ -9,9 +9,11 @@ const WordDetailContainer = ({ sentenceSnippet }) => {
     setIsMoreInfoOpen(!isMoreInfoOpen);
   };
 
+  const text = isMoreInfoOpen ? 'Collapse' : 'More info';
+
   return (
     <div>
-      <button onClick={handleMoreInfo}>Click for Info</button>
+      <button onClick={handleMoreInfo}>{text}</button>
       {isMoreInfoOpen && <WordDetail sentenceData={sentenceSnippet} />}
     </div>
   );
@@ -31,13 +33,16 @@ const TopSection = ({ sentenceList, listRefs, handleAddToWordBank }) => {
     <div
       style={{
         borderBottom: '5px solid grey',
-        width: 'fit-content',
       }}
     >
       <ul
         style={{
           listStyleType: 'none',
           width: 'fit-content',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'flex-start',
+          gap: '8px',
         }}
       >
         {sentenceList?.map((sentenceSnippet, index) => {
@@ -45,7 +50,12 @@ const TopSection = ({ sentenceList, listRefs, handleAddToWordBank }) => {
           return (
             <li
               key={index}
-              style={{ padding: '10px', borderBottom: '1px solid grey' }}
+              style={{
+                padding: '10px',
+                border: '1px solid grey',
+                display: 'flex',
+                flexWrap: 'wrap' /* Allow items to wrap within the list */,
+              }}
             >
               <div
                 style={{
@@ -53,7 +63,11 @@ const TopSection = ({ sentenceList, listRefs, handleAddToWordBank }) => {
                 }}
               >
                 <button
-                  style={{ border: 'none', background: 'none' }}
+                  style={{
+                    border: 'grey',
+                    fontSize: '15px',
+                    borderRadius: '15%',
+                  }}
                   onClick={() =>
                     handleAddToWordBank({
                       word: sentenceSnippet[1],
