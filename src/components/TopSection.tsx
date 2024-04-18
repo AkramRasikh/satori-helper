@@ -44,6 +44,8 @@ const TopSection = ({ sentenceList, handleAddToWordBank }) => {
           flexWrap: 'wrap',
           justifyContent: 'flex-start',
           gap: '8px',
+          padding: '15px',
+          marginTop: '0px',
         }}
       >
         {sentenceList?.map((sentenceSnippet, index) => {
