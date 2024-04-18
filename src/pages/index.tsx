@@ -5,23 +5,7 @@ import { useRef, useState } from 'react';
 import chatGptAPI from './api/chatgpt';
 import ResponseSection from '@/components/ResponseSection';
 import WordBankSection from '@/components/WordBankSection';
-
-const storyPrompt = `
-  Make the following words make sense together in as short few lined 
-  story in Japanese. Note the word context is there to help make sense
-  of the words
-`;
-
-const combinePrompt = `
-  I am studying these words. I have given context to them too.
-  Give me simple sentences and ideally combine them where possible.
-  For example if the words plate and dinosaur were in the list, a sentence like "I tried to smash the dinosaurs head with the plate" will suffice.
-  Don’t make them very similar to the examples given in the context
-
-I also want them in the format as follows (Japanese and English translation):
-  [JP] 妹は小さめの靴を履いて、全速力で公園を走っています。
-  [EN] My younger sister is wearing small shoes and running at full speed in the park.
-`;
+import GetContentCTAs from '@/components/GetContentCTAs';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -96,21 +80,10 @@ export default function Home(props) {
         />
       )}
       {wordBank?.length > 0 && (
-        <div>
-          <button
-            onClick={() => handleChatGPTRes(storyPrompt)}
-            disabled={isLoadingResponse}
-          >
-            Get a story!
-          </button>
-          <button
-            onClick={() => handleChatGPTRes(combinePrompt)}
-            disabled={isLoadingResponse}
-          >
-            Combine words
-          </button>
-          {isLoadingResponse && <span>Loading response!</span>}
-        </div>
+        <GetContentCTAs
+          handleChatGPTRes={handleChatGPTRes}
+          isLoadingResponse={isLoadingResponse}
+        />
       )}
       {response?.length > 0 ? <ResponseSection response={response} /> : null}
     </div>
