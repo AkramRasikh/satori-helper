@@ -8,12 +8,11 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true,
 });
 
-const speechFile = path.resolve('./siu.mp3');
-
 export default async function handler(req, res) {
   try {
     const { tts } = req.body;
 
+    const speechFile = path.resolve('public/audio/' + tts + '.mp3');
     const mp3 = await openai.audio.speech.create({
       model: 'tts-1',
       voice: 'alloy',
