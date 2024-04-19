@@ -55,7 +55,10 @@ export default function Home(props) {
       if (!finalPrompt) return;
       const res = await chatGptAPI(finalPrompt);
 
-      setResponse((prev) => [...prev, res]);
+      setResponse((prev) => [
+        ...prev,
+        { wordBank: wordBank.map((word) => word.word), response: res },
+      ]);
     } catch (error) {
       console.error('Error fetching response:', error);
     } finally {
