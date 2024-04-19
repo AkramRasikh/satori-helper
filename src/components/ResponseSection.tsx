@@ -32,8 +32,24 @@ const MoreNestedResponse = ({ detail }) => {
   }
   return (
     <li>
-      <p>{detail}</p>
-      {isJapaneseText && <button onClick={handleGetAudio}>Get Audio</button>}
+      <div style={{ display: 'flex' }}>
+        <p>{detail}</p>
+        {isJapaneseText && (
+          <button
+            style={{
+              margin: 'auto auto auto 10px',
+              height: 'fit-content',
+              padding: '5px',
+              borderRadius: '15px',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+            onClick={handleGetAudio}
+          >
+            Get Audio
+          </button>
+        )}
+      </div>
       {audioUrl && (
         <div>
           <audio controls>
