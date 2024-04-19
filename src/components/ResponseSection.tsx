@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 const MoreNestedResponse = ({ detail }) => {
   const [audioUrl, setAudioUrl] = useState('');
+  const [loadingResponse, setLoadingResponse] = useState(false);
   let japaneseBareText = '';
   const japaneseRegex = /\[JP\]/;
 
@@ -11,6 +12,7 @@ const MoreNestedResponse = ({ detail }) => {
     if (!japaneseBareText) return null;
     try {
       // figure reference to code
+      setLoadingResponse(true);
       await fetch('/api/chatgpt-tts', {
         method: 'POST',
         headers: {
@@ -21,6 +23,8 @@ const MoreNestedResponse = ({ detail }) => {
       setAudioUrl('/audio/' + japaneseBareText + '.mp3');
     } catch (error) {
       console.error('## Error fetching data:', error);
+    } finally {
+      setLoadingResponse(false);
     }
   };
   if (isJapaneseText) {
@@ -44,6 +48,7 @@ const MoreNestedResponse = ({ detail }) => {
               border: 'none',
               cursor: 'pointer',
             }}
+            disabled={loadingResponse}
             onClick={handleGetAudio}
           >
             Get Audio
