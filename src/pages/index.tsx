@@ -78,11 +78,13 @@ export default function Home(props) {
       const res = await chatGptAPI(finalPrompt);
 
       const structuredJapEngRes = getStructuredJapEngRes(res);
-      console.log('## structuredJapEngRes: ', structuredJapEngRes);
 
       setResponse((prev) => [
         ...prev,
-        { wordBank: wordBank.map((word) => word.word), response: res },
+        {
+          wordBank: wordBank.map((word) => word.word),
+          response: structuredJapEngRes,
+        },
       ]);
     } catch (error) {
       console.error('Error fetching response:', error);

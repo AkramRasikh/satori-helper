@@ -7,13 +7,8 @@ const MoreNestedResponse = ({ detail, wordBank }) => {
   const [tried, setTried] = useState(false);
   const sentenceRef = useRef();
 
-  let japaneseBareText = '';
-  const japaneseRegex = /\[JP\]/;
-  const isJapaneseText = japaneseRegex.test(detail);
-
-  if (isJapaneseText) {
-    japaneseBareText = detail.replace(japaneseRegex, '');
-  }
+  const japaneseSentence = detail.jap;
+  const englishSentence = detail.eng;
 
   const handleDeleteSentence = () => {
     console.log('## handleDeleteSentence');
@@ -44,7 +39,7 @@ const MoreNestedResponse = ({ detail, wordBank }) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            japaneseSentence: japaneseBareText,
+            japaneseSentence: japaneseSentence,
             targetWords: wordBank,
           }),
         });
@@ -62,13 +57,13 @@ const MoreNestedResponse = ({ detail, wordBank }) => {
         throw error;
       }
     };
-    if (japaneseBareText && !tried && matchedWords?.length === 0) {
+    if (japaneseSentence && !tried && matchedWords?.length === 0) {
       fetchKuromojiDictionary();
     }
-  }, [japaneseBareText, matchedWords?.length, tried, wordBank]);
+  }, [japaneseSentence, matchedWords?.length, tried, wordBank]);
 
   const handleGetAudio = async () => {
-    if (!japaneseBareText) return null;
+    if (!japaneseSentence) return null;
     try {
       // figure reference to code
       setLoadingResponse(true);
@@ -77,9 +72,9 @@ const MoreNestedResponse = ({ detail, wordBank }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tts: japaneseBareText }),
+        body: JSON.stringify({ tts: japaneseSentence }),
       });
-      setAudioUrl('/audio/' + japaneseBareText + '.mp3');
+      setAudioUrl('/audio/' + japaneseSentence + '.mp3');
     } catch (error) {
       console.error('## Error fetching data:', error);
     } finally {
@@ -91,53 +86,45 @@ const MoreNestedResponse = ({ detail, wordBank }) => {
     return null;
   }
 
-  const japaneseCondition =
-    isJapaneseText &&
-    (matchedWords?.length > 0 || wordBank?.length > 0) &&
-    japaneseBareText &&
-    sentenceRef;
-
-  const underlinedSentence = japaneseCondition
-    ? underlineWordsInSentence(japaneseBareText)
-    : detail;
+  const underlinedSentence = underlineWordsInSentence(japaneseSentence);
 
   return (
     <li>
       <div style={{ display: 'flex' }}>
         <p ref={sentenceRef}>{underlinedSentence}</p>
-        {isJapaneseText && (
-          <div style={{ margin: 'auto 0' }}>
-            <button
-              style={{
-                margin: 'auto auto auto 10px',
-                height: 'fit-content',
-                padding: '5px',
-                borderRadius: '15px',
-                border: 'none',
-                cursor: 'pointer',
-              }}
-              disabled={loadingResponse}
-              onClick={handleDeleteSentence}
-            >
-              Delete
-            </button>
-            <button
-              style={{
-                margin: 'auto auto auto 10px',
-                height: 'fit-content',
-                padding: '5px',
-                borderRadius: '15px',
-                border: 'none',
-                cursor: 'pointer',
-              }}
-              disabled={loadingResponse}
-              onClick={handleGetAudio}
-            >
-              Get Audio
-            </button>
-          </div>
-        )}
+        <div style={{ margin: 'auto 0' }}>
+          <button
+            style={{
+              margin: 'auto auto auto 10px',
+              height: 'fit-content',
+              padding: '5px',
+              borderRadius: '15px',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+            disabled={loadingResponse}
+            onClick={handleDeleteSentence}
+          >
+            Delete
+          </button>
+          <button
+            style={{
+              margin: 'auto auto auto 10px',
+              height: 'fit-content',
+              padding: '5px',
+              borderRadius: '15px',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+            disabled={loadingResponse}
+            onClick={handleGetAudio}
+          >
+            Get Audio
+          </button>
+        </div>
       </div>
+      <p>{englishSentence}</p>
+
       {audioUrl && (
         <div>
           <audio controls>
@@ -153,7 +140,7 @@ const MoreNestedResponse = ({ detail, wordBank }) => {
 const ResponseItem = ({ responseItem, wordBank }) => {
   return (
     <div style={{ borderTop: '1px solid grey' }}>
-      {responseItem.split('\n').map((detail, index) => {
+      {responseItem.map((detail, index) => {
         return (
           <MoreNestedResponse key={index} detail={detail} wordBank={wordBank} />
         );
