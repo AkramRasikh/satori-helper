@@ -7,6 +7,7 @@ import ResponseSection from '@/components/ResponseSection';
 import WordBankSection from '@/components/WordBankSection';
 import GetContentCTAs from '@/components/GetContentCTAs';
 import LoadingStatus from '@/components/LoadingStatus';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -33,6 +34,27 @@ export default function Home(props) {
     setWordBank(filteredWordBank);
   };
 
+  const getStructuredJapEngRes = (responseString) => {
+    const lines = responseString.split('\n');
+    const sentences = [];
+    const japaneseRegex = /\[JP\]/;
+    const engRegex = /\[EN\]/;
+
+    for (let i = 0; i < lines.length; i++) {
+      const sentence = lines[i];
+      if (japaneseRegex.test(sentence)) {
+        const sentenceObj = {
+          id: uuidv4(),
+          jap: sentence.replace(japaneseRegex, ''),
+          eng: lines[i + 1].replace(engRegex, ''),
+        };
+        sentences.push(sentenceObj);
+      }
+    }
+
+    return sentences;
+  };
+
   const handleClearWordBank = () => {
     setWordBank([]);
   };
@@ -54,6 +76,9 @@ export default function Home(props) {
 
       if (!finalPrompt) return;
       const res = await chatGptAPI(finalPrompt);
+
+      const structuredJapEngRes = getStructuredJapEngRes(res);
+      console.log('## structuredJapEngRes: ', structuredJapEngRes);
 
       setResponse((prev) => [
         ...prev,
