@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
-const MoreNestedResponse = ({ detail, wordBank, handleDeleteSentence }) => {
+const MoreNestedResponse = ({
+  detail,
+  wordBank,
+  handleDeleteSentence,
+  handleGetNewSentence,
+}) => {
   const [audioUrl, setAudioUrl] = useState('');
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [matchedWords, setMatchedWords] = useState([]);
@@ -12,6 +17,10 @@ const MoreNestedResponse = ({ detail, wordBank, handleDeleteSentence }) => {
 
   const handleDeleteClick = () => {
     handleDeleteSentence(detail.id);
+  };
+
+  const handleGetNewSentenceClick = () => {
+    handleGetNewSentence(detail, matchedWords);
   };
 
   function underlineWordsInSentence(sentence) {
@@ -117,6 +126,20 @@ const MoreNestedResponse = ({ detail, wordBank, handleDeleteSentence }) => {
               cursor: 'pointer',
             }}
             disabled={loadingResponse}
+            onClick={handleGetNewSentenceClick}
+          >
+            Redo
+          </button>
+          <button
+            style={{
+              margin: 'auto auto auto 10px',
+              height: 'fit-content',
+              padding: '5px',
+              borderRadius: '15px',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+            disabled={loadingResponse}
             onClick={handleGetAudio}
           >
             Get Audio
@@ -137,7 +160,12 @@ const MoreNestedResponse = ({ detail, wordBank, handleDeleteSentence }) => {
   );
 };
 
-const ResponseItem = ({ responseItem, wordBank, handleDeleteSentence }) => {
+const ResponseItem = ({
+  responseItem,
+  wordBank,
+  handleDeleteSentence,
+  handleGetNewSentence,
+}) => {
   return (
     <div style={{ borderTop: '1px solid grey' }}>
       {responseItem.map((detail, index) => {
@@ -147,13 +175,18 @@ const ResponseItem = ({ responseItem, wordBank, handleDeleteSentence }) => {
             detail={detail}
             wordBank={wordBank}
             handleDeleteSentence={handleDeleteSentence}
+            handleGetNewSentence={handleGetNewSentence}
           />
         );
       })}
     </div>
   );
 };
-const ResponseSection = ({ response, handleDeleteSentence }) => {
+const ResponseSection = ({
+  response,
+  handleDeleteSentence,
+  handleGetNewSentence,
+}) => {
   return (
     <ul style={{ borderBottom: '1px solid grey' }}>
       {response.map((responseItem, index) => {
@@ -165,6 +198,7 @@ const ResponseSection = ({ response, handleDeleteSentence }) => {
             responseItem={response}
             wordBank={wordBank}
             handleDeleteSentence={handleDeleteSentence}
+            handleGetNewSentence={handleGetNewSentence}
           />
         );
       })}

@@ -8,6 +8,7 @@ import WordBankSection from '@/components/WordBankSection';
 import GetContentCTAs from '@/components/GetContentCTAs';
 import LoadingStatus from '@/components/LoadingStatus';
 import { v4 as uuidv4 } from 'uuid';
+import { combinePrompt } from '@/prompts';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -34,6 +35,44 @@ export default function Home(props) {
     setWordBank(filteredWordBank);
   };
 
+  const replaceSentence = (responseAfterRemovedSentenceId, newRes) => {
+    return response.map((resItem) => {
+      const filteredResponse = resItem.response.filter(
+        (resItem) => resItem.id !== responseAfterRemovedSentenceId,
+      );
+
+      return {
+        wordBank: resItem.wordBank,
+        response: [...newRes, ...filteredResponse],
+      };
+    });
+  };
+
+  const handleGetNewSentence = async (sentenceToBeReplaced, matchedWords) => {
+    try {
+      setLoadingResponse(true);
+      const prompt =
+        combinePrompt +
+        matchedWords[0] +
+        ' context: ' +
+        sentenceToBeReplaced.jap;
+      if (!prompt) return;
+      const res = await chatGptAPI(prompt);
+      const structuredJapEngRes = getStructuredJapEngRes(res);
+
+      const newReplacedResponse = replaceSentence(
+        sentenceToBeReplaced.id,
+        structuredJapEngRes,
+      );
+
+      setResponse(newReplacedResponse);
+    } catch (error) {
+      console.error('Error fetching response:', error);
+    } finally {
+      setLoadingResponse(false);
+    }
+  };
+
   const getStructuredJapEngRes = (responseString) => {
     const lines = responseString.split('\n');
     const sentences = [];
@@ -55,8 +94,8 @@ export default function Home(props) {
     return sentences;
   };
 
-  const handleDeleteSentence = (sentenceToRemoveId) => {
-    const responseAfterRemovedSentence = response.map((resItem) => {
+  const deleteSentenceLogic = (sentenceToRemoveId) => {
+    return (responseAfterRemovedSentence = response.map((resItem) => {
       const newResponse = resItem.response.filter(
         (nestedRes) => nestedRes.id !== sentenceToRemoveId,
       );
@@ -64,8 +103,12 @@ export default function Home(props) {
         wordBank: resItem.wordBank,
         response: newResponse,
       };
-    });
+    }));
+  };
 
+  const handleDeleteSentence = (sentenceToRemoveId) => {
+    const responseAfterRemovedSentence =
+      deleteSentenceLogic(sentenceToRemoveId);
     setResponse(responseAfterRemovedSentence);
   };
 
@@ -135,6 +178,7 @@ export default function Home(props) {
         <ResponseSection
           response={response}
           handleDeleteSentence={handleDeleteSentence}
+          handleGetNewSentence={handleGetNewSentence}
         />
       ) : null}
     </div>
