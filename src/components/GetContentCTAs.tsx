@@ -12,6 +12,7 @@ const GetContentCTAs = ({
           border: 'none',
           borderRadius: '15px',
           padding: '10px',
+          cursor: 'pointer',
         }}
         onClick={handleClearWordBank}
       >
@@ -22,6 +23,7 @@ const GetContentCTAs = ({
           border: 'none',
           borderRadius: '15px',
           padding: '10px',
+          cursor: 'pointer',
         }}
         onClick={() => handleChatGPTRes(storyPrompt)}
         disabled={isLoadingResponse}
@@ -33,6 +35,7 @@ const GetContentCTAs = ({
           border: 'none',
           borderRadius: '15px',
           padding: '10px',
+          cursor: 'pointer',
         }}
         onClick={() => handleChatGPTRes(combinePrompt)}
         disabled={isLoadingResponse}
