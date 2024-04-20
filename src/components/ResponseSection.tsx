@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-const MoreNestedResponse = ({ detail, wordBank }) => {
+const MoreNestedResponse = ({ detail, wordBank, handleDeleteSentence }) => {
   const [audioUrl, setAudioUrl] = useState('');
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [matchedWords, setMatchedWords] = useState([]);
@@ -10,8 +10,8 @@ const MoreNestedResponse = ({ detail, wordBank }) => {
   const japaneseSentence = detail.jap;
   const englishSentence = detail.eng;
 
-  const handleDeleteSentence = () => {
-    console.log('## handleDeleteSentence');
+  const handleDeleteClick = () => {
+    handleDeleteSentence(detail.id);
   };
 
   function underlineWordsInSentence(sentence) {
@@ -103,7 +103,7 @@ const MoreNestedResponse = ({ detail, wordBank }) => {
               cursor: 'pointer',
             }}
             disabled={loadingResponse}
-            onClick={handleDeleteSentence}
+            onClick={handleDeleteClick}
           >
             Delete
           </button>
@@ -137,18 +137,23 @@ const MoreNestedResponse = ({ detail, wordBank }) => {
   );
 };
 
-const ResponseItem = ({ responseItem, wordBank }) => {
+const ResponseItem = ({ responseItem, wordBank, handleDeleteSentence }) => {
   return (
     <div style={{ borderTop: '1px solid grey' }}>
       {responseItem.map((detail, index) => {
         return (
-          <MoreNestedResponse key={index} detail={detail} wordBank={wordBank} />
+          <MoreNestedResponse
+            key={index}
+            detail={detail}
+            wordBank={wordBank}
+            handleDeleteSentence={handleDeleteSentence}
+          />
         );
       })}
     </div>
   );
 };
-const ResponseSection = ({ response }) => {
+const ResponseSection = ({ response, handleDeleteSentence }) => {
   return (
     <ul style={{ borderBottom: '1px solid grey' }}>
       {response.map((responseItem, index) => {
@@ -159,6 +164,7 @@ const ResponseSection = ({ response }) => {
             key={index}
             responseItem={response}
             wordBank={wordBank}
+            handleDeleteSentence={handleDeleteSentence}
           />
         );
       })}

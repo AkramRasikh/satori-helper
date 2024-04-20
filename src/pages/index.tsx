@@ -55,6 +55,20 @@ export default function Home(props) {
     return sentences;
   };
 
+  const handleDeleteSentence = (sentenceToRemoveId) => {
+    const responseAfterRemovedSentence = response.map((resItem) => {
+      const newResponse = resItem.response.filter(
+        (nestedRes) => nestedRes.id !== sentenceToRemoveId,
+      );
+      return {
+        wordBank: resItem.wordBank,
+        response: newResponse,
+      };
+    });
+
+    setResponse(responseAfterRemovedSentence);
+  };
+
   const handleClearWordBank = () => {
     setWordBank([]);
   };
@@ -117,7 +131,12 @@ export default function Home(props) {
           handleClearWordBank={handleClearWordBank}
         />
       )}
-      {response?.length > 0 ? <ResponseSection response={response} /> : null}
+      {response?.length > 0 ? (
+        <ResponseSection
+          response={response}
+          handleDeleteSentence={handleDeleteSentence}
+        />
+      ) : null}
     </div>
   );
 }
