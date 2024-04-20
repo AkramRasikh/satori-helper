@@ -16,16 +16,19 @@ const MoreNestedResponse = ({ detail, wordBank }) => {
   }
 
   function underlineWordsInSentence(sentence) {
-    // Create a regular expression pattern to match any of the words
-    const pattern = new RegExp(matchedWords.join('|'), 'g');
+    const pattern = new RegExp([...matchedWords, ...wordBank].join('|'), 'g');
 
-    // Replace each matched word with an underlined version
     const underlinedSentence = sentence.replace(
       pattern,
       (match) => `<u>${match}</u>`,
     );
 
-    sentenceRef.current.innerHTML = underlinedSentence;
+    if (sentenceRef.current) {
+      setTimeout(
+        () => (sentenceRef.current.innerHTML = underlinedSentence),
+        200,
+      );
+    }
   }
 
   useEffect(() => {
@@ -84,13 +87,15 @@ const MoreNestedResponse = ({ detail, wordBank }) => {
     return null;
   }
 
-  const underlinedSentence =
+  const japaneseCondition =
     isJapaneseText &&
-    matchedWords?.length > 0 &&
+    (matchedWords?.length > 0 || wordBank?.length > 0) &&
     japaneseBareText &&
-    sentenceRef
-      ? underlineWordsInSentence(japaneseBareText)
-      : detail;
+    sentenceRef;
+
+  const underlinedSentence = japaneseCondition
+    ? underlineWordsInSentence(japaneseBareText)
+    : detail;
 
   return (
     <li>
