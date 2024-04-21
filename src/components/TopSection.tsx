@@ -2,9 +2,60 @@ import React, { useState } from 'react';
 
 import WordDetail from './WordDetail';
 
-const WordDetailContainer = ({ sentenceSnippet }) => {
+const WordDetailWrapper = ({ handleAddToWordBank, sentenceSnippet }) => {
   const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false);
+  const textWithKanji = sentenceSnippet[1];
 
+  return (
+    <li
+      style={{
+        padding: '10px',
+        border: '1px solid grey',
+        display: 'flex',
+        flexWrap: 'wrap',
+        borderRadius: '20px',
+        width: isMoreInfoOpen ? '100%' : 'auto',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+        }}
+      >
+        <button
+          style={{
+            border: 'grey',
+            fontSize: '15px',
+            borderRadius: '15%',
+            cursor: 'pointer',
+            height: 'fit-content',
+          }}
+          onClick={() =>
+            handleAddToWordBank({
+              word: sentenceSnippet[1],
+              context: sentenceSnippet[0],
+              definition: sentenceSnippet[4],
+            })
+          }
+        >
+          🧺
+        </button>
+        <span style={{ margin: '0 10px' }}>{textWithKanji}</span>
+      </div>
+      <WordDetailContainer
+        sentenceSnippet={sentenceSnippet}
+        isMoreInfoOpen={isMoreInfoOpen}
+        setIsMoreInfoOpen={setIsMoreInfoOpen}
+      />
+    </li>
+  );
+};
+
+const WordDetailContainer = ({
+  sentenceSnippet,
+  isMoreInfoOpen,
+  setIsMoreInfoOpen,
+}) => {
   const handleMoreInfo = () => {
     setIsMoreInfoOpen(!isMoreInfoOpen);
   };
@@ -19,7 +70,6 @@ const WordDetailContainer = ({ sentenceSnippet }) => {
           border: 'none',
           padding: '5px',
           borderRadius: '15%',
-          marginTop: isMoreInfoOpen ? '10px' : 'auto',
         }}
       >
         {text}
@@ -49,44 +99,12 @@ const TopSection = ({ sentenceList, handleAddToWordBank }) => {
         }}
       >
         {sentenceList?.map((sentenceSnippet, index) => {
-          const textWithKanji = sentenceSnippet[1];
           return (
-            <li
+            <WordDetailWrapper
               key={index}
-              style={{
-                padding: '10px',
-                border: '1px solid grey',
-                display: 'flex',
-                flexWrap: 'wrap' /* Allow items to wrap within the list */,
-                borderRadius: '20px',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                }}
-              >
-                <button
-                  style={{
-                    border: 'grey',
-                    fontSize: '15px',
-                    borderRadius: '15%',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() =>
-                    handleAddToWordBank({
-                      word: sentenceSnippet[1],
-                      context: sentenceSnippet[0],
-                      definition: sentenceSnippet[4],
-                    })
-                  }
-                >
-                  🧺
-                </button>
-                <span style={{ margin: '0 10px' }}>{textWithKanji}</span>
-              </div>
-              <WordDetailContainer sentenceSnippet={sentenceSnippet} />
-            </li>
+              sentenceSnippet={sentenceSnippet}
+              handleAddToWordBank={handleAddToWordBank}
+            />
           );
         })}
       </ul>
