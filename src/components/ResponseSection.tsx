@@ -8,6 +8,7 @@ const MoreNestedResponse = ({
 }) => {
   const [audioUrl, setAudioUrl] = useState('');
   const [loadingResponse, setLoadingResponse] = useState(false);
+  const [noKanjiSentence, setNoKanjiSentence] = useState('');
   const [matchedWords, setMatchedWords] = useState([]);
   const [tried, setTried] = useState(false);
   const sentenceRef = useRef();
@@ -91,6 +92,34 @@ const MoreNestedResponse = ({
     }
   };
 
+  const getKanjiFreeSentence = async () => {
+    try {
+      setLoadingResponse(true);
+      const response = await fetch('/api/kanji-to-hiragana', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          japaneseSentence: japaneseSentence,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const resText = JSON.parse(await response.text());
+
+      setNoKanjiSentence(resText.sentence);
+    } catch (error) {
+      console.error('Error fetching Kuromoji dictionary:', error);
+      throw error;
+    } finally {
+      setLoadingResponse(false);
+    }
+  };
+
   if (!detail) {
     return null;
   }
@@ -98,9 +127,11 @@ const MoreNestedResponse = ({
   const underlinedSentence = underlineWordsInSentence(japaneseSentence);
 
   return (
-    <li>
+    <li style={{ marginBottom: '10px' }}>
       <div style={{ display: 'flex' }}>
-        <p ref={sentenceRef}>{underlinedSentence}</p>
+        <p ref={sentenceRef} style={{ margin: '5px 0' }}>
+          {underlinedSentence}
+        </p>
         <div style={{ margin: 'auto 0' }}>
           <button
             style={{
@@ -144,9 +175,24 @@ const MoreNestedResponse = ({
           >
             Get Audio
           </button>
+          <button
+            style={{
+              margin: 'auto auto auto 10px',
+              height: 'fit-content',
+              padding: '5px',
+              borderRadius: '15px',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+            disabled={loadingResponse}
+            onClick={getKanjiFreeSentence}
+          >
+            Remove Kanji
+          </button>
         </div>
       </div>
-      <p>{englishSentence}</p>
+      {noKanjiSentence && <p style={{ margin: '5px 0' }}>{noKanjiSentence}</p>}
+      <p style={{ margin: '5px 0' }}>{englishSentence}</p>
 
       {audioUrl && (
         <div>
@@ -195,17 +241,15 @@ const ResponseSection = ({
 
         return (
           <div key={index} style={{ borderTop: '1px solid grey' }}>
-            <div>
-              <h3 style={{ textAlign: 'center' }}>
-                Words in this response:{' '}
-                {wordBank.map((word, indexWord) => (
-                  <span key={indexWord}>
-                    {word}
-                    {indexWord === wordBank.length - 1 ? '' : ', '}
-                  </span>
-                ))}
-              </h3>
-            </div>
+            <h3 style={{ textAlign: 'center' }}>
+              Words in this response:{' '}
+              {wordBank.map((word, indexWord) => (
+                <span key={indexWord}>
+                  {word}
+                  {indexWord === wordBank.length - 1 ? '' : ', '}
+                </span>
+              ))}
+            </h3>
             <ResponseItem
               responseItem={response}
               wordBank={wordBank}
