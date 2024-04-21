@@ -116,7 +116,7 @@ export default function Home(props) {
     setWordBank([]);
   };
 
-  const handleChatGPTRes = async (prompt) => {
+  const handleChatGPTRes = async (prompt, model) => {
     try {
       setLoadingResponse(true);
       let finalPrompt;
@@ -132,7 +132,7 @@ export default function Home(props) {
       }
 
       if (!finalPrompt) return;
-      const res = await chatGptAPI(finalPrompt);
+      const res = await chatGptAPI(finalPrompt, model);
 
       const structuredJapEngRes = getStructuredJapEngRes(res);
 
