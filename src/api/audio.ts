@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export default async function getSentenceAudio(episode, id) {
+export default async function getSentenceAudio(episode: string, id: string) {
   const sessionToken = process.env.NEXT_PUBLIC_SESSION_TOKEN as string;
 
   try {
