@@ -59,7 +59,7 @@ export default async function handler(
     const formedSentence = convertedTokens
       .map((token) => token.surface_form)
       .join('');
-    res.json({ formedSentence });
+    res.json({ sentence: formedSentence });
   } catch (error) {
     throw error;
   }
