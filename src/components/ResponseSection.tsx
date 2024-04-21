@@ -128,7 +128,7 @@ const MoreNestedResponse = ({
 
   return (
     <li style={{ marginBottom: '10px' }}>
-      <div style={{ display: 'flex' }}>
+      <div style={{ flexWrap: 'wrap', display: 'flex' }}>
         <p ref={sentenceRef} style={{ margin: '5px 0' }}>
           {underlinedSentence}
         </p>
