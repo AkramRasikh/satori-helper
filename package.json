@@ -15,6 +15,8 @@
     "elevenlabs-js": "^1.2.6",
     "fluent-ffmpeg": "^2.1.2",
     "kuromoji": "^0.1.2",
+    "kuroshiro": "^1.2.0",
+    "kuroshiro-analyzer-kuromoji": "^1.1.0",
     "mecab-async": "^0.1.2",
     "next": "14.0.4",
     "openai": "^4.33.1",
