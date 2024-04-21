@@ -167,7 +167,7 @@ const ResponseItem = ({
   handleGetNewSentence,
 }) => {
   return (
-    <div style={{ borderTop: '1px solid grey' }}>
+    <div>
       {responseItem.map((detail, index) => {
         return (
           <MoreNestedResponse
@@ -192,14 +192,27 @@ const ResponseSection = ({
       {response.map((responseItem, index) => {
         const wordBank = responseItem.wordBank;
         const response = responseItem.response;
+
         return (
-          <ResponseItem
-            key={index}
-            responseItem={response}
-            wordBank={wordBank}
-            handleDeleteSentence={handleDeleteSentence}
-            handleGetNewSentence={handleGetNewSentence}
-          />
+          <div key={index} style={{ borderTop: '1px solid grey' }}>
+            <div>
+              <h3 style={{ textAlign: 'center' }}>
+                Words in this response:{' '}
+                {wordBank.map((word, indexWord) => (
+                  <span key={indexWord}>
+                    {word}
+                    {indexWord === wordBank.length - 1 ? '' : ', '}
+                  </span>
+                ))}
+              </h3>
+            </div>
+            <ResponseItem
+              responseItem={response}
+              wordBank={wordBank}
+              handleDeleteSentence={handleDeleteSentence}
+              handleGetNewSentence={handleGetNewSentence}
+            />
+          </div>
         );
       })}
     </ul>
