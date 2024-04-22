@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { CSSTransition } from 'react-transition-group';
 import WordDetail from './WordDetail';
 
 const WordDetailWrapper = ({
@@ -14,59 +14,62 @@ const WordDetailWrapper = ({
   const handleDelete = () => {
     deleteWordFromSentenceList(textWithKanji);
   };
+
   return (
-    <li
-      style={{
-        padding: '10px',
-        border: wordHasBeenUsed ? '3px solid lightgreen' : '1px solid grey',
-        display: 'flex',
-        flexWrap: 'wrap',
-        borderRadius: '20px',
-        width: isMoreInfoOpen ? '100%' : 'auto',
-      }}
-    >
-      <div
+    <CSSTransition timeout={500} classNames='fade' unmountOnExit>
+      <li
         style={{
+          padding: '10px',
+          border: wordHasBeenUsed ? '3px solid lightgreen' : '1px solid grey',
           display: 'flex',
+          flexWrap: 'wrap',
+          borderRadius: '20px',
+          width: isMoreInfoOpen ? '100%' : 'auto',
         }}
       >
-        <button
+        <div
           style={{
-            border: 'grey',
-            fontSize: '15px',
-            borderRadius: '15%',
-            cursor: 'pointer',
-            height: 'fit-content',
+            display: 'flex',
           }}
-          onClick={() =>
-            handleAddToWordBank({
-              word: sentenceSnippet[1],
-              context: sentenceSnippet[0],
-              definition: sentenceSnippet[4],
-            })
-          }
         >
-          🧺
+          <button
+            style={{
+              border: 'grey',
+              fontSize: '15px',
+              borderRadius: '15%',
+              cursor: 'pointer',
+              height: 'fit-content',
+            }}
+            onClick={() =>
+              handleAddToWordBank({
+                word: sentenceSnippet[1],
+                context: sentenceSnippet[0],
+                definition: sentenceSnippet[4],
+              })
+            }
+          >
+            🧺
+          </button>
+          <span style={{ margin: '0 10px' }}>{textWithKanji}</span>
+        </div>
+        <WordDetailContainer
+          sentenceSnippet={sentenceSnippet}
+          isMoreInfoOpen={isMoreInfoOpen}
+          setIsMoreInfoOpen={setIsMoreInfoOpen}
+        />
+        <button
+          onClick={handleDelete}
+          style={{
+            border: 'none',
+            borderRadius: '15%',
+            marginLeft: '10px',
+            cursor: 'pointer',
+          }}
+        >
+          ❌
         </button>
-        <span style={{ margin: '0 10px' }}>{textWithKanji}</span>
-      </div>
-      <WordDetailContainer
-        sentenceSnippet={sentenceSnippet}
-        isMoreInfoOpen={isMoreInfoOpen}
-        setIsMoreInfoOpen={setIsMoreInfoOpen}
-      />
-      <button
-        onClick={handleDelete}
-        style={{
-          border: 'none',
-          borderRadius: '15%',
-          marginLeft: '10px',
-          cursor: 'pointer',
-        }}
-      >
-        ❌
-      </button>
-    </li>
+      </li>
+    </CSSTransition>
   );
 };
 
