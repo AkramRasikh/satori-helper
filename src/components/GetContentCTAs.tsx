@@ -44,6 +44,18 @@ const GetContentCTAs = ({
           padding: '10px',
           cursor: 'pointer',
         }}
+        onClick={() => handleChatGPTRes(storyPrompt, 'gpt-4')}
+        disabled={isLoadingResponse}
+      >
+        Get a story! GPT 4
+      </button>
+      <button
+        style={{
+          border: 'none',
+          borderRadius: '15px',
+          padding: '10px',
+          cursor: 'pointer',
+        }}
         onClick={() => handleChatGPTRes(combinePrompt)}
         disabled={isLoadingResponse}
       >
