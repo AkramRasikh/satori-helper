@@ -6,7 +6,14 @@ const GetContentCTAs = ({
   handleClearWordBank,
 }) => {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-evenly',
+        gap: '10px',
+      }}
+    >
       <button
         style={{
           border: 'none',
