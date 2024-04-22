@@ -14,9 +14,13 @@ export default function Home(props) {
   const sentenceList = props?.satoriData;
   const wordBankRef = useRef([]);
   const [wordBank, setWordBank] = useState([]);
-
+  const [wordBankForGeneratedWords, setWordBankForGeneratedWords] = useState(
+    [],
+  );
   const [response, setResponse] = useState([]);
   const [isLoadingResponse, setLoadingResponse] = useState(false);
+
+  console.log('## wordBankForGeneratedWords: ', wordBankForGeneratedWords);
 
   const handleAddToWordBank = (wordData) => {
     const isWordInWord = wordBank.find(
@@ -143,6 +147,11 @@ export default function Home(props) {
           response: structuredJapEngRes,
         },
       ]);
+      setWordBankForGeneratedWords((prev) =>
+        Array.from(
+          new Set([...prev, ...wordBank.map((wordObj) => wordObj.word)]),
+        ),
+      );
     } catch (error) {
       console.error('Error fetching response:', error);
     } finally {
