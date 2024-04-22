@@ -5,7 +5,7 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true,
 });
 
-async function chatGptAPI(textContent, model = 'gpt-3.5-turbo') {
+async function chatGptAPI(textContent, model) {
   try {
     const completion = await openai.chat.completions.create({
       messages: [

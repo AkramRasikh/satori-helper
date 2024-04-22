@@ -68,8 +68,7 @@ const GetContentCTAs = ({
           padding: '10px',
           cursor: 'pointer',
         }}
-        onClick={() => handleChatGPTRes(combinePrompt, null, true)}
-        disabled // Por el momento
+        onClick={() => handleChatGPTRes(combinePrompt, 'gpt-3.5-turbo', true)}
       >
         Combine words + Audio
       </button>

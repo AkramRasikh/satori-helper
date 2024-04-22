@@ -125,7 +125,11 @@ export default function Home(props) {
     setWordBank([]);
   };
 
-  const handleChatGPTRes = async (prompt, model, withAudio = false) => {
+  const handleChatGPTRes = async (
+    prompt,
+    model = 'gpt-3.5-turbo',
+    withAudio,
+  ) => {
     try {
       setLoadingResponse(true);
       let finalPrompt;
@@ -157,10 +161,35 @@ export default function Home(props) {
           new Set([...prev, ...wordBank.map((wordObj) => wordObj.word)]),
         ),
       );
+      if (withAudio) {
+        await Promise.all(
+          structuredJapEngRes.map(
+            async (sentenceData) => await getCorrespondingAudio(sentenceData),
+          ),
+        );
+      }
     } catch (error) {
       console.error('Error fetching response:', error);
     } finally {
       setLoadingResponse(false);
+    }
+  };
+
+  const getCorrespondingAudio = async (japaneseSentenceData) => {
+    if (!japaneseSentenceData) return null;
+    try {
+      await fetch('/api/chatgpt-tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: japaneseSentenceData.id,
+          tts: japaneseSentenceData.jap,
+        }),
+      });
+    } catch (error) {
+      console.error('## Error fetching data (audio):', error);
     }
   };
 

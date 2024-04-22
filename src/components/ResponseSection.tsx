@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import AudioPlayer from './AudioPlayer';
 
 const MoreNestedResponse = ({
   detail,
@@ -12,6 +13,10 @@ const MoreNestedResponse = ({
   const [matchedWords, setMatchedWords] = useState([]);
   const [tried, setTried] = useState(false);
   const sentenceRef = useRef();
+
+  const bulkAudioFormat = '/audio/' + detail.id + '.mp3';
+
+  const mp3AudioFile = bulkAudioFormat || audioUrl;
 
   const japaneseSentence = detail.jap;
   const englishSentence = detail.eng;
@@ -194,13 +199,8 @@ const MoreNestedResponse = ({
       {noKanjiSentence && <p style={{ margin: '5px 0' }}>{noKanjiSentence}</p>}
       <p style={{ margin: '5px 0' }}>{englishSentence}</p>
 
-      {audioUrl && (
-        <div>
-          <audio controls>
-            <source src={audioUrl} type='audio/mpeg' />
-            Your browser does not support the audio element.
-          </audio>
-        </div>
+      {mp3AudioFile && (
+        <AudioPlayer id={`audio-${detail.id}`} mp3AudioFile={mp3AudioFile} />
       )}
     </li>
   );
