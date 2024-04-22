@@ -100,7 +100,7 @@ export default function Home(props) {
   };
 
   const deleteSentenceLogic = (sentenceToRemoveId) => {
-    return (responseAfterRemovedSentence = response.map((resItem) => {
+    return response.map((resItem) => {
       const newResponse = resItem.response.filter(
         (nestedRes) => nestedRes.id !== sentenceToRemoveId,
       );
@@ -108,7 +108,7 @@ export default function Home(props) {
         wordBank: resItem.wordBank,
         response: newResponse,
       };
-    }));
+    });
   };
 
   const handleDeleteSentence = (sentenceToRemoveId) => {
