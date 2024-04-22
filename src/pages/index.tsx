@@ -14,6 +14,7 @@ export default function Home(props) {
   const sentenceList = props?.satoriData;
   const wordBankRef = useRef([]);
   const [wordBank, setWordBank] = useState([]);
+  const [sentenceListState, setSentenceListState] = useState(sentenceList);
   const [wordBankForGeneratedWords, setWordBankForGeneratedWords] = useState(
     [],
   );
@@ -114,6 +115,11 @@ export default function Home(props) {
     setResponse(responseAfterRemovedSentence);
   };
 
+  const deleteWordFromSentenceList = (word) => {
+    const newSentenceList = sentenceListState.filter((arr) => arr[1] !== word);
+    setSentenceListState(newSentenceList);
+  };
+
   const handleClearWordBank = () => {
     setWordBank([]);
   };
@@ -162,9 +168,10 @@ export default function Home(props) {
       <details open>
         <summary>Word list</summary>
         <TopSection
-          sentenceList={sentenceList}
+          sentenceList={sentenceListState}
           handleAddToWordBank={handleAddToWordBank}
           wordBankForGeneratedWords={wordBankForGeneratedWords}
+          deleteWordFromSentenceList={deleteWordFromSentenceList}
         />
       </details>
       {wordBank?.length > 0 && (
