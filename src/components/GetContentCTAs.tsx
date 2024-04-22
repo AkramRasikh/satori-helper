@@ -61,6 +61,18 @@ const GetContentCTAs = ({
       >
         Combine words (GPT4)
       </button>
+      <button
+        style={{
+          border: 'none',
+          borderRadius: '15px',
+          padding: '10px',
+          cursor: 'pointer',
+        }}
+        onClick={() => handleChatGPTRes(combinePrompt, null, true)}
+        disabled // Por el momento
+      >
+        Combine words + Audio
+      </button>
     </div>
   );
 };

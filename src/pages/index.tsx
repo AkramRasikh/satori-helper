@@ -125,7 +125,7 @@ export default function Home(props) {
     setWordBank([]);
   };
 
-  const handleChatGPTRes = async (prompt, model) => {
+  const handleChatGPTRes = async (prompt, model, withAudio = false) => {
     try {
       setLoadingResponse(true);
       let finalPrompt;
