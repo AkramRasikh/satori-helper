@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import AudioPlayer from './AudioPlayer';
+import ResponseCTAs from './ResponseCTAs';
 
 const MoreNestedResponse = ({
   detail,
   wordBank,
   handleDeleteSentence,
   handleGetNewSentence,
+  mp3Bank,
 }) => {
   const [audioUrl, setAudioUrl] = useState('');
   const [loadingResponse, setLoadingResponse] = useState(false);
@@ -20,6 +22,10 @@ const MoreNestedResponse = ({
 
   const japaneseSentence = detail.jap;
   const englishSentence = detail.eng;
+
+  const isAudioInMP3Banks =
+    mp3Bank.includes(detail.id + '.mp3') ||
+    mp3Bank.includes(detail.jap + '.mp3');
 
   const handleDeleteClick = () => {
     handleDeleteSentence(detail.id);
@@ -89,7 +95,9 @@ const MoreNestedResponse = ({
         },
         body: JSON.stringify({ tts: japaneseSentence }),
       });
+
       setAudioUrl('/audio/' + japaneseSentence + '.mp3');
+      // setAvailableMP3s(availableMP3s)
     } catch (error) {
       console.error('## Error fetching data:', error);
     } finally {
@@ -137,69 +145,18 @@ const MoreNestedResponse = ({
         <p ref={sentenceRef} style={{ margin: '5px 0' }}>
           {underlinedSentence}
         </p>
-        <div style={{ margin: 'auto 0' }}>
-          <button
-            style={{
-              margin: 'auto auto auto 10px',
-              height: 'fit-content',
-              padding: '5px',
-              borderRadius: '15px',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-            disabled={loadingResponse}
-            onClick={handleDeleteClick}
-          >
-            Delete
-          </button>
-          <button
-            style={{
-              margin: 'auto auto auto 10px',
-              height: 'fit-content',
-              padding: '5px',
-              borderRadius: '15px',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-            disabled={loadingResponse}
-            onClick={handleGetNewSentenceClick}
-          >
-            Redo
-          </button>
-          <button
-            style={{
-              margin: 'auto auto auto 10px',
-              height: 'fit-content',
-              padding: '5px',
-              borderRadius: '15px',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-            disabled={loadingResponse}
-            onClick={handleGetAudio}
-          >
-            Get Audio
-          </button>
-          <button
-            style={{
-              margin: 'auto auto auto 10px',
-              height: 'fit-content',
-              padding: '5px',
-              borderRadius: '15px',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-            disabled={loadingResponse}
-            onClick={getKanjiFreeSentence}
-          >
-            Remove Kanji
-          </button>
-        </div>
+        <ResponseCTAs
+          loadingResponse={loadingResponse}
+          handleDeleteClick={handleDeleteClick}
+          handleGetNewSentenceClick={handleGetNewSentenceClick}
+          handleGetAudio={handleGetAudio}
+          getKanjiFreeSentence={getKanjiFreeSentence}
+        />
       </div>
       {noKanjiSentence && <p style={{ margin: '5px 0' }}>{noKanjiSentence}</p>}
       <p style={{ margin: '5px 0' }}>{englishSentence}</p>
 
-      {mp3AudioFile && (
+      {isAudioInMP3Banks && (
         <AudioPlayer id={`audio-${detail.id}`} mp3AudioFile={mp3AudioFile} />
       )}
     </li>
@@ -211,6 +168,7 @@ const ResponseItem = ({
   wordBank,
   handleDeleteSentence,
   handleGetNewSentence,
+  mp3Bank,
 }) => {
   return (
     <div>
@@ -222,6 +180,7 @@ const ResponseItem = ({
             wordBank={wordBank}
             handleDeleteSentence={handleDeleteSentence}
             handleGetNewSentence={handleGetNewSentence}
+            mp3Bank={mp3Bank}
           />
         );
       })}
@@ -232,6 +191,7 @@ const ResponseSection = ({
   response,
   handleDeleteSentence,
   handleGetNewSentence,
+  mp3Bank,
 }) => {
   return (
     <ul style={{ borderBottom: '1px solid grey' }}>
@@ -255,6 +215,7 @@ const ResponseSection = ({
               wordBank={wordBank}
               handleDeleteSentence={handleDeleteSentence}
               handleGetNewSentence={handleGetNewSentence}
+              mp3Bank={mp3Bank}
             />
           </div>
         );

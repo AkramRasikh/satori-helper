@@ -21,6 +21,7 @@ export default function Home(props) {
   );
   const [response, setResponse] = useState([]);
   const [isLoadingResponse, setLoadingResponse] = useState(false);
+  const [mp3Bank, setMp3Bank] = useState([]);
 
   const handleAddToWordBank = (wordData) => {
     const isWordInWord = wordBank.find(
@@ -178,7 +179,7 @@ export default function Home(props) {
   const getCorrespondingAudio = async (japaneseSentenceData) => {
     if (!japaneseSentenceData) return null;
     try {
-      await fetch('/api/chatgpt-tts', {
+      const responseFiles = await fetch('/api/chatgpt-tts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,6 +189,8 @@ export default function Home(props) {
           tts: japaneseSentenceData.jap,
         }),
       });
+      const availableMP3Files = JSON.parse(await responseFiles.text());
+      setMp3Bank(availableMP3Files);
     } catch (error) {
       console.error('## Error fetching data (audio):', error);
     }
@@ -224,6 +227,7 @@ export default function Home(props) {
           response={response}
           handleDeleteSentence={handleDeleteSentence}
           handleGetNewSentence={handleGetNewSentence}
+          mp3Bank={mp3Bank}
         />
       ) : null}
     </div>

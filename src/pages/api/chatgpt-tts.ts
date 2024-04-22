@@ -19,16 +19,17 @@ export default async function handler(req, res) {
     });
 
     const nameToSaveUnder = id || tts;
-    // Convert the audio data to a buffer
+
     const buffer = Buffer.from(await mp3.arrayBuffer());
 
-    // Save the audio file
     const speechFile = path.resolve('public/audio/' + nameToSaveUnder + '.mp3');
     await fs.promises.writeFile(speechFile, buffer);
+    const audioDirectoryPath = path.join(process.cwd(), 'public', 'audio');
 
-    res.status(200).json();
+    const availableMP3Files = await fs.promises.readdir(audioDirectoryPath);
+
+    res.status(200).json(availableMP3Files);
   } catch (error) {
-    // If an error occurs, send an error response
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
