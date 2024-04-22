@@ -8,15 +8,26 @@ const WordDetailWrapper = ({
   wordBankForGeneratedWords,
   deleteWordFromSentenceList,
 }) => {
+  const [isRemoved, setIsRemoved] = useState(false);
+
   const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false);
   const textWithKanji = sentenceSnippet[1];
   const wordHasBeenUsed = wordBankForGeneratedWords.includes(textWithKanji);
+
   const handleDelete = () => {
-    deleteWordFromSentenceList(textWithKanji);
+    setIsRemoved(true);
   };
 
   return (
-    <CSSTransition timeout={500} classNames='fade' unmountOnExit>
+    <CSSTransition
+      in={!isRemoved}
+      timeout={500}
+      classNames='fade'
+      unmountOnExit
+      onExited={() => {
+        deleteWordFromSentenceList(textWithKanji);
+      }}
+    >
       <li
         style={{
           padding: '10px',

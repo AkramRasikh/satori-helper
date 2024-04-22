@@ -9,6 +9,7 @@ import GetContentCTAs from '@/components/GetContentCTAs';
 import LoadingStatus from '@/components/LoadingStatus';
 import { v4 as uuidv4 } from 'uuid';
 import { combinePrompt } from '@/prompts';
+import '../app/styles/globals.css';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
