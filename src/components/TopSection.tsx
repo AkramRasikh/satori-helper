@@ -2,15 +2,20 @@ import React, { useState } from 'react';
 
 import WordDetail from './WordDetail';
 
-const WordDetailWrapper = ({ handleAddToWordBank, sentenceSnippet }) => {
+const WordDetailWrapper = ({
+  handleAddToWordBank,
+  sentenceSnippet,
+  wordBankForGeneratedWords,
+}) => {
   const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false);
   const textWithKanji = sentenceSnippet[1];
+  const wordHasBeenUsed = wordBankForGeneratedWords.includes(textWithKanji);
 
   return (
     <li
       style={{
         padding: '10px',
-        border: '1px solid grey',
+        border: wordHasBeenUsed ? '3px solid lightgreen' : '1px solid grey',
         display: 'flex',
         flexWrap: 'wrap',
         borderRadius: '20px',
@@ -79,7 +84,11 @@ const WordDetailContainer = ({
   );
 };
 
-const TopSection = ({ sentenceList, handleAddToWordBank }) => {
+const TopSection = ({
+  sentenceList,
+  handleAddToWordBank,
+  wordBankForGeneratedWords,
+}) => {
   return (
     <div
       style={{
@@ -104,6 +113,7 @@ const TopSection = ({ sentenceList, handleAddToWordBank }) => {
               key={index}
               sentenceSnippet={sentenceSnippet}
               handleAddToWordBank={handleAddToWordBank}
+              wordBankForGeneratedWords={wordBankForGeneratedWords}
             />
           );
         })}

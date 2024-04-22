@@ -20,8 +20,6 @@ export default function Home(props) {
   const [response, setResponse] = useState([]);
   const [isLoadingResponse, setLoadingResponse] = useState(false);
 
-  console.log('## wordBankForGeneratedWords: ', wordBankForGeneratedWords);
-
   const handleAddToWordBank = (wordData) => {
     const isWordInWord = wordBank.find(
       (wordObj) => wordObj.word === wordData.word,
@@ -166,6 +164,7 @@ export default function Home(props) {
         <TopSection
           sentenceList={sentenceList}
           handleAddToWordBank={handleAddToWordBank}
+          wordBankForGeneratedWords={wordBankForGeneratedWords}
         />
       </details>
       {wordBank?.length > 0 && (
