@@ -9,6 +9,7 @@ const MoreNestedResponse = ({
   handleDeleteSentence,
   handleGetNewSentence,
   mp3Bank,
+  setRefs,
 }) => {
   const [audioUrlIsAvailable, setAudioUrlIsAvailable] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
@@ -158,7 +159,9 @@ const MoreNestedResponse = ({
       {noKanjiSentence && <p style={{ margin: '5px 0' }}>{noKanjiSentence}</p>}
       <p style={{ margin: '5px 0' }}>{englishSentence}</p>
 
-      {isAudioInMP3Banks && <AudioPlayer mp3AudioFile={audioFile} />}
+      {isAudioInMP3Banks && (
+        <AudioPlayer mp3AudioFile={audioFile} setRefs={setRefs} />
+      )}
     </li>
   );
 };
@@ -170,21 +173,30 @@ const ResponseItem = ({
   handleGetNewSentence,
   mp3Bank,
 }) => {
+  const [audioRefs, setAudioRefs] = useState([]);
+  const setRefs = (ref) => {
+    setAudioRefs((prev) => [...prev, ref]);
+  };
+
   return (
-    <div>
-      {responseItem.map((detail, index) => {
-        return (
-          <MoreNestedResponse
-            key={index}
-            detail={detail}
-            wordBank={wordBank}
-            handleDeleteSentence={handleDeleteSentence}
-            handleGetNewSentence={handleGetNewSentence}
-            mp3Bank={mp3Bank}
-          />
-        );
-      })}
-    </div>
+    <>
+      <ResultsAudioActions audioRefs={audioRefs} />
+      <div>
+        {responseItem.map((detail, index) => {
+          return (
+            <MoreNestedResponse
+              key={index}
+              detail={detail}
+              wordBank={wordBank}
+              handleDeleteSentence={handleDeleteSentence}
+              handleGetNewSentence={handleGetNewSentence}
+              mp3Bank={mp3Bank}
+              setRefs={setRefs}
+            />
+          );
+        })}
+      </div>
+    </>
   );
 };
 const ResponseSection = ({
@@ -210,7 +222,6 @@ const ResponseSection = ({
                 </span>
               ))}
             </h3>
-            <ResultsAudioActions />
             <ResponseItem
               responseItem={response}
               wordBank={wordBank}

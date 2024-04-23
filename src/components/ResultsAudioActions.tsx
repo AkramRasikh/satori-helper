@@ -1,6 +1,10 @@
-const ResultsAudioActions = () => {
+const ResultsAudioActions = ({ audioRefs }) => {
+  const playAudio = () => {
+    audioRefs[0].current.play();
+  };
+
   return (
-    <div style={{ marginBottom: '20px' }}>
+    <div style={{ textAlign: 'center', marginBottom: '20px' }}>
       <button
         style={{
           margin: 'auto auto auto 10px',
@@ -10,6 +14,7 @@ const ResultsAudioActions = () => {
           border: 'none',
           cursor: 'pointer',
         }}
+        onClick={playAudio}
       >
         Play
       </button>
