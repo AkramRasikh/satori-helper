@@ -1,4 +1,4 @@
-import { combinePrompt, storyPrompt } from '@/prompts';
+import { combinePrompt, storyPrompt, storyPromptFormatted } from '@/prompts';
 
 const GetContentCTAs = ({
   handleChatGPTRes,
@@ -44,7 +44,9 @@ const GetContentCTAs = ({
           padding: '10px',
           cursor: 'pointer',
         }}
-        onClick={() => handleChatGPTRes(storyPrompt, 'gpt-4')}
+        onClick={
+          () => handleChatGPTRes(storyPrompt, 'gpt-4', storyPromptFormatted) // needs works
+        }
         disabled={isLoadingResponse}
       >
         Get a story! GPT 4
