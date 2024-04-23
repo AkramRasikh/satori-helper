@@ -21,6 +21,7 @@ const GetContentCTAs = ({
           padding: '10px',
           cursor: 'pointer',
         }}
+        disabled={isLoadingResponse}
         onClick={handleClearWordBank}
       >
         Clear word bank 🏦!
@@ -82,6 +83,7 @@ const GetContentCTAs = ({
           padding: '10px',
           cursor: 'pointer',
         }}
+        disabled={isLoadingResponse}
         onClick={() => handleChatGPTRes(combinePrompt, 'gpt-3.5-turbo', true)}
       >
         Combine words + Audio

@@ -10,6 +10,7 @@ const MoreNestedResponse = ({
   handleGetNewSentence,
   mp3Bank,
   setRefs,
+  inArrayIndex,
 }) => {
   const [audioUrlIsAvailable, setAudioUrlIsAvailable] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
@@ -160,7 +161,11 @@ const MoreNestedResponse = ({
       <p style={{ margin: '5px 0' }}>{englishSentence}</p>
 
       {isAudioInMP3Banks && (
-        <AudioPlayer mp3AudioFile={audioFile} setRefs={setRefs} />
+        <AudioPlayer
+          mp3AudioFile={audioFile}
+          setRefs={setRefs}
+          inArrayIndex={inArrayIndex}
+        />
       )}
     </li>
   );
@@ -174,18 +179,30 @@ const ResponseItem = ({
   mp3Bank,
 }) => {
   const [audioRefs, setAudioRefs] = useState([]);
-  const setRefs = (ref) => {
-    setAudioRefs((prev) => [...prev, ref]);
+  const setRefs = (ref, index) => {
+    setAudioRefs((prev) => [...prev, { ref, index }]);
+  };
+
+  const handleAudioEnd = (index) => {
+    console.log('## Ended? index: ', index);
+  };
+  const handleAudioPlay = (index) => {
+    console.log('## Playing? index: ', index);
   };
 
   return (
     <>
-      <ResultsAudioActions audioRefs={audioRefs} />
+      <ResultsAudioActions
+        audioRefs={audioRefs}
+        handleAudioEnd={handleAudioEnd}
+        handleAudioPlay={handleAudioPlay}
+      />
       <div>
         {responseItem.map((detail, index) => {
           return (
             <MoreNestedResponse
               key={index}
+              inArrayIndex={index}
               detail={detail}
               wordBank={wordBank}
               handleDeleteSentence={handleDeleteSentence}

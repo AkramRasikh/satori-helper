@@ -1,6 +1,10 @@
-const ResultsAudioActions = ({ audioRefs }) => {
+const ResultsAudioActions = ({
+  audioRefs,
+  // handleAudioEnd,
+  // handleAudioPlay,
+}) => {
   const playAudio = () => {
-    audioRefs[0].current.play();
+    audioRefs[0].ref.current.play();
   };
 
   return (
