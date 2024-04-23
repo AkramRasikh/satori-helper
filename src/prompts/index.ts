@@ -4,6 +4,16 @@ export const storyPrompt = `
   of the words
 `;
 
+export const storyPromptFormatted = `
+  Make the following words make sense together in as short few lined 
+  story in Japanese. Note the word context is there to help make sense
+  of the words
+  
+  I also want each sentence to follow the following format:
+  [JP] 妹は小さめの靴を履いて、全速力で公園を走っています。
+  [EN] My younger sister is wearing small shoes and running at full speed in the park.
+`;
+
 export const combinePrompt = `
   I am studying these words. I have given context to them too.
   Give me simple sentences and ideally combine them where possible.
