@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import AudioPlayer from './AudioPlayer';
 import ResponseCTAs from './ResponseCTAs';
+import ResultsAudioActions from './ResultsAudioActions';
 
 const MoreNestedResponse = ({
   detail,
@@ -9,21 +10,20 @@ const MoreNestedResponse = ({
   handleGetNewSentence,
   mp3Bank,
 }) => {
-  const [audioUrl, setAudioUrl] = useState('');
+  const [audioUrlIsAvailable, setAudioUrlIsAvailable] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [noKanjiSentence, setNoKanjiSentence] = useState('');
   const [matchedWords, setMatchedWords] = useState([]);
   const [tried, setTried] = useState(false);
   const sentenceRef = useRef();
 
-  const bulkAudioFormat = '/audio/' + detail.id + '.mp3';
-
-  const mp3AudioFile = bulkAudioFormat || audioUrl;
+  const audioFile = '/audio/' + detail.id + '.mp3';
 
   const japaneseSentence = detail.jap;
   const englishSentence = detail.eng;
 
   const isAudioInMP3Banks =
+    audioUrlIsAvailable ||
     mp3Bank.includes(detail.id + '.mp3') ||
     mp3Bank.includes(detail.jap + '.mp3');
 
@@ -88,16 +88,18 @@ const MoreNestedResponse = ({
     try {
       // figure reference to code
       setLoadingResponse(true);
-      await fetch('/api/chatgpt-tts', {
+      const responseFiles = await fetch('/api/chatgpt-tts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tts: japaneseSentence }),
+        body: JSON.stringify({ tts: japaneseSentence, id: detail.id }),
       });
 
-      setAudioUrl('/audio/' + japaneseSentence + '.mp3');
-      // setAvailableMP3s(availableMP3s)
+      const availableMP3Files = JSON.parse(await responseFiles.text());
+
+      availableMP3Files.includes(detail.id + '.mp3');
+      setAudioUrlIsAvailable(true);
     } catch (error) {
       console.error('## Error fetching data:', error);
     } finally {
@@ -156,9 +158,7 @@ const MoreNestedResponse = ({
       {noKanjiSentence && <p style={{ margin: '5px 0' }}>{noKanjiSentence}</p>}
       <p style={{ margin: '5px 0' }}>{englishSentence}</p>
 
-      {isAudioInMP3Banks && (
-        <AudioPlayer id={`audio-${detail.id}`} mp3AudioFile={mp3AudioFile} />
-      )}
+      {isAudioInMP3Banks && <AudioPlayer mp3AudioFile={audioFile} />}
     </li>
   );
 };
@@ -210,6 +210,7 @@ const ResponseSection = ({
                 </span>
               ))}
             </h3>
+            <ResultsAudioActions />
             <ResponseItem
               responseItem={response}
               wordBank={wordBank}
