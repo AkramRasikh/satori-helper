@@ -25,7 +25,6 @@ const AudioPlayer = ({
   };
 
   const audioEnded = () => {
-    console.log('## AudioPlayer audioEnded: ', inArrayIndex);
     return handleWhatAudioIsEnded(inArrayIndex);
   };
 
