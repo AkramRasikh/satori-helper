@@ -286,22 +286,36 @@ const ResponseSection = ({
 
         return (
           <div key={index} style={{ borderTop: '1px solid grey' }}>
-            <h3 style={{ textAlign: 'center' }}>
-              Words in this response:{' '}
-              {wordBank.map((word, indexWord) => (
-                <span key={indexWord}>
-                  {word}
-                  {indexWord === wordBank.length - 1 ? '' : ', '}
-                </span>
-              ))}
-            </h3>
-            <ResponseItem
-              responseItem={response}
-              wordBank={wordBank}
-              handleDeleteSentence={handleDeleteSentence}
-              handleGetNewSentence={handleGetNewSentence}
-              mp3Bank={mp3Bank}
-            />
+            <details style={{ display: 'flex', alignItems: 'center' }}>
+              <summary
+                open
+                style={{
+                  outline: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <h3 style={{ textAlign: 'center' }}>
+                  {index + 1}
+                  {'.    '}
+                  Words in this response:{' '}
+                  {wordBank.map((word, indexWord) => (
+                    <span key={indexWord}>
+                      {word}
+                      {indexWord === wordBank.length - 1 ? '' : ', '}
+                    </span>
+                  ))}
+                </h3>
+              </summary>
+              <ResponseItem
+                responseItem={response}
+                wordBank={wordBank}
+                handleDeleteSentence={handleDeleteSentence}
+                handleGetNewSentence={handleGetNewSentence}
+                mp3Bank={mp3Bank}
+              />
+            </details>
           </div>
         );
       })}
