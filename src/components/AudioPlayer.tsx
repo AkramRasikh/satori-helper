@@ -28,6 +28,12 @@ const AudioPlayer = ({
     return handleWhatAudioIsEnded(inArrayIndex);
   };
 
+  const handleRefresh = () => {
+    if (ref?.current) {
+      ref.current.currentTime = 0; // Restart audio from the beginning
+    }
+  };
+
   useEffect(() => {
     if (ref?.current) {
       ref.current.addEventListener('play', audioPlay);
@@ -45,11 +51,28 @@ const AudioPlayer = ({
   }, [ref]);
 
   return (
-    <div>
-      <audio controls ref={ref}>
-        <source src={mp3AudioFile} type='audio/mpeg' />
-        Your browser does not support the audio element.
-      </audio>
+    <div
+      style={{
+        display: 'flex',
+      }}
+    >
+      <div>
+        <audio controls ref={ref}>
+          <source src={mp3AudioFile} type='audio/mpeg' />
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+      <button
+        style={{
+          border: 'none',
+          borderRadius: '15%',
+          margin: 'auto 10px',
+          cursor: 'pointer',
+        }}
+        onClick={handleRefresh}
+      >
+        🔄
+      </button>
     </div>
   );
 };
