@@ -24,13 +24,13 @@ const MoreNestedResponse = ({
 
   const audioFile = '/audio/' + detail.id + '.mp3';
 
-  const japaneseSentence = detail.jap;
+  const japaneseSentence = detail.targetLang;
   const englishSentence = detail.eng;
 
   const isAudioInMP3Banks =
     audioUrlIsAvailable ||
     mp3Bank.includes(detail.id + '.mp3') ||
-    mp3Bank.includes(detail.jap + '.mp3');
+    mp3Bank.includes(detail.targetLang + '.mp3');
 
   const handleDeleteClick = () => {
     handleDeleteSentence(detail.id);

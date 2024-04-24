@@ -10,7 +10,7 @@ const ResultsAudioActions = ({
 }) => {
   useEffect(() => {
     if (audioToPlay) {
-      audioRefs[audioToPlay].ref.current.play();
+      setTimeout(() => audioRefs[audioToPlay].ref.current.play(), 500);
     }
   }, [audioRefs, audioToPlay]);
 

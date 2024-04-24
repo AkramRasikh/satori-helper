@@ -60,7 +60,7 @@ export default function Home(props) {
         combinePrompt +
         matchedWords[0] +
         ' context: ' +
-        sentenceToBeReplaced.jap;
+        sentenceToBeReplaced.targetLang;
       if (!prompt) return;
       const res = await chatGptAPI(prompt);
       const structuredJapEngRes = getStructuredJapEngRes(res);
@@ -89,7 +89,7 @@ export default function Home(props) {
       if (japaneseRegex.test(sentence)) {
         const sentenceObj = {
           id: uuidv4(),
-          jap: sentence.replace(japaneseRegex, ''),
+          targetLang: sentence.replace(japaneseRegex, ''),
           eng: lines[i + 1].replace(engRegex, ''),
         };
         sentences.push(sentenceObj);
@@ -186,7 +186,7 @@ export default function Home(props) {
         },
         body: JSON.stringify({
           id: japaneseSentenceData.id,
-          tts: japaneseSentenceData.jap,
+          tts: japaneseSentenceData.targetLang,
         }),
       });
       const availableMP3Files = JSON.parse(await responseFiles.text());
