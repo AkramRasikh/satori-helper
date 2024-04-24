@@ -31,6 +31,7 @@ const AudioPlayer = ({
   const handleRefresh = () => {
     if (ref?.current) {
       ref.current.currentTime = 0; // Restart audio from the beginning
+      ref.current.play();
     }
   };
 
