@@ -10,10 +10,6 @@ const AudioPlayer = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const ref = useRef();
 
-  const playAudio = () => {
-    ref?.current.play();
-  };
-
   const handleAudioError = (event) => {
     console.error('## Audio error:', event.target.error);
   };
@@ -55,7 +51,6 @@ const AudioPlayer = ({
         <source src={mp3AudioFile} type='audio/mpeg' />
         Your browser does not support the audio element.
       </audio>
-      <button onClick={playAudio}>playAudio</button>
     </div>
   );
 };
