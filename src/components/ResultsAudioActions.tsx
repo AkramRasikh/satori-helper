@@ -4,6 +4,7 @@ const ResultsAudioActions = ({
   audioRefs,
   audioToPlay,
   setRestart,
+  handleAudioPause,
   handleAudioEnd,
   handleAudioPlay,
 }) => {
@@ -41,6 +42,7 @@ const ResultsAudioActions = ({
           border: 'none',
           cursor: 'pointer',
         }}
+        onClick={() => handleAudioPause(audioToPlay)}
       >
         Pause
       </button>

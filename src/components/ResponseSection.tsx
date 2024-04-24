@@ -210,6 +210,13 @@ const ResponseItem = ({
     }
   };
 
+  const handleAudioPause = (index) => {
+    if (audioRefs[index].ref?.current) {
+      console.log('## handleAudioPause 2');
+      audioRefs[index].ref.current.pause();
+    }
+  };
+
   const setRestart = () => {
     setAudioToPlay(0);
   };
@@ -243,6 +250,7 @@ const ResponseItem = ({
         handleAudioPlay={handleAudioPlay}
         audioToPlay={audioToPlay}
         setRestart={setRestart}
+        handleAudioPause={handleAudioPause}
       />
       <div>
         {responseItem.map((detail, index) => {
