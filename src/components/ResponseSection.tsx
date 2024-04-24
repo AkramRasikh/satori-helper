@@ -273,7 +273,13 @@ const ResponseSection = ({
   mp3Bank,
 }) => {
   return (
-    <ul style={{ borderBottom: '1px solid grey' }}>
+    <ul
+      style={{
+        borderBottom: '1px solid grey',
+        padding: '10px',
+        listStyleType: 'none',
+      }}
+    >
       {response.map((responseItem, index) => {
         const wordBank = responseItem.wordBank;
         const response = responseItem.response;
