@@ -40,7 +40,7 @@ const AudioPlayer = ({
       if (ref?.current) {
         ref.current?.removeEventListener('play', audioPlay);
         ref.current?.removeEventListener('ended', audioEnded);
-        ref.current?.addEventListener('error', handleAudioError);
+        ref.current?.removeEventListener('error', handleAudioError);
       }
     };
   }, [ref]);
