@@ -1,9 +1,19 @@
+import { useEffect } from 'react';
+
 const ResultsAudioActions = ({
   audioRefs,
-  // handleAudioEnd,
-  // handleAudioPlay,
+  audioToPlay,
+  setRestart,
+  handleAudioEnd,
+  handleAudioPlay,
 }) => {
-  const playAudio = () => {
+  useEffect(() => {
+    if (audioToPlay) {
+      audioRefs[audioToPlay].ref.current.play();
+    }
+  }, [audioRefs, audioToPlay]);
+
+  const handleStartPlay = () => {
     audioRefs[0].ref.current.play();
   };
 
@@ -18,7 +28,7 @@ const ResultsAudioActions = ({
           border: 'none',
           cursor: 'pointer',
         }}
-        onClick={playAudio}
+        onClick={handleStartPlay}
       >
         Play
       </button>
@@ -33,6 +43,19 @@ const ResultsAudioActions = ({
         }}
       >
         Pause
+      </button>
+      <button
+        style={{
+          margin: 'auto auto auto 10px',
+          height: 'fit-content',
+          padding: '15px',
+          borderRadius: '15px',
+          border: 'none',
+          cursor: 'pointer',
+        }}
+        onClick={setRestart}
+      >
+        Restart
       </button>
     </div>
   );

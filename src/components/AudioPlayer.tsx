@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 const AudioPlayer = ({
   mp3AudioFile,
   setRefs,
-  handleAudioEnd,
-  handleAudioPlay,
   inArrayIndex,
+  handleWhatAudioIsPlaying,
+  handleWhatAudioIsEnded,
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const ref = useRef();
@@ -15,27 +15,37 @@ const AudioPlayer = ({
   };
 
   const handleAudioError = (event) => {
-    console.error('Audio error:', event.target.error);
+    console.error('## Audio error:', event.target.error);
   };
   useEffect(() => {
     if (ref?.current && !isLoaded) {
       setRefs(ref, inArrayIndex);
       setIsLoaded(true);
     }
-  }, [ref, setRefs, isLoaded]);
+  }, [ref, setRefs, inArrayIndex, isLoaded]);
+
+  const audioPlay = () => {
+    handleWhatAudioIsPlaying(inArrayIndex);
+  };
+
+  const audioEnded = () => {
+    console.log('## AudioPlayer audioEnded: ', inArrayIndex);
+    return handleWhatAudioIsEnded(inArrayIndex);
+  };
 
   useEffect(() => {
     if (ref?.current) {
-      ref?.current.addEventListener('play', handleAudioPlay);
-      ref?.current.addEventListener('ended', handleAudioEnd);
+      ref.current.addEventListener('play', audioPlay);
+      ref.current.addEventListener('ended', audioEnded);
       ref.current.addEventListener('error', handleAudioError);
-      // setIsAttachedEvents(true);
     }
-    console.log('## attached???');
 
     return () => {
-      ref?.current.removeEventListener('ended', handleAudioEnd);
-      ref?.current.removeEventListener('play', handleAudioPlay);
+      if (ref?.current) {
+        ref.current?.removeEventListener('play', audioPlay);
+        ref.current?.removeEventListener('ended', audioEnded);
+        ref.current?.addEventListener('error', handleAudioError);
+      }
     };
   }, [ref]);
 

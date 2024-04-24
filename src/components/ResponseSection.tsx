@@ -11,6 +11,8 @@ const MoreNestedResponse = ({
   mp3Bank,
   setRefs,
   inArrayIndex,
+  handleWhatAudioIsPlaying,
+  handleWhatAudioIsEnded,
 }) => {
   const [audioUrlIsAvailable, setAudioUrlIsAvailable] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
@@ -165,6 +167,8 @@ const MoreNestedResponse = ({
           mp3AudioFile={audioFile}
           setRefs={setRefs}
           inArrayIndex={inArrayIndex}
+          handleWhatAudioIsPlaying={handleWhatAudioIsPlaying}
+          handleWhatAudioIsEnded={handleWhatAudioIsEnded}
         />
       )}
     </li>
@@ -179,8 +183,22 @@ const ResponseItem = ({
   mp3Bank,
 }) => {
   const [audioRefs, setAudioRefs] = useState([]);
+  const [audioToPlay, setAudioToPlay] = useState(0);
+
   const setRefs = (ref, index) => {
-    setAudioRefs((prev) => [...prev, { ref, index }]);
+    const updatedAudioRefs =
+      audioRefs?.length === 0
+        ? [{ ref, index }]
+        : [...audioRefs, { ref, index }];
+    if (updatedAudioRefs?.length === 1) {
+      setAudioRefs(updatedAudioRefs);
+    } else {
+      setAudioRefs(updatedAudioRefs.sort((a, b) => a.index - b.index));
+    }
+  };
+
+  const setRestart = () => {
+    setAudioToPlay(0);
   };
 
   const handleAudioEnd = (index) => {
@@ -190,12 +208,28 @@ const ResponseItem = ({
     console.log('## Playing? index: ', index);
   };
 
+  const handleWhatAudioIsPlaying = (index) => {
+    console.log('## handleWhatAudioIsPlaying: ', index);
+  };
+
+  const handleWhatAudioIsEnded = (index) => {
+    setAudioRefs((prevAudioRefs) => {
+      const nextInArr = index + 1;
+      const triggerNextAudio = nextInArr < prevAudioRefs.length;
+      if (triggerNextAudio) {
+        setAudioToPlay(nextInArr);
+      }
+      return prevAudioRefs;
+    });
+  };
   return (
     <>
       <ResultsAudioActions
         audioRefs={audioRefs}
         handleAudioEnd={handleAudioEnd}
         handleAudioPlay={handleAudioPlay}
+        audioToPlay={audioToPlay}
+        setRestart={setRestart}
       />
       <div>
         {responseItem.map((detail, index) => {
@@ -209,6 +243,8 @@ const ResponseItem = ({
               handleGetNewSentence={handleGetNewSentence}
               mp3Bank={mp3Bank}
               setRefs={setRefs}
+              handleWhatAudioIsPlaying={handleWhatAudioIsPlaying}
+              handleWhatAudioIsEnded={handleWhatAudioIsEnded}
             />
           );
         })}
