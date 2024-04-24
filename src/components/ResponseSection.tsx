@@ -13,6 +13,7 @@ const MoreNestedResponse = ({
   inArrayIndex,
   handleWhatAudioIsPlaying,
   handleWhatAudioIsEnded,
+  isNowPlaying,
 }) => {
   const [audioUrlIsAvailable, setAudioUrlIsAvailable] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
@@ -147,8 +148,19 @@ const MoreNestedResponse = ({
 
   return (
     <li style={{ marginBottom: '10px' }}>
-      <div style={{ flexWrap: 'wrap', display: 'flex' }}>
-        <p ref={sentenceRef} style={{ margin: '5px 0' }}>
+      <div
+        style={{
+          flexWrap: 'wrap',
+          display: 'flex',
+        }}
+      >
+        <p
+          ref={sentenceRef}
+          style={{
+            margin: '5px 0',
+            background: isNowPlaying === inArrayIndex ? 'yellow' : 'none',
+          }}
+        >
           {underlinedSentence}
         </p>
         <ResponseCTAs
@@ -184,6 +196,7 @@ const ResponseItem = ({
 }) => {
   const [audioRefs, setAudioRefs] = useState([]);
   const [audioToPlay, setAudioToPlay] = useState(0);
+  const [isNowPlaying, setIsNowPlaying] = useState();
 
   const setRefs = (ref, index) => {
     const updatedAudioRefs =
@@ -209,7 +222,7 @@ const ResponseItem = ({
   };
 
   const handleWhatAudioIsPlaying = (index) => {
-    console.log('## handleWhatAudioIsPlaying: ', index);
+    setIsNowPlaying(index);
   };
 
   const handleWhatAudioIsEnded = (index) => {
@@ -245,6 +258,7 @@ const ResponseItem = ({
               setRefs={setRefs}
               handleWhatAudioIsPlaying={handleWhatAudioIsPlaying}
               handleWhatAudioIsEnded={handleWhatAudioIsEnded}
+              isNowPlaying={isNowPlaying}
             />
           );
         })}
