@@ -205,6 +205,7 @@ export default function Home(props) {
           handleAddToWordBank={handleAddToWordBank}
           wordBankForGeneratedWords={wordBankForGeneratedWords}
           deleteWordFromSentenceList={deleteWordFromSentenceList}
+          wordBank={wordBank}
         />
       </details>
       {wordBank?.length > 0 && (

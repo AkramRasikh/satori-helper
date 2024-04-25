@@ -7,12 +7,19 @@ const WordDetailWrapper = ({
   sentenceSnippet,
   wordBankForGeneratedWords,
   deleteWordFromSentenceList,
+  wordBank,
 }) => {
   const [isRemoved, setIsRemoved] = useState(false);
 
   const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false);
   const textWithKanji = sentenceSnippet[1];
   const wordHasBeenUsed = wordBankForGeneratedWords.includes(textWithKanji);
+
+  const isInWordBank = wordBank.some(
+    (wordObj) => wordObj.word === textWithKanji,
+  );
+
+  const isInWordBankAndUsed = wordHasBeenUsed && isInWordBank;
 
   const handleDelete = () => {
     setIsRemoved(true);
@@ -31,7 +38,13 @@ const WordDetailWrapper = ({
       <li
         style={{
           padding: '10px',
-          border: wordHasBeenUsed ? '3px solid lightgreen' : '1px solid grey',
+          border: isInWordBankAndUsed
+            ? '3px dashed lightgreen'
+            : wordHasBeenUsed
+            ? '3px solid lightgreen'
+            : isInWordBank
+            ? '3px solid orange'
+            : '1px solid grey',
           display: 'flex',
           flexWrap: 'wrap',
           borderRadius: '20px',
@@ -118,6 +131,7 @@ const TopSection = ({
   handleAddToWordBank,
   wordBankForGeneratedWords,
   deleteWordFromSentenceList,
+  wordBank,
 }) => {
   return (
     <div
@@ -145,6 +159,7 @@ const TopSection = ({
               handleAddToWordBank={handleAddToWordBank}
               wordBankForGeneratedWords={wordBankForGeneratedWords}
               deleteWordFromSentenceList={deleteWordFromSentenceList}
+              wordBank={wordBank}
             />
           );
         })}
