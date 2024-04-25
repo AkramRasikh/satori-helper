@@ -7,6 +7,7 @@ const WordDetailWrapper = ({
   sentenceSnippet,
   wordBankForGeneratedWords,
   deleteWordFromSentenceList,
+  handleFlashCard,
   wordBank,
 }) => {
   const [isRemoved, setIsRemoved] = useState(false);
@@ -80,14 +81,15 @@ const WordDetailWrapper = ({
           sentenceSnippet={sentenceSnippet}
           isMoreInfoOpen={isMoreInfoOpen}
           setIsMoreInfoOpen={setIsMoreInfoOpen}
+          handleFlashCard={handleFlashCard}
         />
         <button
           onClick={handleDelete}
           style={{
             border: 'none',
             borderRadius: '15%',
-            marginLeft: '10px',
             cursor: 'pointer',
+            marginLeft: '10px',
           }}
         >
           ❌
@@ -101,6 +103,7 @@ const WordDetailContainer = ({
   sentenceSnippet,
   isMoreInfoOpen,
   setIsMoreInfoOpen,
+  handleFlashCard,
 }) => {
   const handleMoreInfo = () => {
     setIsMoreInfoOpen(!isMoreInfoOpen);
@@ -121,7 +124,12 @@ const WordDetailContainer = ({
       >
         {text}
       </button>
-      {isMoreInfoOpen && <WordDetail sentenceData={sentenceSnippet} />}
+      {isMoreInfoOpen && (
+        <WordDetail
+          sentenceData={sentenceSnippet}
+          handleFlashCard={handleFlashCard}
+        />
+      )}
     </div>
   );
 };
@@ -132,6 +140,7 @@ const TopSection = ({
   wordBankForGeneratedWords,
   deleteWordFromSentenceList,
   wordBank,
+  handleFlashCard,
 }) => {
   return (
     <div
@@ -160,6 +169,7 @@ const TopSection = ({
               wordBankForGeneratedWords={wordBankForGeneratedWords}
               deleteWordFromSentenceList={deleteWordFromSentenceList}
               wordBank={wordBank}
+              handleFlashCard={handleFlashCard}
             />
           );
         })}

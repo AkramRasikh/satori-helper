@@ -1,5 +1,5 @@
 import getSentenceAudio from '@/api/audio';
-import { satoriPendinghandler } from '../api/pending';
+import { satoriReviewhandler } from '../api/pending';
 import TopSection from '@/components/TopSection';
 import { useRef, useState } from 'react';
 import chatGptAPI from './api/chatgpt';
@@ -30,6 +30,20 @@ export default function Home(props) {
     if (!isWordInWord) {
       setWordBank((prev) => [...prev, wordData]);
     }
+  };
+
+  const handleFlashCard = async (flashCardNumber, cardId) => {
+    const response = await fetch('/api/satori-flashcard', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        flashCardNumber,
+        cardId,
+      }),
+    });
+    // remove sentence
   };
 
   const handleRemoveFromBank = (wordToDelete) => {
@@ -206,6 +220,7 @@ export default function Home(props) {
           wordBankForGeneratedWords={wordBankForGeneratedWords}
           deleteWordFromSentenceList={deleteWordFromSentenceList}
           wordBank={wordBank}
+          handleFlashCard={handleFlashCard}
         />
       </details>
       {wordBank?.length > 0 && (
@@ -237,7 +252,7 @@ export default function Home(props) {
 
 export async function getStaticProps() {
   try {
-    const satoriData = await satoriPendinghandler();
+    const satoriData = await satoriReviewhandler();
     const getPathToWord = (inArrIndex) => {
       const thisWordsData = satoriData[inArrIndex];
       const expression = JSON.parse(thisWordsData.expression);
