@@ -15,7 +15,7 @@ const ResultsAudioActions = ({
   }, [audioRefs, audioToPlay]);
 
   const handleStartPlay = () => {
-    audioRefs[0].ref.current.play();
+    // audioRefs[0].ref.current.play();
   };
 
   return (

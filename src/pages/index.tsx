@@ -33,17 +33,26 @@ export default function Home(props) {
   };
 
   const handleFlashCard = async (flashCardNumber, cardId) => {
-    const response = await fetch('/api/satori-flashcard', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        flashCardNumber,
-        cardId,
-      }),
-    });
-    // remove sentence
+    try {
+      setLoadingResponse(true);
+      await fetch('/api/satori-flashcard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          flashCardNumber,
+          cardId,
+        }),
+      });
+      setSentenceListState((prev) =>
+        prev.filter((sentenceArr) => sentenceArr[6] !== cardId),
+      );
+    } catch (error) {
+      console.log('## handleFlashCard Error: ', error);
+    } finally {
+      setLoadingResponse(false);
+    }
   };
 
   const handleRemoveFromBank = (wordToDelete) => {
