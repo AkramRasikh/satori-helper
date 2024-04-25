@@ -286,6 +286,7 @@ export async function getStaticProps() {
           audioData?.url,
           definition,
           engTranslation,
+          firstContext.cardId,
         ];
       }),
     );
