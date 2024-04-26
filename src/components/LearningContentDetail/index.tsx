@@ -1,13 +1,13 @@
 import LearningContentDetailCardsCTAs from './LearningContentDetailCardsCTAs';
 
 const LearningContentDetail = ({ sentenceData, handleFlashCard }) => {
-  const sentence = sentenceData[0];
-  const textWithKanji = sentenceData[1];
-  const textZeroKanji = sentenceData[2];
-  const audioUrl = sentenceData[3];
-  const definition = sentenceData[4];
-  const engTranslation = sentenceData[5];
-  const cardId = sentenceData[6];
+  const sentence = sentenceData.fullSentence;
+  const textWithKanji = sentenceData.textWithKanji;
+  const textZeroKanji = sentenceData.textZeroKanji;
+  const audioUrl = sentenceData.audioUrl;
+  const definition = sentenceData.definition;
+  const engTranslation = sentenceData.engTranslation;
+  const cardId = sentenceData.cardId;
 
   const formattedSentence = sentence.replace(
     new RegExp(textWithKanji, 'g'),

@@ -13,7 +13,7 @@ const LearningBaseItemWrapper = ({
   const [isRemoved, setIsRemoved] = useState(false);
 
   const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false);
-  const textWithKanji = sentenceSnippet[1];
+  const textWithKanji = sentenceSnippet.textWithKanji;
   const wordHasBeenUsed = wordBankForGeneratedWords.includes(textWithKanji);
 
   const isInWordBank = wordBank.some(
@@ -67,9 +67,9 @@ const LearningBaseItemWrapper = ({
             }}
             onClick={() =>
               handleAddToWordBank({
-                word: sentenceSnippet[1],
-                context: sentenceSnippet[0],
-                definition: sentenceSnippet[4],
+                word: sentenceSnippet.textZeroKanji,
+                context: sentenceSnippet.fullSentence,
+                definition: sentenceSnippet.definition,
               })
             }
           >

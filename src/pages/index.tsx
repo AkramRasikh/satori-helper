@@ -46,7 +46,7 @@ export default function Home(props) {
         }),
       });
       setSentenceListState((prev) =>
-        prev.filter((sentenceArr) => sentenceArr[6] !== cardId),
+        prev.filter((sentenceArr) => sentenceArr.cardId !== cardId),
       );
     } catch (error) {
       console.log('## handleFlashCard Error: ', error);
@@ -141,7 +141,9 @@ export default function Home(props) {
   };
 
   const deleteWordFromSentenceList = (word) => {
-    const newSentenceList = sentenceListState.filter((arr) => arr[1] !== word);
+    const newSentenceList = sentenceListState.filter(
+      (wordData) => wordData.textWithKanji !== word,
+    );
     setSentenceListState(newSentenceList);
   };
 
@@ -291,8 +293,8 @@ export async function getStaticProps() {
 
         const audioData = await getSentenceAudio(articleCode, sentenceId);
 
-        return [
-          allParts
+        return {
+          fullSentence: allParts
             .map((item) => {
               if (item.text) {
                 return item.text;
@@ -300,13 +302,13 @@ export async function getStaticProps() {
               return item?.parts[0].text;
             })
             .join(''),
-          textWithKanji,
-          textZeroKanji,
-          audioData?.url,
-          definition,
-          engTranslation,
-          firstContext.cardId,
-        ];
+          textWithKanji: textWithKanji,
+          textZeroKanji: textZeroKanji,
+          audioUrl: audioData?.url,
+          definition: definition,
+          engTranslation: engTranslation,
+          cardId: firstContext.cardId,
+        };
       }),
     );
 
