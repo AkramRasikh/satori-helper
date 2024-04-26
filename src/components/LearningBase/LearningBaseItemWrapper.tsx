@@ -25,6 +25,11 @@ const LearningBaseItemWrapper = ({
   const handleDelete = () => {
     setIsRemoved(true);
   };
+  const handleMoreInfo = () => {
+    setIsMoreInfoOpen(!isMoreInfoOpen);
+  };
+
+  const collapseOrInfoText = isMoreInfoOpen ? 'Collapse' : 'More info';
 
   return (
     <CSSTransition
@@ -46,8 +51,6 @@ const LearningBaseItemWrapper = ({
             : isInWordBank
             ? '3px solid orange'
             : '3px solid red',
-          display: 'flex',
-          flexWrap: 'wrap',
           borderRadius: '20px',
           width: isMoreInfoOpen ? '100%' : 'auto',
         }}
@@ -67,7 +70,7 @@ const LearningBaseItemWrapper = ({
             }}
             onClick={() =>
               handleAddToWordBank({
-                word: sentenceSnippet.textZeroKanji,
+                word: sentenceSnippet.textWithKanji,
                 context: sentenceSnippet.fullSentence,
                 definition: sentenceSnippet.definition,
               })
@@ -76,20 +79,18 @@ const LearningBaseItemWrapper = ({
             🧺
           </button>
           <span style={{ margin: '0 10px' }}>{textWithKanji}</span>
-        </div>
-        <div
-          id='meow'
-          style={{
-            display: 'flex',
-            justifyContent: isMoreInfoOpen ? 'space-between' : '',
-          }}
-        >
-          <LearningBaseContainer
-            sentenceSnippet={sentenceSnippet}
-            isMoreInfoOpen={isMoreInfoOpen}
-            setIsMoreInfoOpen={setIsMoreInfoOpen}
-            handleFlashCard={handleFlashCard}
-          />
+          <button
+            onClick={handleMoreInfo}
+            style={{
+              border: 'none',
+              padding: '5px',
+              borderRadius: '15%',
+              cursor: 'pointer',
+              height: isMoreInfoOpen ? 'fit-content' : 'auto',
+            }}
+          >
+            {collapseOrInfoText}
+          </button>
           <button
             onClick={handleDelete}
             style={{
@@ -97,12 +98,17 @@ const LearningBaseItemWrapper = ({
               borderRadius: '15%',
               cursor: 'pointer',
               marginLeft: '10px',
-              height: isMoreInfoOpen ? 'fit-content' : 'auto',
             }}
           >
             ❌
           </button>
         </div>
+        {isMoreInfoOpen && (
+          <LearningBaseContainer
+            sentenceSnippet={sentenceSnippet}
+            handleFlashCard={handleFlashCard}
+          />
+        )}
       </li>
     </CSSTransition>
   );
