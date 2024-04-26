@@ -5,13 +5,14 @@ export const storyPrompt = `
 `;
 
 export const storyPromptFormatted = `
-  Make the following words make sense together in as short few lined 
-  story in Japanese. Note the word context is there to help make sense
-  of the words
-  
-  I also want each sentence to follow the following format:
+  I have a list of words in Japanese I am learning. I want you to make a short story of a few sentences in a bilingual format. For each sentence, the Japanese will be followed by English as follows:
+
   [JP] 妹は小さめの靴を履いて、全速力で公園を走っています。
   [EN] My younger sister is wearing small shoes and running at full speed in the park.
+
+  Using the words multiple times is a bonus and in a combined way would be ideal but not a requirement at the expense of comprehension
+
+  List of words:
 `;
 
 export const combinePrompt = `

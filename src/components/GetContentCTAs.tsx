@@ -1,4 +1,4 @@
-import { combinePrompt, storyPrompt, storyPromptFormatted } from '@/prompts';
+import { combinePrompt, storyPromptFormatted } from '@/prompts';
 
 const GetContentActions = ({
   handleChatGPTRes,
@@ -12,12 +12,11 @@ const GetContentActions = ({
     },
     {
       text: 'Get a story!',
-      onClickHandler: () => handleChatGPTRes(storyPrompt),
+      onClickHandler: () => handleChatGPTRes(storyPromptFormatted),
     },
     {
       text: 'Get a story! GPT 4',
-      onClickHandler: () =>
-        handleChatGPTRes(storyPrompt, 'gpt-4', storyPromptFormatted), // needs works,
+      onClickHandler: () => handleChatGPTRes(storyPromptFormatted, 'gpt-4'), // needs works,
     },
     {
       text: 'Combine words',
