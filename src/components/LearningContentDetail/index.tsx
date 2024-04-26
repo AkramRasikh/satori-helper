@@ -1,4 +1,4 @@
-import LearningContentDetailAudio from './LearningContentDetailAudio';
+import AudioPlayerElement from '../AudioPlayer/AudioPlayerElement';
 import LearningContentDetailCardsCTAs from './LearningContentDetailCardsCTAs';
 
 const TargetNonPhoneticScript = ({ text }) => (
@@ -39,7 +39,7 @@ const LearningContentDetail = ({ sentenceData, handleFlashCard }) => {
       {textWithKanji !== textZeroKanji && <p>{textZeroKanji}</p>}
       <Definition definition={definition} />
       <EngTranslation engTranslation={engTranslation} />
-      <LearningContentDetailAudio audioUrl={audioUrl} />
+      <AudioPlayerElement url={audioUrl} />
       <LearningContentDetailCardsCTAs
         handleFlashCard={handleFlashCard}
         cardId={cardId}
