@@ -5,17 +5,20 @@ const ResultsAudioActions = ({
   audioToPlay,
   setRestart,
   handleAudioPause,
+  masterPlayPressed,
+  setMasterPlayPressed,
   handleAudioEnd,
   handleAudioPlay,
 }) => {
   useEffect(() => {
-    if (audioToPlay) {
-      setTimeout(() => audioRefs[audioToPlay].ref.current.play(), 500);
+    if (audioToPlay && masterPlayPressed) {
+      setTimeout(() => audioRefs[audioToPlay].ref.current.play(), 300);
     }
   }, [audioRefs, audioToPlay]);
 
   const handleStartPlay = () => {
-    // audioRefs[0].ref.current.play();
+    audioRefs[0].ref.current.play();
+    setMasterPlayPressed(true);
   };
 
   return (

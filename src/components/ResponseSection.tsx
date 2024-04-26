@@ -14,6 +14,7 @@ const MoreNestedResponse = ({
   handleWhatAudioIsPlaying,
   handleWhatAudioIsEnded,
   isNowPlaying,
+  setMasterPlayPressed,
 }) => {
   const [audioUrlIsAvailable, setAudioUrlIsAvailable] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
@@ -181,6 +182,7 @@ const MoreNestedResponse = ({
           inArrayIndex={inArrayIndex}
           handleWhatAudioIsPlaying={handleWhatAudioIsPlaying}
           handleWhatAudioIsEnded={handleWhatAudioIsEnded}
+          setMasterPlayPressed={setMasterPlayPressed}
         />
       )}
     </li>
@@ -197,6 +199,7 @@ const ResponseItem = ({
   const [audioRefs, setAudioRefs] = useState([]);
   const [audioToPlay, setAudioToPlay] = useState(0);
   const [isNowPlaying, setIsNowPlaying] = useState();
+  const [masterPlayPressed, setMasterPlayPressed] = useState(false);
 
   const setRefs = (ref, index) => {
     const updatedAudioRefs =
@@ -251,6 +254,8 @@ const ResponseItem = ({
         audioToPlay={audioToPlay}
         setRestart={setRestart}
         handleAudioPause={handleAudioPause}
+        masterPlayPressed={masterPlayPressed}
+        setMasterPlayPressed={setMasterPlayPressed}
       />
       <div>
         {responseItem.map((detail, index) => {
@@ -267,6 +272,7 @@ const ResponseItem = ({
               handleWhatAudioIsPlaying={handleWhatAudioIsPlaying}
               handleWhatAudioIsEnded={handleWhatAudioIsEnded}
               isNowPlaying={isNowPlaying}
+              setMasterPlayPressed={setMasterPlayPressed}
             />
           );
         })}

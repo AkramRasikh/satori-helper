@@ -45,7 +45,7 @@ const WordDetailWrapper = ({
             ? '3px solid lightgreen'
             : isInWordBank
             ? '3px solid orange'
-            : '1px solid grey',
+            : '3px solid red',
           display: 'flex',
           flexWrap: 'wrap',
           borderRadius: '20px',

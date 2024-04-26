@@ -6,6 +6,7 @@ const AudioPlayer = ({
   inArrayIndex,
   handleWhatAudioIsPlaying,
   handleWhatAudioIsEnded,
+  setMasterPlayPressed,
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const ref = useRef();
@@ -24,6 +25,12 @@ const AudioPlayer = ({
     handleWhatAudioIsPlaying(inArrayIndex);
   };
 
+  const audioPause = () => {
+    if (ref.current.currentTime < ref.current.duration) {
+      setMasterPlayPressed(false);
+    }
+  };
+
   const audioEnded = () => {
     return handleWhatAudioIsEnded(inArrayIndex);
   };
@@ -38,6 +45,7 @@ const AudioPlayer = ({
   useEffect(() => {
     if (ref?.current) {
       ref.current.addEventListener('play', audioPlay);
+      ref.current.addEventListener('pause', audioPause);
       ref.current.addEventListener('ended', audioEnded);
       ref.current.addEventListener('error', handleAudioError);
     }
@@ -45,6 +53,7 @@ const AudioPlayer = ({
     return () => {
       if (ref?.current) {
         ref.current?.removeEventListener('play', audioPlay);
+        ref.current?.removeEventListener('pause', audioPause);
         ref.current?.removeEventListener('ended', audioEnded);
         ref.current?.removeEventListener('error', handleAudioError);
       }
