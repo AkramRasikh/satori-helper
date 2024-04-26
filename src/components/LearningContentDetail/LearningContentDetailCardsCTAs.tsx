@@ -6,7 +6,7 @@ const LearningContentDetailCardsCTAs = ({ handleFlashCard, cardId }) => {
     {
       text: 'Incorrect',
       title: 'No point, just make a bloodclart sentence!',
-      onClickHandler: null,
+      onClickHandler: () => {},
       disabled: true,
     },
     {
@@ -41,6 +41,7 @@ const LearningContentDetailCardsCTAs = ({ handleFlashCard, cardId }) => {
             }}
             title={cta?.title}
             disabled={cta?.disabled}
+            onClick={cta.onClickHandler}
           >
             {cta.text}
           </button>
