@@ -1,6 +1,6 @@
 import getSentenceAudio from '@/api/audio';
 import { satoriReviewhandler } from '../api/pending';
-import TopSection from '@/components/TopSection';
+import LearningBase from '@/components/LearningBase';
 import { useRef, useState } from 'react';
 import chatGptAPI from './api/chatgpt';
 import ResponseSection from '@/components/ResponseSection';
@@ -222,8 +222,8 @@ export default function Home(props) {
   return (
     <div style={{ paddingBottom: '40px' }}>
       <details open>
-        <summary>Word list</summary>
-        <TopSection
+        <summary>Learning Base</summary>
+        <LearningBase
           sentenceList={sentenceListState}
           handleAddToWordBank={handleAddToWordBank}
           wordBankForGeneratedWords={wordBankForGeneratedWords}

@@ -134,7 +134,7 @@ const WordDetailContainer = ({
   );
 };
 
-const TopSection = ({
+const LearningBase = ({
   sentenceList,
   handleAddToWordBank,
   wordBankForGeneratedWords,
@@ -178,4 +178,4 @@ const TopSection = ({
   );
 };
 
-export default TopSection;
+export default LearningBase;
