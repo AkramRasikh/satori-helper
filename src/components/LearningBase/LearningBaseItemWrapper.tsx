@@ -78,23 +78,32 @@ const LearningBaseItemWrapper = ({
             </button>
             <span style={{ margin: '0 10px' }}>{textWithKanji}</span>
           </div>
-          <LearningBaseContainer
-            sentenceSnippet={sentenceSnippet}
-            isMoreInfoOpen={isMoreInfoOpen}
-            setIsMoreInfoOpen={setIsMoreInfoOpen}
-            handleFlashCard={handleFlashCard}
-          />
-          <button
-            onClick={handleDelete}
+          <div
+            id='meow'
             style={{
-              border: 'none',
-              borderRadius: '15%',
-              cursor: 'pointer',
-              marginLeft: '10px',
+              display: 'flex',
+              justifyContent: isMoreInfoOpen ? 'space-between' : '',
             }}
           >
-            ❌
-          </button>
+            <LearningBaseContainer
+              sentenceSnippet={sentenceSnippet}
+              isMoreInfoOpen={isMoreInfoOpen}
+              setIsMoreInfoOpen={setIsMoreInfoOpen}
+              handleFlashCard={handleFlashCard}
+            />
+            <button
+              onClick={handleDelete}
+              style={{
+                border: 'none',
+                borderRadius: '15%',
+                cursor: 'pointer',
+                marginLeft: '10px',
+                height: isMoreInfoOpen ? 'fit-content' : 'auto',
+              }}
+            >
+              ❌
+            </button>
+          </div>
         </div>
       </li>
     </CSSTransition>
