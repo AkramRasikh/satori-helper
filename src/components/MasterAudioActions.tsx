@@ -14,7 +14,7 @@ const MasterAudioActions = ({
     if (audioToPlay && masterPlayPressed) {
       setTimeout(() => audioRefs[audioToPlay].ref.current.play(), 300);
     }
-  }, [audioRefs, audioToPlay]);
+  }, [audioRefs, audioToPlay, masterPlayPressed]);
 
   const handleStartPlay = () => {
     audioRefs[0].ref.current.play();
