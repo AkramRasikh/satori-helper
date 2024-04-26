@@ -143,38 +143,41 @@ const LearningBase = ({
   handleFlashCard,
 }) => {
   return (
-    <div
-      style={{
-        borderBottom: '5px solid grey',
-      }}
-    >
-      <ul
+    <details open>
+      <summary>Learning Base</summary>
+      <div
         style={{
-          listStyleType: 'none',
-          width: 'fit-content',
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'flex-start',
-          gap: '8px',
-          padding: '15px',
-          marginTop: '0px',
+          borderBottom: '5px solid grey',
         }}
       >
-        {sentenceList?.map((sentenceSnippet, index) => {
-          return (
-            <WordDetailWrapper
-              key={index}
-              sentenceSnippet={sentenceSnippet}
-              handleAddToWordBank={handleAddToWordBank}
-              wordBankForGeneratedWords={wordBankForGeneratedWords}
-              deleteWordFromSentenceList={deleteWordFromSentenceList}
-              wordBank={wordBank}
-              handleFlashCard={handleFlashCard}
-            />
-          );
-        })}
-      </ul>
-    </div>
+        <ul
+          style={{
+            listStyleType: 'none',
+            width: 'fit-content',
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+            gap: '8px',
+            padding: '15px',
+            marginTop: '0px',
+          }}
+        >
+          {sentenceList?.map((sentenceSnippet, index) => {
+            return (
+              <WordDetailWrapper
+                key={index}
+                sentenceSnippet={sentenceSnippet}
+                handleAddToWordBank={handleAddToWordBank}
+                wordBankForGeneratedWords={wordBankForGeneratedWords}
+                deleteWordFromSentenceList={deleteWordFromSentenceList}
+                wordBank={wordBank}
+                handleFlashCard={handleFlashCard}
+              />
+            );
+          })}
+        </ul>
+      </div>
+    </details>
   );
 };
 

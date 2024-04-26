@@ -1,6 +1,6 @@
 import { combinePrompt, storyPrompt, storyPromptFormatted } from '@/prompts';
 
-const GetContentCTAs = ({
+const GetContentActions = ({
   handleChatGPTRes,
   isLoadingResponse,
   handleClearWordBank,
@@ -104,4 +104,4 @@ const GetContentCTAs = ({
   );
 };
 
-export default GetContentCTAs;
+export default GetContentActions;

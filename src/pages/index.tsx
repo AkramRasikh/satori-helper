@@ -5,7 +5,7 @@ import { useRef, useState } from 'react';
 import chatGptAPI from './api/chatgpt';
 import ResponseSection from '@/components/ResponseSection';
 import WordBankSection from '@/components/WordBankSection';
-import GetContentCTAs from '@/components/GetContentCTAs';
+import GetContentActions from '@/components/GetContentCTAs';
 import LoadingStatus from '@/components/LoadingStatus';
 import { v4 as uuidv4 } from 'uuid';
 import { combinePrompt } from '@/prompts';
@@ -221,17 +221,14 @@ export default function Home(props) {
 
   return (
     <div style={{ paddingBottom: '40px' }}>
-      <details open>
-        <summary>Learning Base</summary>
-        <LearningBase
-          sentenceList={sentenceListState}
-          handleAddToWordBank={handleAddToWordBank}
-          wordBankForGeneratedWords={wordBankForGeneratedWords}
-          deleteWordFromSentenceList={deleteWordFromSentenceList}
-          wordBank={wordBank}
-          handleFlashCard={handleFlashCard}
-        />
-      </details>
+      <LearningBase
+        sentenceList={sentenceListState}
+        handleAddToWordBank={handleAddToWordBank}
+        wordBankForGeneratedWords={wordBankForGeneratedWords}
+        deleteWordFromSentenceList={deleteWordFromSentenceList}
+        wordBank={wordBank}
+        handleFlashCard={handleFlashCard}
+      />
       {wordBank?.length > 0 && (
         <WordBankSection
           wordBankRef={wordBankRef}
@@ -241,7 +238,7 @@ export default function Home(props) {
       )}
       {isLoadingResponse && <LoadingStatus />}
       {wordBank?.length > 0 && (
-        <GetContentCTAs
+        <GetContentActions
           handleChatGPTRes={handleChatGPTRes}
           isLoadingResponse={isLoadingResponse}
           handleClearWordBank={handleClearWordBank}
