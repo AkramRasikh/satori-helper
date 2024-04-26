@@ -49,10 +49,10 @@ const MoreNestedResponse = ({
       (match) => `<u>${match}</u>`,
     );
 
-    if (sentenceRef.current) {
+    if (sentenceRef?.current) {
       setTimeout(
         () => (sentenceRef.current.innerHTML = underlinedSentence),
-        200,
+        100,
       );
     }
   }
@@ -174,7 +174,6 @@ const MoreNestedResponse = ({
       </div>
       {noKanjiSentence && <p style={{ margin: '5px 0' }}>{noKanjiSentence}</p>}
       <p style={{ margin: '5px 0' }}>{englishSentence}</p>
-
       {isAudioInMP3Banks && (
         <AudioPlayer
           mp3AudioFile={audioFile}
@@ -280,6 +279,82 @@ const ResponseItem = ({
     </>
   );
 };
+
+const ResponseHeaderSection = ({
+  index,
+  wordBank,
+  isContentOpen,
+  setIsContentOpen,
+}) => {
+  const up = '▲';
+  const down = '▼';
+  return (
+    <div
+      style={{
+        outline: 'none',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}
+    >
+      <h3 style={{ textAlign: 'center' }}>
+        {index + 1}
+        {'.    '}
+        Words in this response:{' '}
+        {wordBank.map((word, indexWord) => (
+          <span key={indexWord}>
+            {word}
+            {indexWord === wordBank.length - 1 ? '' : ', '}
+          </span>
+        ))}
+      </h3>
+      <button
+        onClick={() => setIsContentOpen(!isContentOpen)}
+        style={{
+          border: 'none',
+          padding: '5px',
+          borderRadius: '15%',
+          cursor: 'pointer',
+          marginRight: '10px',
+        }}
+      >
+        {!isContentOpen ? up : down}
+      </button>
+    </div>
+  );
+};
+
+const ResponseSectionContainer = ({
+  wordBank,
+  response,
+  handleDeleteSentence,
+  handleGetNewSentence,
+  mp3Bank,
+  index,
+}) => {
+  const [isContentOpen, setIsContentOpen] = useState(false);
+  return (
+    <div style={{ borderTop: '1px solid grey' }}>
+      <ResponseHeaderSection
+        index={index}
+        wordBank={wordBank}
+        isContentOpen={isContentOpen}
+        setIsContentOpen={setIsContentOpen}
+      />
+      {isContentOpen && (
+        <ResponseItem
+          responseItem={response}
+          wordBank={wordBank}
+          handleDeleteSentence={handleDeleteSentence}
+          handleGetNewSentence={handleGetNewSentence}
+          mp3Bank={mp3Bank}
+        />
+      )}
+    </div>
+  );
+};
+
 const ResponseSection = ({
   response,
   handleDeleteSentence,
@@ -299,38 +374,15 @@ const ResponseSection = ({
         const response = responseItem.response;
 
         return (
-          <div key={index} style={{ borderTop: '1px solid grey' }}>
-            <details style={{ display: 'flex', alignItems: 'center' }}>
-              <summary
-                open
-                style={{
-                  outline: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <h3 style={{ textAlign: 'center' }}>
-                  {index + 1}
-                  {'.    '}
-                  Words in this response:{' '}
-                  {wordBank.map((word, indexWord) => (
-                    <span key={indexWord}>
-                      {word}
-                      {indexWord === wordBank.length - 1 ? '' : ', '}
-                    </span>
-                  ))}
-                </h3>
-              </summary>
-              <ResponseItem
-                responseItem={response}
-                wordBank={wordBank}
-                handleDeleteSentence={handleDeleteSentence}
-                handleGetNewSentence={handleGetNewSentence}
-                mp3Bank={mp3Bank}
-              />
-            </details>
-          </div>
+          <ResponseSectionContainer
+            key={index}
+            index={index}
+            wordBank={wordBank}
+            response={response}
+            handleDeleteSentence={handleDeleteSentence}
+            handleGetNewSentence={handleGetNewSentence}
+            mp3Bank={mp3Bank}
+          />
         );
       })}
     </ul>

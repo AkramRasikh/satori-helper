@@ -17,8 +17,10 @@ const MasterAudioActions = ({
   }, [audioRefs, audioToPlay, masterPlayPressed]);
 
   const handleStartPlay = () => {
-    audioRefs[0].ref.current.play();
-    setMasterPlayPressed(true);
+    if (audioRefs?.length > 0 && audioRefs[0].ref) {
+      audioRefs[0].ref.current.play();
+      setMasterPlayPressed(true);
+    }
   };
 
   const ctaArr = [
