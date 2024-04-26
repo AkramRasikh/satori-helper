@@ -5,6 +5,39 @@ const GetContentActions = ({
   isLoadingResponse,
   handleClearWordBank,
 }) => {
+  const contentActionsCTAs = [
+    {
+      text: 'Clear word bank 🏦!',
+      onClickHandler: handleClearWordBank,
+    },
+    {
+      text: 'Get a story!',
+      onClickHandler: () => handleChatGPTRes(storyPrompt),
+    },
+    {
+      text: 'Get a story! GPT 4',
+      onClickHandler: () =>
+        handleChatGPTRes(storyPrompt, 'gpt-4', storyPromptFormatted), // needs works,
+    },
+    {
+      text: 'Combine words',
+      onClickHandler: () => handleChatGPTRes(combinePrompt),
+    },
+    {
+      text: 'Combine words (GPT4)',
+      onClickHandler: () => handleChatGPTRes(combinePrompt, 'gpt-4'),
+    },
+    {
+      text: 'Combine words + Audio',
+      onClickHandler: () =>
+        handleChatGPTRes(combinePrompt, 'gpt-3.5-turbo', true),
+    },
+    {
+      text: 'Combine words + Audio (GPT4)',
+      onClickHandler: () => handleChatGPTRes(combinePrompt, 'gpt-4', true),
+    },
+  ];
+
   return (
     <div
       style={{
@@ -14,92 +47,23 @@ const GetContentActions = ({
         gap: '10px',
       }}
     >
-      <button
-        style={{
-          border: 'none',
-          borderRadius: '15px',
-          padding: '10px',
-          cursor: 'pointer',
-        }}
-        disabled={isLoadingResponse}
-        onClick={handleClearWordBank}
-      >
-        Clear word bank 🏦!
-      </button>
-      <button
-        style={{
-          border: 'none',
-          borderRadius: '15px',
-          padding: '10px',
-          cursor: 'pointer',
-        }}
-        onClick={() => handleChatGPTRes(storyPrompt)}
-        disabled={isLoadingResponse}
-      >
-        Get a story!
-      </button>
-      <button
-        style={{
-          border: 'none',
-          borderRadius: '15px',
-          padding: '10px',
-          cursor: 'pointer',
-        }}
-        onClick={
-          () => handleChatGPTRes(storyPrompt, 'gpt-4', storyPromptFormatted) // needs works
-        }
-        disabled={isLoadingResponse}
-      >
-        Get a story! GPT 4
-      </button>
-      <button
-        style={{
-          border: 'none',
-          borderRadius: '15px',
-          padding: '10px',
-          cursor: 'pointer',
-        }}
-        onClick={() => handleChatGPTRes(combinePrompt)}
-        disabled={isLoadingResponse}
-      >
-        Combine words
-      </button>
-      <button
-        style={{
-          border: 'none',
-          borderRadius: '15px',
-          padding: '10px',
-          cursor: 'pointer',
-        }}
-        onClick={() => handleChatGPTRes(combinePrompt, 'gpt-4')}
-        disabled={isLoadingResponse}
-      >
-        Combine words (GPT4)
-      </button>
-      <button
-        style={{
-          border: 'none',
-          borderRadius: '15px',
-          padding: '10px',
-          cursor: 'pointer',
-        }}
-        disabled={isLoadingResponse}
-        onClick={() => handleChatGPTRes(combinePrompt, 'gpt-3.5-turbo', true)}
-      >
-        Combine words + Audio
-      </button>
-      <button
-        style={{
-          border: 'none',
-          borderRadius: '15px',
-          padding: '10px',
-          cursor: 'pointer',
-        }}
-        disabled={isLoadingResponse}
-        onClick={() => handleChatGPTRes(combinePrompt, 'gpt-4', true)}
-      >
-        Combine words + Audio (GPT4)
-      </button>
+      {contentActionsCTAs.map((cta, index) => {
+        return (
+          <button
+            key={index}
+            style={{
+              border: 'none',
+              borderRadius: '15px',
+              padding: '10px',
+              cursor: 'pointer',
+            }}
+            disabled={isLoadingResponse}
+            onClick={cta.onClickHandler}
+          >
+            {cta.text}
+          </button>
+        );
+      })}
     </div>
   );
 };

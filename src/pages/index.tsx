@@ -229,13 +229,11 @@ export default function Home(props) {
         wordBank={wordBank}
         handleFlashCard={handleFlashCard}
       />
-      {wordBank?.length > 0 && (
-        <WordBankSection
-          wordBankRef={wordBankRef}
-          wordBank={wordBank}
-          handleRemoveFromBank={handleRemoveFromBank}
-        />
-      )}
+      <WordBankSection
+        wordBankRef={wordBankRef}
+        wordBank={wordBank}
+        handleRemoveFromBank={handleRemoveFromBank}
+      />
       {isLoadingResponse && <LoadingStatus />}
       {wordBank?.length > 0 && (
         <GetContentActions
