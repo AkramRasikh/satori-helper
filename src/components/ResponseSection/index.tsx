@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import AudioPlayer from './AudioPlayer';
-import ResponseCTAs from './ResponseCTAs';
-import ResultsAudioActions from './ResultsAudioActions';
+import AudioPlayer from '../AudioPlayer';
+import ResponseCTAs from '../ResponseCTAs';
+import ResultsAudioActions from '../ResultsAudioActions';
 
 const MoreNestedResponse = ({
   detail,

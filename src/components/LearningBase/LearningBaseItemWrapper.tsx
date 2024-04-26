@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import WordDetail from './WordDetail';
+import { useState } from 'react';
+import LearningBaseContainer from './LearningBaseContainer';
 
-const WordDetailWrapper = ({
+const LearningBaseItemWrapper = ({
   handleAddToWordBank,
   sentenceSnippet,
   wordBankForGeneratedWords,
@@ -77,7 +77,7 @@ const WordDetailWrapper = ({
           </button>
           <span style={{ margin: '0 10px' }}>{textWithKanji}</span>
         </div>
-        <WordDetailContainer
+        <LearningBaseContainer
           sentenceSnippet={sentenceSnippet}
           isMoreInfoOpen={isMoreInfoOpen}
           setIsMoreInfoOpen={setIsMoreInfoOpen}
@@ -99,86 +99,4 @@ const WordDetailWrapper = ({
   );
 };
 
-const WordDetailContainer = ({
-  sentenceSnippet,
-  isMoreInfoOpen,
-  setIsMoreInfoOpen,
-  handleFlashCard,
-}) => {
-  const handleMoreInfo = () => {
-    setIsMoreInfoOpen(!isMoreInfoOpen);
-  };
-
-  const text = isMoreInfoOpen ? 'Collapse' : 'More info';
-
-  return (
-    <div>
-      <button
-        onClick={handleMoreInfo}
-        style={{
-          border: 'none',
-          padding: '5px',
-          borderRadius: '15%',
-          cursor: 'pointer',
-        }}
-      >
-        {text}
-      </button>
-      {isMoreInfoOpen && (
-        <WordDetail
-          sentenceData={sentenceSnippet}
-          handleFlashCard={handleFlashCard}
-        />
-      )}
-    </div>
-  );
-};
-
-const LearningBase = ({
-  sentenceList,
-  handleAddToWordBank,
-  wordBankForGeneratedWords,
-  deleteWordFromSentenceList,
-  wordBank,
-  handleFlashCard,
-}) => {
-  return (
-    <details open>
-      <summary>Learning Base</summary>
-      <div
-        style={{
-          borderBottom: '5px solid grey',
-        }}
-      >
-        <ul
-          style={{
-            listStyleType: 'none',
-            width: 'fit-content',
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
-            gap: '8px',
-            padding: '15px',
-            marginTop: '0px',
-          }}
-        >
-          {sentenceList?.map((sentenceSnippet, index) => {
-            return (
-              <WordDetailWrapper
-                key={index}
-                sentenceSnippet={sentenceSnippet}
-                handleAddToWordBank={handleAddToWordBank}
-                wordBankForGeneratedWords={wordBankForGeneratedWords}
-                deleteWordFromSentenceList={deleteWordFromSentenceList}
-                wordBank={wordBank}
-                handleFlashCard={handleFlashCard}
-              />
-            );
-          })}
-        </ul>
-      </div>
-    </details>
-  );
-};
-
-export default LearningBase;
+export default LearningBaseItemWrapper;
