@@ -25,3 +25,5 @@ I also want them in the format as follows (Japanese and English translation):
   [JP] 妹は小さめの靴を履いて、全速力で公園を走っています。
   [EN] My younger sister is wearing small shoes and running at full speed in the park.
 `;
+
+export const grammarIntensivePrompt = ``;
