@@ -1,4 +1,4 @@
-import WordDetail from './WordDetail';
+import LearningContentDetail from './LearningContentDetail';
 
 const ExtraInfoList = ({ response, sentenceList }) => {
   return (
@@ -13,7 +13,7 @@ const ExtraInfoList = ({ response, sentenceList }) => {
       </div>
       <div style={{ listStyleType: 'none', padding: '5px' }}>
         {sentenceList?.map((sentenceData, index) => (
-          <WordDetail key={index} sentenceData={sentenceData} />
+          <LearningContentDetail key={index} sentenceData={sentenceData} />
         ))}
       </div>
     </>

@@ -1,4 +1,4 @@
-import WordDetail from '../WordDetail';
+import LearningContentDetail from '../LearningContentDetail';
 
 const LearningBaseContainer = ({
   sentenceSnippet,
@@ -26,7 +26,7 @@ const LearningBaseContainer = ({
         {text}
       </button>
       {isMoreInfoOpen && (
-        <WordDetail
+        <LearningContentDetail
           sentenceData={sentenceSnippet}
           handleFlashCard={handleFlashCard}
         />
