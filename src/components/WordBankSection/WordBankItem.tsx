@@ -1,3 +1,9 @@
+const WordBankContext = ({ word }) => (
+  <span>
+    {word.word} context: {word.context}
+  </span>
+);
+
 const WordBankItem = ({ handleRemoveFromBank, word }) => (
   <li>
     <button
@@ -12,9 +18,7 @@ const WordBankItem = ({ handleRemoveFromBank, word }) => (
     >
       <span>❌</span>
     </button>
-    <span>
-      {word.word} context: {word.context}
-    </span>
+    <WordBankContext word={word} />
   </li>
 );
 
