@@ -1,4 +1,22 @@
+import LearningContentDetailAudio from './LearningContentDetailAudio';
 import LearningContentDetailCardsCTAs from './LearningContentDetailCardsCTAs';
+
+const TargetNonPhoneticScript = ({ text }) => (
+  <p dangerouslySetInnerHTML={{ __html: text }} />
+);
+const FormattedSentence = ({ text }) => <p>{text}</p>;
+
+const Definition = ({ definition }) => (
+  <p style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
+    Eng: {definition}
+  </p>
+);
+
+const EngTranslation = ({ engTranslation }) => (
+  <p>
+    <i> Eng: {engTranslation}</i>
+  </p>
+);
 
 const LearningContentDetail = ({ sentenceData, handleFlashCard }) => {
   const sentence = sentenceData.fullSentence;
@@ -16,33 +34,12 @@ const LearningContentDetail = ({ sentenceData, handleFlashCard }) => {
 
   return (
     <div>
-      <div>
-        <p dangerouslySetInnerHTML={{ __html: formattedSentence }} />
-        <span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
-          {textWithKanji}
-        </span>
-        <br />
-        {textWithKanji !== textZeroKanji && (
-          <>
-            <span>{textZeroKanji}</span>
-            <br />
-          </>
-        )}
-        <span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
-          Eng: {definition}
-        </span>
-      </div>
-      <div>
-        <span>
-          <i> Eng: {engTranslation}</i>
-        </span>
-      </div>
-      <div>
-        <audio controls>
-          <source src={audioUrl} type='audio/mpeg' />
-          Your browser does not support the audio element.
-        </audio>
-      </div>
+      <TargetNonPhoneticScript text={formattedSentence} />
+      <FormattedSentence text={textWithKanji} />
+      {textWithKanji !== textZeroKanji && <p>{textZeroKanji}</p>}
+      <Definition definition={definition} />
+      <EngTranslation engTranslation={engTranslation} />
+      <LearningContentDetailAudio audioUrl={audioUrl} />
       <LearningContentDetailCardsCTAs
         handleFlashCard={handleFlashCard}
         cardId={cardId}
