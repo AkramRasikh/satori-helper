@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import AudioPlayer from '../AudioPlayer';
 import ResponseCTAs from '../ResponseCTAs';
-import ResultsAudioActions from '../ResultsAudioActions';
+import MasterAudioActions from '../MasterAudioActions';
 
 const MoreNestedResponse = ({
   detail,
@@ -247,7 +247,7 @@ const ResponseItem = ({
   };
   return (
     <>
-      <ResultsAudioActions
+      <MasterAudioActions
         audioRefs={audioRefs}
         handleAudioEnd={handleAudioEnd}
         handleAudioPlay={handleAudioPlay}
