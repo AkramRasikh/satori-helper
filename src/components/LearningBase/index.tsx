@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import WordDetail from '../WordDetail';
+import React from 'react';
 import LearningBaseItemWrapper from './LearningBaseItemWrapper';
 
 const LearningBase = ({
@@ -9,44 +8,42 @@ const LearningBase = ({
   deleteWordFromSentenceList,
   wordBank,
   handleFlashCard,
-}) => {
-  return (
-    <details open>
-      <summary>Learning Base</summary>
-      <div
+}) => (
+  <details open>
+    <summary>Learning Base</summary>
+    <div
+      style={{
+        borderBottom: '5px solid grey',
+      }}
+    >
+      <ul
         style={{
-          borderBottom: '5px solid grey',
+          listStyleType: 'none',
+          width: 'fit-content',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'flex-start',
+          gap: '8px',
+          padding: '15px',
+          marginTop: '0px',
         }}
       >
-        <ul
-          style={{
-            listStyleType: 'none',
-            width: 'fit-content',
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
-            gap: '8px',
-            padding: '15px',
-            marginTop: '0px',
-          }}
-        >
-          {sentenceList?.map((sentenceSnippet, index) => {
-            return (
-              <LearningBaseItemWrapper
-                key={index}
-                sentenceSnippet={sentenceSnippet}
-                handleAddToWordBank={handleAddToWordBank}
-                wordBankForGeneratedWords={wordBankForGeneratedWords}
-                deleteWordFromSentenceList={deleteWordFromSentenceList}
-                wordBank={wordBank}
-                handleFlashCard={handleFlashCard}
-              />
-            );
-          })}
-        </ul>
-      </div>
-    </details>
-  );
-};
+        {sentenceList?.map((sentenceSnippet, index) => {
+          return (
+            <LearningBaseItemWrapper
+              key={index}
+              sentenceSnippet={sentenceSnippet}
+              handleAddToWordBank={handleAddToWordBank}
+              wordBankForGeneratedWords={wordBankForGeneratedWords}
+              deleteWordFromSentenceList={deleteWordFromSentenceList}
+              wordBank={wordBank}
+              handleFlashCard={handleFlashCard}
+            />
+          );
+        })}
+      </ul>
+    </div>
+  </details>
+);
 
 export default LearningBase;

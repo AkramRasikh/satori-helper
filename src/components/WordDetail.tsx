@@ -17,7 +17,7 @@ const WordDetail = ({ sentenceData, handleFlashCard }) => {
   );
 
   return (
-    <li>
+    <div>
       <div>
         <p dangerouslySetInnerHTML={{ __html: formattedSentence }} />
         <span style={{ fontWeight: 'bold', textDecoration: 'underline' }}>
@@ -100,7 +100,7 @@ const WordDetail = ({ sentenceData, handleFlashCard }) => {
           Easy
         </button>
       </div>
-    </li>
+    </div>
   );
 };
 

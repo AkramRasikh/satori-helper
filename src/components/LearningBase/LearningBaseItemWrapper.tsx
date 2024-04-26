@@ -36,64 +36,66 @@ const LearningBaseItemWrapper = ({
         deleteWordFromSentenceList(textWithKanji);
       }}
     >
-      <li
-        style={{
-          padding: '10px',
-          border: isInWordBankAndUsed
-            ? '3px dashed lightgreen'
-            : wordHasBeenUsed
-            ? '3px solid lightgreen'
-            : isInWordBank
-            ? '3px solid orange'
-            : '3px solid red',
-          display: 'flex',
-          flexWrap: 'wrap',
-          borderRadius: '20px',
-          width: isMoreInfoOpen ? '100%' : 'auto',
-        }}
-      >
+      <li>
         <div
           style={{
+            padding: '10px',
+            border: isInWordBankAndUsed
+              ? '3px dashed lightgreen'
+              : wordHasBeenUsed
+              ? '3px solid lightgreen'
+              : isInWordBank
+              ? '3px solid orange'
+              : '3px solid red',
             display: 'flex',
+            flexWrap: 'wrap',
+            borderRadius: '20px',
+            width: isMoreInfoOpen ? '100%' : 'auto',
           }}
         >
-          <button
+          <div
             style={{
-              border: 'grey',
-              fontSize: '15px',
+              display: 'flex',
+            }}
+          >
+            <button
+              style={{
+                border: 'grey',
+                fontSize: '15px',
+                borderRadius: '15%',
+                cursor: 'pointer',
+                height: 'fit-content',
+              }}
+              onClick={() =>
+                handleAddToWordBank({
+                  word: sentenceSnippet[1],
+                  context: sentenceSnippet[0],
+                  definition: sentenceSnippet[4],
+                })
+              }
+            >
+              🧺
+            </button>
+            <span style={{ margin: '0 10px' }}>{textWithKanji}</span>
+          </div>
+          <LearningBaseContainer
+            sentenceSnippet={sentenceSnippet}
+            isMoreInfoOpen={isMoreInfoOpen}
+            setIsMoreInfoOpen={setIsMoreInfoOpen}
+            handleFlashCard={handleFlashCard}
+          />
+          <button
+            onClick={handleDelete}
+            style={{
+              border: 'none',
               borderRadius: '15%',
               cursor: 'pointer',
-              height: 'fit-content',
+              marginLeft: '10px',
             }}
-            onClick={() =>
-              handleAddToWordBank({
-                word: sentenceSnippet[1],
-                context: sentenceSnippet[0],
-                definition: sentenceSnippet[4],
-              })
-            }
           >
-            🧺
+            ❌
           </button>
-          <span style={{ margin: '0 10px' }}>{textWithKanji}</span>
         </div>
-        <LearningBaseContainer
-          sentenceSnippet={sentenceSnippet}
-          isMoreInfoOpen={isMoreInfoOpen}
-          setIsMoreInfoOpen={setIsMoreInfoOpen}
-          handleFlashCard={handleFlashCard}
-        />
-        <button
-          onClick={handleDelete}
-          style={{
-            border: 'none',
-            borderRadius: '15%',
-            cursor: 'pointer',
-            marginLeft: '10px',
-          }}
-        >
-          ❌
-        </button>
       </li>
     </CSSTransition>
   );

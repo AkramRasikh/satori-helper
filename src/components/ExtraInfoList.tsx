@@ -4,22 +4,18 @@ const ExtraInfoList = ({ response, sentenceList }) => {
   return (
     <>
       <div>
-        <ul>
+        <div>
           {response &&
             response.split('\n').map((detail, index) => {
-              return (
-                <li key={index}>
-                  <p>{detail}</p>
-                </li>
-              );
+              return <p key={index}>{detail}</p>;
             })}
-        </ul>
+        </div>
       </div>
-      <ul style={{ listStyleType: 'none', padding: '5px' }}>
+      <div style={{ listStyleType: 'none', padding: '5px' }}>
         {sentenceList?.map((sentenceData, index) => (
           <WordDetail key={index} sentenceData={sentenceData} />
         ))}
-      </ul>
+      </div>
     </>
   );
 };
