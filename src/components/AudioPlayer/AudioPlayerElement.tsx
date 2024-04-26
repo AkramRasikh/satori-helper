@@ -1,4 +1,6 @@
-const AudioPlayerElement = ({ ref, url }) => {
+import React from 'react';
+
+const AudioPlayerElement = ({ url }, ref) => {
   return (
     <div>
       <audio controls ref={ref}>
@@ -9,4 +11,4 @@ const AudioPlayerElement = ({ ref, url }) => {
   );
 };
 
-export default AudioPlayerElement;
+export default React.forwardRef(AudioPlayerElement);
