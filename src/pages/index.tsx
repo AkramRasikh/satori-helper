@@ -1,7 +1,7 @@
 import getSentenceAudio from '@/api/audio';
 import { satoriReviewhandler } from '../api/pending';
 import LearningBase from '@/components/LearningBase';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import chatGptAPI from './api/chatgpt';
 import ResponseSection from '@/components/ResponseSection';
 import WordBankSection from '@/components/WordBankSection';
@@ -10,6 +10,7 @@ import LoadingStatus from '@/components/LoadingStatus';
 import { v4 as uuidv4 } from 'uuid';
 import { combinePrompt } from '@/prompts';
 import '../app/styles/globals.css';
+import FlashCardDoneToast from '@/components/FlashCardDoneToast';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -20,7 +21,9 @@ export default function Home(props) {
     [],
   );
   const [response, setResponse] = useState([]);
+  const [flashCardWordDone, setFlashCardWordDone] = useState('');
   const [isLoadingResponse, setLoadingResponse] = useState(false);
+  const [isHandleAllSentence, setHandleAllSentence] = useState(false);
   const [mp3Bank, setMp3Bank] = useState([]);
 
   const handleAddToWordBank = (wordData) => {
@@ -32,10 +35,28 @@ export default function Home(props) {
     }
   };
 
+  const getFlashCardNumberToText = (flashCardNumber) => {
+    if (flashCardNumber === 5) {
+      return 'Easy 👍🏽';
+    }
+
+    if (flashCardNumber === 4) {
+      return 'Medium 🤏🏾';
+    }
+
+    if (flashCardNumber === 3) {
+      return 'Hard 👎';
+    }
+    return '';
+  };
+
   const handleFlashCard = async (flashCardNumber, cardId) => {
+    const wordToBeRemoved = sentenceListState.find(
+      (el) => el.cardId === cardId,
+    );
     try {
       setLoadingResponse(true);
-      await fetch('/api/satori-flashcard', {
+      const flashcardResponse = await fetch('/api/satori-flashcard', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,6 +69,12 @@ export default function Home(props) {
       setSentenceListState((prev) =>
         prev.filter((sentenceArr) => sentenceArr.cardId !== cardId),
       );
+      if (flashcardResponse.status === 200 && wordToBeRemoved) {
+        setFlashCardWordDone(
+          `${wordToBeRemoved.textWithKanji} updated ✅ ` +
+            getFlashCardNumberToText(flashCardNumber),
+        );
+      }
     } catch (error) {
       console.log('## handleFlashCard Error: ', error);
     } finally {
@@ -151,6 +178,27 @@ export default function Home(props) {
     setWordBank([]);
   };
 
+  useEffect(() => {
+    const callHandler = async () => {
+      await handleChatGPTRes(combinePrompt, 'gpt-4', true);
+    };
+    if (isHandleAllSentence) {
+      callHandler();
+      setHandleAllSentence(false);
+    }
+  }, [isHandleAllSentence]);
+
+  const handleAllSentences = () => {
+    sentenceList.forEach((sentenceSnippet) => {
+      handleAddToWordBank({
+        word: sentenceSnippet.textWithKanji,
+        context: sentenceSnippet.fullSentence,
+        definition: sentenceSnippet.definition,
+      });
+    });
+    setHandleAllSentence(true);
+  };
+
   const handleChatGPTRes = async (
     prompt,
     model = 'gpt-3.5-turbo',
@@ -223,6 +271,12 @@ export default function Home(props) {
 
   return (
     <div style={{ paddingBottom: '40px' }}>
+      {flashCardWordDone && (
+        <FlashCardDoneToast
+          text={flashCardWordDone}
+          setFlashCardWordDone={setFlashCardWordDone}
+        />
+      )}
       <LearningBase
         sentenceList={sentenceListState}
         handleAddToWordBank={handleAddToWordBank}
@@ -242,6 +296,7 @@ export default function Home(props) {
           handleChatGPTRes={handleChatGPTRes}
           isLoadingResponse={isLoadingResponse}
           handleClearWordBank={handleClearWordBank}
+          handleAllSentences={handleAllSentences}
         />
       )}
       {response?.length > 0 ? (

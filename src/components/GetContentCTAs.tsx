@@ -4,11 +4,25 @@ const GetContentActions = ({
   handleChatGPTRes,
   isLoadingResponse,
   handleClearWordBank,
+  handleAllSentences,
 }) => {
+  const buttonStyling = {
+    border: 'none',
+    borderRadius: '15px',
+    padding: '10px',
+    cursor: 'pointer',
+  };
   const contentActionsCTAs = [
     {
       text: 'Clear word bank 🏦!',
       onClickHandler: handleClearWordBank,
+    },
+    {
+      text: 'All words + Audio (GPT4) 🌟',
+      onClickHandler: handleAllSentences,
+      styling: {
+        border: '2px solid gold',
+      },
     },
     {
       text: 'Get a story!',
@@ -50,12 +64,7 @@ const GetContentActions = ({
         return (
           <button
             key={index}
-            style={{
-              border: 'none',
-              borderRadius: '15px',
-              padding: '10px',
-              cursor: 'pointer',
-            }}
+            style={{ ...buttonStyling, ...cta?.styling }}
             disabled={isLoadingResponse}
             onClick={cta.onClickHandler}
           >
