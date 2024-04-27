@@ -1,5 +1,5 @@
 import getSentenceAudio from '@/api/audio';
-import { satoriReviewhandler } from '../api/pending';
+import { satoriPendinghandler } from '../api/pending';
 import LearningBase from '@/components/LearningBase';
 import { useEffect, useRef, useState } from 'react';
 import chatGptAPI from './api/chatgpt';
@@ -313,7 +313,7 @@ export default function Home(props) {
 
 export async function getStaticProps() {
   try {
-    const satoriData = await satoriReviewhandler();
+    const satoriData = await satoriPendinghandler();
     const getPathToWord = (inArrIndex) => {
       const thisWordsData = satoriData[inArrIndex];
       const expression = JSON.parse(thisWordsData.expression);
