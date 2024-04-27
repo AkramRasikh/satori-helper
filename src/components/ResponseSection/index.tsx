@@ -361,31 +361,44 @@ const ResponseSection = ({
   handleGetNewSentence,
   mp3Bank,
 }) => {
-  return (
-    <ul
-      style={{
-        borderBottom: '1px solid grey',
-        padding: '10px',
-        listStyleType: 'none',
-      }}
-    >
-      {response.map((responseItem, index) => {
-        const wordBank = responseItem.wordBank;
-        const response = responseItem.response;
+  let totalSentenceCount = 0;
 
-        return (
-          <ResponseSectionContainer
-            key={index}
-            index={index}
-            wordBank={wordBank}
-            response={response}
-            handleDeleteSentence={handleDeleteSentence}
-            handleGetNewSentence={handleGetNewSentence}
-            mp3Bank={mp3Bank}
-          />
-        );
-      })}
-    </ul>
+  const renderedResponse = response.map((responseItem, index) => {
+    const sentenceCount = responseItem.response.length;
+
+    totalSentenceCount += sentenceCount;
+
+    const wordBank = responseItem.wordBank;
+    const response = responseItem.response;
+
+    return (
+      <ResponseSectionContainer
+        key={index}
+        index={index}
+        wordBank={wordBank}
+        response={response}
+        handleDeleteSentence={handleDeleteSentence}
+        handleGetNewSentence={handleGetNewSentence}
+        mp3Bank={mp3Bank}
+      />
+    );
+  });
+
+  return (
+    <div>
+      <h3 style={{ margin: 'auto' }}>
+        Total sentence count: {totalSentenceCount}
+      </h3>
+      <ul
+        style={{
+          borderBottom: '1px solid grey',
+          padding: '10px',
+          listStyleType: 'none',
+        }}
+      >
+        {renderedResponse}
+      </ul>
+    </div>
   );
 };
 
