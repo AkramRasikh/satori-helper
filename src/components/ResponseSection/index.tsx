@@ -1,4 +1,4 @@
-import ResponseSectionContainer from './ResponseSectionWrapper';
+import ResponseSectionWrapper from './ResponseSectionWrapper';
 
 const ResponseSection = ({
   response,
@@ -17,7 +17,7 @@ const ResponseSection = ({
     const response = responseItem.response;
 
     return (
-      <ResponseSectionContainer
+      <ResponseSectionWrapper
         key={index}
         index={index}
         wordBank={wordBank}
