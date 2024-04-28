@@ -14,6 +14,7 @@
     "elevenlabs": "^0.2.2",
     "elevenlabs-js": "^1.2.6",
     "fluent-ffmpeg": "^2.1.2",
+    "got": "^14.2.1",
     "kuromoji": "^0.1.2",
     "kuroshiro": "^1.2.0",
     "kuroshiro-analyzer-kuromoji": "^1.1.0",
