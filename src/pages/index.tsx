@@ -113,7 +113,7 @@ export default function Home(props) {
         sentenceToBeReplaced.targetLang;
       if (!prompt) return;
       const res = await chatGptAPI(prompt);
-      const structuredJapEngRes = getStructuredJapEngRes(res);
+      const structuredJapEngRes = addIdToResponse(res);
 
       const newReplacedResponse = replaceSentence(
         sentenceToBeReplaced.id,
@@ -128,25 +128,13 @@ export default function Home(props) {
     }
   };
 
-  const getStructuredJapEngRes = (responseString) => {
-    const lines = responseString.split('\n');
-    const sentences = [];
-    const japaneseRegex = /\[JP\]/;
-    const engRegex = /\[EN\]/;
-
-    for (let i = 0; i < lines.length; i++) {
-      const sentence = lines[i];
-      if (japaneseRegex.test(sentence)) {
-        const sentenceObj = {
-          id: uuidv4(),
-          targetLang: sentence.replace(japaneseRegex, ''),
-          eng: lines[i + 1].replace(engRegex, ''),
-        };
-        sentences.push(sentenceObj);
-      }
-    }
-
-    return sentences;
+  const addIdToResponse = (parsedResponse) => {
+    const responseWithId = parsedResponse.map((item) => ({
+      id: uuidv4(),
+      targetLang: item.targetLang,
+      eng: item.baseLang,
+    }));
+    return responseWithId;
   };
 
   const deleteSentenceLogic = (sentenceToRemoveId) => {
@@ -220,8 +208,8 @@ export default function Home(props) {
 
       if (!finalPrompt) return;
       const res = await chatGptAPI(finalPrompt, model);
-
-      const structuredJapEngRes = getStructuredJapEngRes(res);
+      const parsedRes = JSON.parse(res);
+      const structuredJapEngRes = addIdToResponse(parsedRes);
 
       setResponse((prev) => [
         ...prev,
