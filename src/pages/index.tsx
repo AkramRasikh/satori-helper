@@ -182,11 +182,11 @@ export default function Home(props) {
     const callHandler = async () => {
       await handleChatGPTRes(combinePrompt, 'gpt-4', true);
     };
-    if (isHandleAllSentence) {
+    if (isHandleAllSentence && sentenceListState?.length > 0) {
       callHandler();
       setHandleAllSentence(false);
     }
-  }, [isHandleAllSentence]);
+  }, [isHandleAllSentence, sentenceListState]);
 
   const handleAllSentences = () => {
     sentenceList.forEach((sentenceSnippet) => {
