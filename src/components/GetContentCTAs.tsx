@@ -58,6 +58,7 @@ const GetContentActions = ({
         flexWrap: 'wrap',
         justifyContent: 'space-evenly',
         gap: '10px',
+        marginBottom: '10px',
       }}
     >
       {contentActionsCTAs.map((cta, index) => {

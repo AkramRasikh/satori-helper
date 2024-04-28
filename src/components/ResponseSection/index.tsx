@@ -31,7 +31,7 @@ const ResponseSection = ({
 
   return (
     <div>
-      <h3 style={{ margin: 'auto' }}>
+      <h3 style={{ margin: 'auto', textAlign: 'center' }}>
         Total sentence count: {totalSentenceCount}
       </h3>
       <ul
