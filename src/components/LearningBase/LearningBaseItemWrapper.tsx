@@ -29,6 +29,11 @@ const LearningBaseItemWrapper = ({
     setIsMoreInfoOpen(!isMoreInfoOpen);
   };
 
+  const handleFlashCardFunc = (flashCardNumber, cardId) => {
+    setIsRemoved(true);
+    handleFlashCard(flashCardNumber, cardId);
+  };
+
   const collapseOrInfoText = isMoreInfoOpen ? 'Collapse' : 'More info';
 
   return (
@@ -106,7 +111,7 @@ const LearningBaseItemWrapper = ({
         {isMoreInfoOpen && (
           <LearningBaseContainer
             sentenceSnippet={sentenceSnippet}
-            handleFlashCard={handleFlashCard}
+            handleFlashCard={handleFlashCardFunc}
           />
         )}
       </li>
