@@ -10,15 +10,15 @@ const openai = new OpenAI({
 
 export default async function handler(req, res) {
   try {
-    const { tts, id } = req.body;
+    const { sentence, id } = req.body;
 
     const mp3 = await openai.audio.speech.create({
       model: 'tts-1',
       voice: 'alloy',
-      input: tts,
+      input: sentence,
     });
 
-    const nameToSaveUnder = id || tts;
+    const nameToSaveUnder = id || sentence;
 
     const buffer = Buffer.from(await mp3.arrayBuffer());
 

@@ -98,7 +98,7 @@ const ResponseSectionContentContainer = ({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tts: japaneseSentence, id: detail.id }),
+        body: JSON.stringify({ sentence: japaneseSentence, id: detail.id }),
       });
 
       const availableMP3Files = JSON.parse(await responseFiles.text());

@@ -187,11 +187,11 @@ export default function Home(props) {
     setHandleAllSentence(true);
   };
 
-  const handleChatGPTRes = async (
+  const handleChatGPTRes = async ({
     prompt,
     model = 'gpt-3.5-turbo',
-    withAudio,
-  ) => {
+    audio,
+  }) => {
     try {
       setLoadingResponse(true);
       let finalPrompt;
@@ -223,10 +223,11 @@ export default function Home(props) {
           new Set([...prev, ...wordBank.map((wordObj) => wordObj.word)]),
         ),
       );
-      if (withAudio) {
+      if (audio) {
         await Promise.all(
           structuredJapEngRes.map(
-            async (sentenceData) => await getCorrespondingAudio(sentenceData),
+            async (sentenceData) =>
+              await getCorrespondingAudio(sentenceData, audio),
           ),
         );
       }
@@ -237,17 +238,20 @@ export default function Home(props) {
     }
   };
 
-  const getCorrespondingAudio = async (japaneseSentenceData) => {
+  const getCorrespondingAudio = async (japaneseSentenceData, audio) => {
     if (!japaneseSentenceData) return null;
     try {
-      const responseFiles = await fetch('/api/chatgpt-tts', {
+      const apiEndPoint =
+        audio === 'narakeet' ? '/api/narakeet' : '/api/chatgpt-tts';
+
+      const responseFiles = await fetch(apiEndPoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           id: japaneseSentenceData.id,
-          tts: japaneseSentenceData.targetLang,
+          sentence: japaneseSentenceData.targetLang,
         }),
       });
       const availableMP3Files = JSON.parse(await responseFiles.text());

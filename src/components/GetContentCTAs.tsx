@@ -26,28 +26,48 @@ const GetContentActions = ({
     },
     {
       text: 'Get a story!',
-      onClickHandler: () => handleChatGPTRes(storyPromptFormatted),
+      onClickHandler: () => handleChatGPTRes({ prompt: storyPromptFormatted }),
     },
     {
       text: 'Get a story! GPT 4',
-      onClickHandler: () => handleChatGPTRes(storyPromptFormatted, 'gpt-4'), // needs works,
+      onClickHandler: () =>
+        handleChatGPTRes({ prompt: storyPromptFormatted, model: 'gpt-4' }), // needs works,
     },
     {
       text: 'Combine words',
-      onClickHandler: () => handleChatGPTRes(combinePrompt),
+      onClickHandler: () => handleChatGPTRes({ prompt: combinePrompt }),
     },
     {
       text: 'Combine words (GPT4)',
-      onClickHandler: () => handleChatGPTRes(combinePrompt, 'gpt-4'),
+      onClickHandler: () =>
+        handleChatGPTRes({ prompt: combinePrompt, model: 'gpt-4' }),
     },
     {
       text: 'Combine words + Audio',
       onClickHandler: () =>
-        handleChatGPTRes(combinePrompt, 'gpt-3.5-turbo', true),
+        handleChatGPTRes({
+          prompt: combinePrompt,
+          model: 'gpt-3.5-turbo',
+          audio: '*',
+        }),
     },
     {
       text: 'Combine words + Audio (GPT4)',
-      onClickHandler: () => handleChatGPTRes(combinePrompt, 'gpt-4', true),
+      onClickHandler: () =>
+        handleChatGPTRes({
+          prompt: combinePrompt,
+          model: 'gpt-4',
+          audio: '*',
+        }),
+    },
+    {
+      text: 'Combine words + Audio (GPT4) + Narakeet',
+      onClickHandler: () =>
+        handleChatGPTRes({
+          prompt: combinePrompt,
+          model: 'gpt-4',
+          audio: 'narakeet',
+        }),
     },
   ];
 
