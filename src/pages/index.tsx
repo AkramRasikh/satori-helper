@@ -169,7 +169,11 @@ export default function Home(props) {
 
   useEffect(() => {
     const callHandler = async () => {
-      await handleChatGPTRes(combinePrompt, 'gpt-4', true);
+      await handleChatGPTRes({
+        prompt: combinePrompt,
+        model: 'gpt-4',
+        audio: true,
+      });
     };
     if (isHandleAllSentence && sentenceListState?.length > 0) {
       callHandler();
@@ -209,8 +213,8 @@ export default function Home(props) {
 
       if (!finalPrompt) return;
       const res = await chatGptAPI({ sentence: finalPrompt, model });
-      const parsedRes = JSON.parse(res);
-      const structuredJapEngRes = addIdToResponse(parsedRes);
+      const parsed = JSON.parse(res);
+      const structuredJapEngRes = addIdToResponse(parsed);
 
       setResponse((prev) => [
         ...prev,

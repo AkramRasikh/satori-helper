@@ -19,10 +19,12 @@ const chatGptAPI = async ({ sentence, model = defaultModel }) => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    const responseToJSON = await response.json();
+    const responseBody = await response.text();
+
+    const responseParsed = JSON.parse(responseBody); // not sure
 
     // Parse and return the JSON content of the response
-    return responseToJSON;
+    return responseParsed;
   } catch (error) {
     console.log('## Error chatGPT to text: ', error);
   }
