@@ -1,8 +1,7 @@
 import getSentenceAudio from '@/api/audio';
-import { satoriPendinghandler } from '../api/pending';
+import satoriCardsBulkAPI from '../api/satori-cards-bulk';
 import LearningBase from '@/components/LearningBase';
 import { useEffect, useRef, useState } from 'react';
-import chatGptAPI from './api/chatgpt';
 import ResponseSection from '@/components/ResponseSection';
 import WordBankSection from '@/components/WordBankSection';
 import GetContentActions from '@/components/GetContentCTAs';
@@ -11,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { combinePrompt } from '@/prompts';
 import '../app/styles/globals.css';
 import FlashCardDoneToast from '@/components/FlashCardDoneToast';
+import chatGptAPI from './api/chatgpt';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -207,7 +207,7 @@ export default function Home(props) {
       }
 
       if (!finalPrompt) return;
-      const res = await chatGptAPI(finalPrompt, model);
+      const res = await chatGptAPI({ sentence: finalPrompt, model });
       const parsedRes = JSON.parse(res);
       const structuredJapEngRes = addIdToResponse(parsedRes);
 
@@ -305,7 +305,7 @@ export default function Home(props) {
 
 export async function getStaticProps() {
   try {
-    const satoriData = await satoriPendinghandler();
+    const satoriData = await satoriCardsBulkAPI({ isPureReview: false });
     const getPathToWord = (inArrIndex) => {
       const thisWordsData = satoriData[inArrIndex];
       const expression = JSON.parse(thisWordsData.expression);

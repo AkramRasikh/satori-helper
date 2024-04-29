@@ -1,30 +1,30 @@
-const OpenAI = require('openai');
-
-const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
-
-async function chatGptAPI(
-  textContent: string,
-  model: string = 'gpt-3.5-turbo',
-) {
+const chatGptAPI = async ({ sentence, model }) => {
+  const openAIKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/chat-gpt-text';
+  console.log('## chatGptAPI: ', { url, sentence, model, openAIKey });
   try {
-    const completion = await openai.chat.completions.create({
-      messages: [
-        {
-          role: 'user',
-          content: textContent,
-        },
-      ],
-      model,
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sentence,
+        model,
+        openAIKey,
+      }),
     });
 
-    const content = completion.choices[0].message.content;
-    return content;
+    // Check if the response is successful
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    // Parse and return the JSON content of the response
+    return response.json();
   } catch (error) {
-    console.log('## Error OpenAI: ', error);
+    console.log('## Error chatGPT to text: ', error);
   }
-}
+};
 
 export default chatGptAPI;
