@@ -112,7 +112,7 @@ export default function Home(props) {
         ' context: ' +
         sentenceToBeReplaced.targetLang;
       if (!prompt) return;
-      const res = await chatGptAPI(prompt);
+      const res = await chatGptAPI({ sentence: prompt });
       const structuredJapEngRes = addIdToResponse(res);
 
       const newReplacedResponse = replaceSentence(
