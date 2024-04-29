@@ -2,7 +2,6 @@ const defaultModel = 'gpt-3.5-turbo';
 const chatGptAPI = async ({ sentence, model = defaultModel }) => {
   const openAIKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
   const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/chat-gpt-text';
-  console.log('## chatGptAPI: ', { url, sentence, model, openAIKey });
   try {
     const response = await fetch(url, {
       method: 'POST',

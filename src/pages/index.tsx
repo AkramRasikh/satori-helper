@@ -1,4 +1,3 @@
-import getSentenceAudio from '@/api/audio';
 import satoriCardsBulkAPI from '../api/satori-cards-bulk';
 import LearningBase from '@/components/LearningBase';
 import { useEffect, useRef, useState } from 'react';
@@ -11,6 +10,7 @@ import { combinePrompt } from '@/prompts';
 import '../app/styles/globals.css';
 import FlashCardDoneToast from '@/components/FlashCardDoneToast';
 import chatGptAPI from './api/chatgpt';
+import getSatoriAudio from '@/api/audio';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -338,7 +338,10 @@ export async function getStaticProps() {
 
         const [textWithKanji, textZeroKanji] = getPathToWord(index);
 
-        const audioData = await getSentenceAudio(articleCode, sentenceId);
+        const audioUrl = await getSatoriAudio({
+          id: sentenceId,
+          episode: articleCode,
+        });
 
         return {
           fullSentence: allParts
@@ -351,7 +354,7 @@ export async function getStaticProps() {
             .join(''),
           textWithKanji: textWithKanji,
           textZeroKanji: textZeroKanji,
-          audioUrl: audioData?.url,
+          audioUrl,
           definition: definition,
           engTranslation: engTranslation,
           cardId: firstContext.cardId,

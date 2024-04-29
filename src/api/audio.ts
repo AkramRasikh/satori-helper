@@ -1,21 +1,30 @@
-import axios from 'axios';
-
-export default async function getSentenceAudio(episode: string, id: string) {
+const getSatoriAudio = async ({ id, episode }) => {
   const sessionToken = process.env.NEXT_PUBLIC_SESSION_TOKEN as string;
 
+  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/satori-audio';
   try {
-    const apiResponse = await axios.get(
-      `https://www.satorireader.com/api/audio-clips/sentences/inline/${episode}/${id}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: `SessionToken=${sessionToken}`,
-        },
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        id,
+        episode,
+        sessionToken,
+      }),
+    });
 
-    return apiResponse.data.result;
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const responseToJSON = await response.json();
+
+    return responseToJSON.url;
   } catch (error) {
-    console.error('## Error fetching data:', error);
+    console.log('## Error chatGPT to text: ', error);
   }
-}
+};
+
+export default getSatoriAudio;
