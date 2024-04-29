@@ -1,7 +1,7 @@
-const defaultModel = 'gpt-3.5-turbo';
-const chatGptAPI = async ({ sentence, model = defaultModel }) => {
+const getChatGptTTS = async ({ id, sentence }) => {
   const openAIKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
-  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/chat-gpt-text';
+  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/chat-gpt-tts';
+
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -9,8 +9,8 @@ const chatGptAPI = async ({ sentence, model = defaultModel }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        id,
         sentence,
-        model,
         openAIKey,
       }),
     });
@@ -19,13 +19,14 @@ const chatGptAPI = async ({ sentence, model = defaultModel }) => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    const responseToJSON = await response.json();
+
+    const jsonRes = await response.json();
 
     // Parse and return the JSON content of the response
-    return responseToJSON;
+    return jsonRes.mp3FilesOnServer;
   } catch (error) {
     console.log('## Error chatGPT to text: ', error);
   }
 };
 
-export default chatGptAPI;
+export default getChatGptTTS;

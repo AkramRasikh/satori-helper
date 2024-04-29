@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import ResponseCTAs from '../ResponseCTAs';
 import AudioPlayer from '../AudioPlayer';
+import getChatGptTTS from '@/pages/api/tts-audio';
 
 const ResponseSectionContentContainer = ({
   detail,
@@ -22,7 +23,8 @@ const ResponseSectionContentContainer = ({
   const [tried, setTried] = useState(false);
   const sentenceRef = useRef();
 
-  const audioFile = '/audio/' + detail.id + '.mp3';
+  const baseAssetsURL = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT;
+  const audioFile = baseAssetsURL + '/audio/' + detail.id + '.mp3';
 
   const japaneseSentence = detail.targetLang;
   const englishSentence = detail.eng;
@@ -91,19 +93,13 @@ const ResponseSectionContentContainer = ({
   const handleGetAudio = async () => {
     if (!japaneseSentence) return null;
     try {
-      // figure reference to code
       setLoadingResponse(true);
-      const responseFiles = await fetch('/api/chatgpt-tts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ sentence: japaneseSentence, id: detail.id }),
+      const mp3FilesOnServer = await getChatGptTTS({
+        id: detail.id,
+        sentence: japaneseSentence,
       });
 
-      const availableMP3Files = JSON.parse(await responseFiles.text());
-
-      availableMP3Files.includes(detail.id + '.mp3');
+      mp3FilesOnServer.includes(detail.id + '.mp3');
       setAudioUrlIsAvailable(true);
     } catch (error) {
       console.error('## Error fetching data:', error);

@@ -11,6 +11,7 @@ import '../app/styles/globals.css';
 import FlashCardDoneToast from '@/components/FlashCardDoneToast';
 import chatGptAPI from './api/chatgpt';
 import getSatoriAudio from '@/api/audio';
+import getChatGptTTS from './api/tts-audio';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -244,15 +245,9 @@ export default function Home(props) {
       const apiEndPoint =
         audio === 'narakeet' ? '/api/narakeet' : '/api/chatgpt-tts';
 
-      const responseFiles = await fetch(apiEndPoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: japaneseSentenceData.id,
-          sentence: japaneseSentenceData.targetLang,
-        }),
+      const responseFiles = await getChatGptTTS({
+        id: japaneseSentenceData.id,
+        sentence: japaneseSentenceData.targetLang,
       });
       const availableMP3Files = JSON.parse(await responseFiles.text());
       setMp3Bank(availableMP3Files);

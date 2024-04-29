@@ -8,20 +8,20 @@ import got from 'got';
 const APIKEY = process.env.NEXT_PUBLIC_NARAKEET_KEY;
 
 const japaneseVoices = [
+  // 'Kasumi',
+  // 'Kei',
+  // 'Ayami',
   'Yuriko',
-  'Akira',
-  'Kasumi',
   'Kenichi',
-  'Tomoka',
   'Takuya',
   'Takeshi',
   'Mariko',
-  'Kei',
-  // 'Ayami',
-  'Hideaki',
   'Kaori',
-  'Kenji',
-  'Kuniko',
+  'Hideaki', // the best!
+  'Akira', // nice
+  'Tomoka', // nice
+  'Kenji', // the best!
+  'Kuniko', // the best!
 ];
 
 const getRandomVoice = () => {
