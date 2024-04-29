@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import ResponseCTAs from '../ResponseCTAs';
 import AudioPlayer from '../AudioPlayer';
 import getChatGptTTS from '@/pages/api/tts-audio';
+import getKanjiToHiragana from '@/pages/api/kanji-to-hiragana';
 
 const ResponseSectionContentContainer = ({
   detail,
@@ -111,23 +112,8 @@ const ResponseSectionContentContainer = ({
   const getKanjiFreeSentence = async () => {
     try {
       setLoadingResponse(true);
-      const response = await fetch('/api/kanji-to-hiragana', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          japaneseSentence: japaneseSentence,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const resText = JSON.parse(await response.text());
-
-      setNoKanjiSentence(resText.sentence);
+      const response = await getKanjiToHiragana({ sentence: japaneseSentence });
+      setNoKanjiSentence(response);
     } catch (error) {
       console.error('Error fetching Kuromoji dictionary:', error);
       throw error;
