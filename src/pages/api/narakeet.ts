@@ -1,68 +1,38 @@
-import fs from 'fs';
-import { pipeline } from 'stream/promises';
-import path from 'path';
-import { createWriteStream } from 'fs';
-import { Readable } from 'stream';
-import got from 'got';
+interface getNarakeetAudioParams {
+  id: string;
+  sentence: string;
+  voice?: string;
+}
 
-const APIKEY = process.env.NEXT_PUBLIC_NARAKEET_KEY;
-
-const japaneseVoices = [
-  // 'Kasumi',
-  // 'Kei',
-  // 'Ayami',
-  'Yuriko',
-  'Kenichi',
-  'Takuya',
-  'Takeshi',
-  'Mariko',
-  'Kaori',
-  'Hideaki', // the best!
-  'Akira', // nice
-  'Tomoka', // nice
-  'Kenji', // the best!
-  'Kuniko', // the best!
-];
-
-const getRandomVoice = () => {
-  const randomIndex = Math.floor(Math.random() * japaneseVoices.length);
-
-  const randomJapaneseVoice = japaneseVoices[randomIndex];
-
-  return randomJapaneseVoice;
-};
-
-export default async function handler(req, res) {
-  const { sentence, id, voice } = req.body;
-
-  const nameToSaveUnder = id || sentence;
-
-  const speechFile = path.resolve('public/audio/' + nameToSaveUnder + '.mp3');
-
-  const voiceSelected = voice || getRandomVoice();
+const getNarakeetAudio = async ({
+  id,
+  sentence,
+  voice,
+}: getNarakeetAudioParams) => {
+  const apiKey = process.env.NEXT_PUBLIC_NARAKEET_KEY;
+  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/narakeet-audio';
 
   try {
-    await pipeline(
-      Readable.from([sentence]),
-      got.stream.post(
-        `https://api.narakeet.com/text-to-speech/mp3?voice=${voiceSelected}`,
-        {
-          headers: {
-            accept: 'application/octet-stream',
-            'x-api-key': APIKEY,
-            'content-type': 'text/plain',
-          },
-        },
-      ),
-      createWriteStream(speechFile),
-    );
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id,
+        sentence,
+        voice,
+        apiKey,
+      }),
+    });
 
-    console.log('File saved successfully: ', { sentence, voiceSelected });
-    const audioDirectoryPath = path.join(process.cwd(), 'public', 'audio');
-    const availableMP3Files = await fs.promises.readdir(audioDirectoryPath);
+    const jsonRes = await response.json();
 
-    res.status(200).json(availableMP3Files);
+    // Parse and return the JSON content of the response
+    return jsonRes.mp3FilesOnServer;
   } catch (error) {
     console.error('Error occurred:', error);
   }
-}
+};
+
+export default getNarakeetAudio;

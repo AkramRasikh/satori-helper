@@ -12,6 +12,7 @@ import FlashCardDoneToast from '@/components/FlashCardDoneToast';
 import chatGptAPI from './api/chatgpt';
 import getSatoriAudio from '@/api/audio';
 import getChatGptTTS from './api/tts-audio';
+import getNarakeetAudio from './api/narakeet';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -249,12 +250,17 @@ export default function Home(props) {
       const apiEndPoint =
         audio === 'narakeet' ? '/api/narakeet' : '/api/chatgpt-tts';
 
-      const responseFiles = await getChatGptTTS({
-        id: japaneseSentenceData.id,
-        sentence: japaneseSentenceData.targetLang,
-      });
-      const availableMP3Files = JSON.parse(await responseFiles.text());
-      setMp3Bank(availableMP3Files);
+      const responseFiles =
+        audio === 'narakeet'
+          ? await getNarakeetAudio({
+              id: japaneseSentenceData.id,
+              sentence: japaneseSentenceData.targetLang,
+            })
+          : await getChatGptTTS({
+              id: japaneseSentenceData.id,
+              sentence: japaneseSentenceData.targetLang,
+            });
+      setMp3Bank(responseFiles);
     } catch (error) {
       console.error('## Error fetching data (audio):', error);
     }

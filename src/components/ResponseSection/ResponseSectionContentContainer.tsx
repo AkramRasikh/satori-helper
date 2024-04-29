@@ -60,6 +60,7 @@ const ResponseSectionContentContainer = ({
   }
 
   useEffect(() => {
+    // figure this shit
     const fetchKuromojiDictionary = async () => {
       try {
         const response = await fetch('/api/kuromoji', {
