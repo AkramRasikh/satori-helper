@@ -20,10 +20,7 @@ const handleSatoriFlashcardAPI = async ({ flashCardDifficulty, cardId }) => {
       throw new Error('Network response was not ok');
     }
 
-    console.log('## response: ', response);
-
     const jsonRes = await response.json();
-    console.log('## response: ', response);
 
     return jsonRes;
   } catch (error) {
