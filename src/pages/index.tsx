@@ -13,6 +13,7 @@ import chatGptAPI from './api/chatgpt';
 import getSatoriAudio from '@/api/audio';
 import getChatGptTTS from './api/tts-audio';
 import getNarakeetAudio from './api/narakeet';
+import handleSatoriFlashcardAPI from './api/satori-flashcard';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -58,20 +59,15 @@ export default function Home(props) {
     );
     try {
       setLoadingResponse(true);
-      const flashcardResponse = await fetch('/api/satori-flashcard', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          flashCardNumber,
-          cardId,
-        }),
+      const flashcardResponse = await handleSatoriFlashcardAPI({
+        flashCardDifficulty: flashCardNumber,
+        cardId,
       });
-      setSentenceListState((prev) =>
-        prev.filter((sentenceArr) => sentenceArr.cardId !== cardId),
-      );
-      if (flashcardResponse.status === 200 && wordToBeRemoved) {
+      const flashcardResponseCardId = flashcardResponse.cardId;
+      if (flashcardResponseCardId === cardId) {
+        setSentenceListState((prev) =>
+          prev.filter((sentenceArr) => sentenceArr.cardId !== cardId),
+        );
         setFlashCardWordDone(
           `${wordToBeRemoved.textWithKanji} updated ✅ ` +
             getFlashCardNumberToText(flashCardNumber),

@@ -1,37 +1,35 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const { cardId, flashCardNumber } = req.body;
-
+const handleSatoriFlashcardAPI = async ({ flashCardDifficulty, cardId }) => {
   const sessionToken = process.env.NEXT_PUBLIC_SESSION_TOKEN as string;
 
-  const headers = {
-    Cookie: `SessionToken=${sessionToken}`,
-    Referer: 'https://www.satorireader.com/review/srs?filter=due', // check without
-  };
-
-  const url = `https://www.satorireader.com/api/studylist/${cardId}?q=${flashCardNumber}`;
+  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/satori-flashcard';
 
   try {
     const response = await fetch(url, {
-      method: 'PUT',
-      headers,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        flashCardDifficulty,
+        cardId,
+        sessionToken,
+      }),
     });
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
 
-    const resText = JSON.parse(await response.text());
+    console.log('## response: ', response);
 
-    if (resText.success) {
-      res.status(200).end();
-    }
+    const jsonRes = await response.json();
+    console.log('## response: ', response);
+
+    return jsonRes;
   } catch (error) {
     console.error('## Error fetching data:', error);
     throw error;
   }
-}
+};
+
+export default handleSatoriFlashcardAPI;
