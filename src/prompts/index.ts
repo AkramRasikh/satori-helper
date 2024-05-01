@@ -34,8 +34,9 @@ export const combinePrompt = `
   For example if the words plate and dinosaur were in the list, a sentence like "I tried to smash the dinosaurs head with the plate" will suffice.
   Don’t make them very similar to the examples given in the context
 
-I also want them in the format as follows (Japanese and English translation):
- ${JSON.stringify(jsonReturnFormat)}
+  I also want them in the format of an array of objects:
+
+  ${JSON.stringify(jsonReturnFormat)}
 `;
 
 export const moodIntensivePrompt = `
