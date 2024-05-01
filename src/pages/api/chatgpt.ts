@@ -1,32 +1,3 @@
-// import axios from 'axios';
-
-// const defaultModel = 'gpt-3.5-turbo';
-
-// const chatGptAPI = async ({ sentence, model = defaultModel }) => {
-//   const openAIKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
-//   const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/chat-gpt-text';
-//   try {
-//     const response = await axios.post(url, {
-//       sentence,
-//       model,
-//       openAIKey,
-//     });
-
-//     console.log('## response: ', response);
-//     console.log('## response.data: ', response.data);
-//     console.log('## response.data.result: ', response.data.result);
-//     const resultsParsed = JSON.parse(response.data.result);
-//     console.log('## resultsParsed: ', resultsParsed);
-
-//     return resultsParsed;
-//   } catch (error) {
-//     console.log('## Error chatGPT to text: ', error);
-//     throw error; // Propagate the error
-//   }
-// };
-
-// export default chatGptAPI;
-
 const defaultModel = 'gpt-3.5-turbo';
 const chatGptAPI = async ({ sentence, model = defaultModel }) => {
   const openAIKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
@@ -51,7 +22,7 @@ const chatGptAPI = async ({ sentence, model = defaultModel }) => {
 
     const responseBody = await response.text();
 
-    const responseParsed = JSON.parse(JSON.parse(responseBody)); // not sure
+    const responseParsed = JSON.parse(responseBody);
 
     return responseParsed;
   } catch (error) {
