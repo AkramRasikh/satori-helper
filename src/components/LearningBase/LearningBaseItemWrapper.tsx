@@ -9,6 +9,7 @@ const LearningBaseItemWrapper = ({
   deleteWordFromSentenceList,
   handleFlashCard,
   wordBank,
+  arrayIndex,
 }) => {
   const [isRemoved, setIsRemoved] = useState(false);
 
@@ -30,8 +31,8 @@ const LearningBaseItemWrapper = ({
   };
 
   const handleFlashCardFunc = (flashCardNumber, cardId) => {
-    setIsRemoved(true);
     handleFlashCard(flashCardNumber, cardId);
+    setIsRemoved(true);
   };
 
   const collapseOrInfoText = isMoreInfoOpen ? 'Collapse' : 'More info';
@@ -65,6 +66,14 @@ const LearningBaseItemWrapper = ({
             display: 'flex',
           }}
         >
+          <span
+            style={{
+              marginRight: '5px',
+            }}
+          >
+            {arrayIndex + 1}
+            {`) `}{' '}
+          </span>
           <button
             style={{
               border: 'grey',

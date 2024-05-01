@@ -1,4 +1,4 @@
-const satoriCardsBulkAPI = async ({ isPureReview = false }) => {
+const satoriCardsBulkAPI = async ({ isDueAndAuto = false }) => {
   const sessionToken = process.env.NEXT_PUBLIC_SESSION_TOKEN as string;
   const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/satori-cards-bulk';
   try {
@@ -8,7 +8,7 @@ const satoriCardsBulkAPI = async ({ isPureReview = false }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        isPureReview,
+        isDueAndAuto,
         sessionToken,
       }),
     });

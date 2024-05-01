@@ -45,6 +45,7 @@ const LearningBase = ({
             return (
               <LearningBaseItemWrapper
                 key={index}
+                arrayIndex={index}
                 sentenceSnippet={sentenceSnippet}
                 handleAddToWordBank={handleAddToWordBank}
                 wordBankForGeneratedWords={wordBankForGeneratedWords}

@@ -306,7 +306,7 @@ export default function Home(props) {
 
 export async function getStaticProps() {
   try {
-    const satoriData = await satoriCardsBulkAPI({ isPureReview: false });
+    const satoriData = await satoriCardsBulkAPI({ isDueAndAuto: true });
     const getPathToWord = (inArrIndex) => {
       const thisWordsData = satoriData[inArrIndex];
       const expression = JSON.parse(thisWordsData.expression);
