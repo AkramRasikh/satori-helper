@@ -131,6 +131,7 @@ export default function Home(props) {
       id: uuidv4(),
       targetLang: item.targetLang,
       eng: item.baseLang,
+      moodUsed: item?.moodUsed,
     }));
     return responseWithId;
   };
@@ -210,8 +211,7 @@ export default function Home(props) {
 
       if (!finalPrompt) return;
       const res = await chatGptAPI({ sentence: finalPrompt, model });
-      const parsed = JSON.parse(res);
-      const structuredJapEngRes = addIdToResponse(parsed);
+      const structuredJapEngRes = addIdToResponse(res);
 
       setResponse((prev) => [
         ...prev,

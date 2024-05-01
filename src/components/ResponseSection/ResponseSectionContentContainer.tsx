@@ -156,6 +156,9 @@ const ResponseSectionContentContainer = ({
       </div>
       {noKanjiSentence && <p style={{ margin: '5px 0' }}>{noKanjiSentence}</p>}
       <p style={{ margin: '5px 0' }}>{englishSentence}</p>
+      {detail?.moodUsed && (
+        <p style={{ margin: '5px 0' }}>Mood: {detail?.moodUsed}</p>
+      )}
       {isAudioInMP3Banks && (
         <AudioPlayer
           mp3AudioFile={audioFile}

@@ -3,6 +3,8 @@ const jsonReturnFormat = [
     targetLang: '妹は小さめの靴を履いて、全速力で公園を走っています.',
     baseLang:
       'My younger sister is wearing small shoes and running at full speed in the park.',
+    moodUsed:
+      'Insert mood(s) used and explanations where possible (subjunctive, indicative, imperative, conditional, iterrogative and optative mood)',
   },
 ];
 
@@ -36,4 +38,13 @@ I also want them in the format as follows (Japanese and English translation):
  ${JSON.stringify(jsonReturnFormat)}
 `;
 
-export const grammarIntensivePrompt = ``;
+export const moodIntensivePrompt = `
+  I am studying these words. I have given context to them too.
+  Give me simple sentences and ideally combine them where possible.
+  For example if the words plate and dinosaur were in the list, a sentence like "I tried to smash the dinosaurs head with the plate" will suffice.
+  Don’t make them very similar to the examples given in the context.
+  I'd also like a diversity of mood expressions where possible (out of the indicative, subjunctive, imperative, conditional, iterrogative and optative mood)
+
+  I also want them in the format as follows (Japanese and English translation):
+  ${JSON.stringify(jsonReturnFormat)}
+  `;
