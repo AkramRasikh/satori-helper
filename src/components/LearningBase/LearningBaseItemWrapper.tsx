@@ -22,15 +22,15 @@ const LearningBaseItemWrapper = ({
   const isInWordBankAndUsed = wordHasBeenUsed && isInWordBank;
 
   const safelyRemoveFromList = () => {
+    setIsVisible(false);
     setTimeout(() => {
-      deleteWordFromSentenceList(textWithKanji); // needs to be fully synced with timeout
+      deleteWordFromSentenceList(textWithKanji); // needs to be fully synced with timeout but do check before mapping again
       setIsMoreInfoOpen(false);
       setIsVisible(true);
     }, 500);
   };
 
   const handleDelete = () => {
-    setIsVisible(false);
     safelyRemoveFromList();
   };
   const handleMoreInfo = () => {
@@ -39,7 +39,6 @@ const LearningBaseItemWrapper = ({
 
   const handleFlashCardFunc = (flashCardNumber, cardId) => {
     handleFlashCard(flashCardNumber, cardId);
-    setIsVisible(false);
     safelyRemoveFromList();
   };
 
