@@ -11,20 +11,27 @@ const LearningBaseItemWrapper = ({
   wordBank,
   arrayIndex,
 }) => {
-  const [isRemoved, setIsRemoved] = useState(false);
-
+  const [isVisible, setIsVisible] = useState(true);
   const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false);
   const textWithKanji = sentenceSnippet.textWithKanji;
   const wordHasBeenUsed = wordBankForGeneratedWords.includes(textWithKanji);
-
   const isInWordBank = wordBank.some(
     (wordObj) => wordObj.word === textWithKanji,
   );
 
   const isInWordBankAndUsed = wordHasBeenUsed && isInWordBank;
 
+  const safelyRemoveFromList = () => {
+    setTimeout(() => {
+      deleteWordFromSentenceList(textWithKanji); // needs to be fully synced with timeout
+      setIsMoreInfoOpen(false);
+      setIsVisible(true);
+    }, 500);
+  };
+
   const handleDelete = () => {
-    setIsRemoved(true);
+    setIsVisible(false);
+    safelyRemoveFromList();
   };
   const handleMoreInfo = () => {
     setIsMoreInfoOpen(!isMoreInfoOpen);
@@ -32,21 +39,14 @@ const LearningBaseItemWrapper = ({
 
   const handleFlashCardFunc = (flashCardNumber, cardId) => {
     handleFlashCard(flashCardNumber, cardId);
-    setIsRemoved(true);
+    setIsVisible(false);
+    safelyRemoveFromList();
   };
 
   const collapseOrInfoText = isMoreInfoOpen ? 'Collapse' : 'More info';
 
   return (
-    <CSSTransition
-      in={!isRemoved}
-      timeout={500}
-      classNames='fade'
-      unmountOnExit
-      onExited={() => {
-        deleteWordFromSentenceList(textWithKanji);
-      }}
-    >
+    <CSSTransition in={isVisible} timeout={500} classNames='fade' unmountOnExit>
       <li
         style={{
           padding: '10px',
