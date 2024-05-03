@@ -6,7 +6,6 @@ const ResponseSectionWrapper = ({
   wordBank,
   response,
   handleDeleteSentence,
-  handleGetNewSentence,
   mp3Bank,
   index,
 }) => {
@@ -24,7 +23,6 @@ const ResponseSectionWrapper = ({
           responseItem={response}
           wordBank={wordBank}
           handleDeleteSentence={handleDeleteSentence}
-          handleGetNewSentence={handleGetNewSentence}
           mp3Bank={mp3Bank}
         />
       )}

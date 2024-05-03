@@ -6,7 +6,6 @@ const ResponseSectionItem = ({
   responseItem,
   wordBank,
   handleDeleteSentence,
-  handleGetNewSentence,
   mp3Bank,
 }) => {
   const [audioRefs, setAudioRefs] = useState([]);
@@ -79,7 +78,6 @@ const ResponseSectionItem = ({
               detail={detail}
               wordBank={wordBank}
               handleDeleteSentence={handleDeleteSentence}
-              handleGetNewSentence={handleGetNewSentence}
               mp3Bank={mp3Bank}
               setRefs={setRefs}
               handleWhatAudioIsPlaying={handleWhatAudioIsPlaying}

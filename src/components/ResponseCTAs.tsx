@@ -1,7 +1,6 @@
 const ResponseCTAs = ({
   loadingResponse,
   handleDeleteClick,
-  handleGetNewSentenceClick,
   handleGetAudio,
   getKanjiFreeSentence,
 }) => {
@@ -9,10 +8,6 @@ const ResponseCTAs = ({
     {
       text: 'Delete',
       onClickHandler: handleDeleteClick,
-    },
-    {
-      text: 'Redo',
-      onClickHandler: handleGetNewSentenceClick,
     },
     {
       text: 'Get Audio',

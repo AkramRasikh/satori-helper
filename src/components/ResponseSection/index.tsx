@@ -1,11 +1,6 @@
 import ResponseSectionWrapper from './ResponseSectionWrapper';
 
-const ResponseSection = ({
-  response,
-  handleDeleteSentence,
-  handleGetNewSentence,
-  mp3Bank,
-}) => {
+const ResponseSection = ({ response, handleDeleteSentence, mp3Bank }) => {
   let totalSentenceCount = 0;
 
   const renderedResponse = response.map((responseItem, index) => {
@@ -23,7 +18,6 @@ const ResponseSection = ({
         wordBank={wordBank}
         response={response}
         handleDeleteSentence={handleDeleteSentence}
-        handleGetNewSentence={handleGetNewSentence}
         mp3Bank={mp3Bank}
       />
     );

@@ -1,6 +1,6 @@
 import satoriCardsBulkAPI from '../api/satori-cards-bulk';
 import LearningBase from '@/components/LearningBase';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ResponseSection from '@/components/ResponseSection';
 import WordBankSection from '@/components/WordBankSection';
 import GetContentActions from '@/components/GetContentCTAs';
@@ -22,7 +22,7 @@ export default function Home(props) {
   const [wordBankForGeneratedWords, setWordBankForGeneratedWords] = useState(
     [],
   );
-  const [response, setResponse] = useState([]);
+  const [response, setResponse] = useState();
   const [flashCardWordDone, setFlashCardWordDone] = useState('');
   const [isLoadingResponse, setLoadingResponse] = useState(false);
   const [isHandleAllSentence, setHandleAllSentence] = useState(false);
@@ -85,44 +85,6 @@ export default function Home(props) {
     );
 
     setWordBank(filteredWordBank);
-  };
-
-  const replaceSentence = (responseAfterRemovedSentenceId, newRes) => {
-    return response.map((resItem) => {
-      const filteredResponse = resItem.response.filter(
-        (resItem) => resItem.id !== responseAfterRemovedSentenceId,
-      );
-
-      return {
-        wordBank: resItem.wordBank,
-        response: [...newRes, ...filteredResponse],
-      };
-    });
-  };
-
-  const handleGetNewSentence = async (sentenceToBeReplaced, matchedWords) => {
-    try {
-      setLoadingResponse(true);
-      const prompt =
-        combinePrompt +
-        matchedWords[0] +
-        ' context: ' +
-        sentenceToBeReplaced.targetLang;
-      if (!prompt) return;
-      const res = await chatGptAPI({ sentence: prompt });
-      const structuredJapEngRes = addIdToResponse(res);
-
-      const newReplacedResponse = replaceSentence(
-        sentenceToBeReplaced.id,
-        structuredJapEngRes,
-      );
-
-      setResponse(newReplacedResponse);
-    } catch (error) {
-      console.error('Error fetching response:', error);
-    } finally {
-      setLoadingResponse(false);
-    }
   };
 
   const addIdToResponse = (parsedResponse) => {
@@ -292,7 +254,6 @@ export default function Home(props) {
         <ResponseSection
           response={response}
           handleDeleteSentence={handleDeleteSentence}
-          handleGetNewSentence={handleGetNewSentence}
           mp3Bank={mp3Bank}
         />
       ) : null}

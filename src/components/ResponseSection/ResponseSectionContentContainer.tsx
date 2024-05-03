@@ -8,7 +8,6 @@ const ResponseSectionContentContainer = ({
   detail,
   wordBank,
   handleDeleteSentence,
-  handleGetNewSentence,
   mp3Bank,
   setRefs,
   inArrayIndex,
@@ -37,10 +36,6 @@ const ResponseSectionContentContainer = ({
 
   const handleDeleteClick = () => {
     handleDeleteSentence(detail.id);
-  };
-
-  const handleGetNewSentenceClick = () => {
-    handleGetNewSentence(detail, matchedWords);
   };
 
   function underlineWordsInSentence(sentence) {
@@ -149,7 +144,6 @@ const ResponseSectionContentContainer = ({
         <ResponseCTAs
           loadingResponse={loadingResponse}
           handleDeleteClick={handleDeleteClick}
-          handleGetNewSentenceClick={handleGetNewSentenceClick}
           handleGetAudio={handleGetAudio}
           getKanjiFreeSentence={getKanjiFreeSentence}
         />
