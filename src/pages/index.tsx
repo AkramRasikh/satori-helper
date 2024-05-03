@@ -3,15 +3,9 @@ import LearningBase from '@/components/LearningBase';
 import { useEffect, useState } from 'react';
 import ResponseSection from '@/components/ResponseSection';
 import WordBankSection from '@/components/WordBankSection';
-import GetContentActions from '@/components/GetContentCTAs';
 import LoadingStatus from '@/components/LoadingStatus';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  combinePrompt,
-  moodIntensivePrompt,
-  nonIndicativeIntensivePrompt,
-  storyPrompt,
-} from '@/prompts';
+import { combinePrompt } from '@/prompts';
 import '../app/styles/globals.css';
 import FlashCardDoneToast from '@/components/FlashCardDoneToast';
 import chatGptAPI from './api/chatgpt';
@@ -20,8 +14,21 @@ import getChatGptTTS from './api/tts-audio';
 import getNarakeetAudio from './api/narakeet';
 import handleSatoriFlashcardAPI from './api/satori-flashcard';
 import underlineTargetWords from './api/underline-target-words';
+import GetContentActions from '@/components/GetContentActions';
 
-const RadioButtonExample = () => {
+export default function Home(props) {
+  const sentenceList = props?.satoriData;
+  const [wordBank, setWordBank] = useState([]);
+  const [sentenceListState, setSentenceListState] = useState(sentenceList);
+  const [wordBankForGeneratedWords, setWordBankForGeneratedWords] = useState(
+    [],
+  );
+  const [response, setResponse] = useState([]);
+  const [flashCardWordDone, setFlashCardWordDone] = useState('');
+  const [isLoadingResponse, setLoadingResponse] = useState(false);
+  const [isHandleAllSentence, setHandleAllSentence] = useState(false);
+  const [mp3Bank, setMp3Bank] = useState([]);
+
   const [selectedOption, setSelectedPrompt] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedWithAudio, setWithAudio] = useState('');
@@ -36,126 +43,6 @@ const RadioButtonExample = () => {
   const handleWithAudioChange = (event) => {
     setWithAudio(event.target.value);
   };
-
-  const promptOptions = [
-    {
-      label: 'Get story',
-      option: storyPrompt,
-    },
-    {
-      label: 'Combine words',
-      option: combinePrompt,
-    },
-    {
-      label: 'Mixed moods combine',
-      option: moodIntensivePrompt,
-    },
-    {
-      label: 'Non Indicative mood',
-      option: nonIndicativeIntensivePrompt,
-    },
-  ];
-  const chatgptModels = [
-    {
-      label: 'gpt-4',
-      option: 'gpt-4',
-    },
-    {
-      label: 'gpt-3.5-turbo',
-      option: 'gpt-3.5-turbo',
-    },
-  ];
-
-  const audioOptions = [
-    {
-      label: 'With Audio (ChatGPT)',
-      option: 'chatgpt',
-    },
-    {
-      label: 'No Audio',
-      option: 'No Audio',
-    },
-    {
-      label: 'With Audio (Narakeet)',
-      option: 'Narakeet',
-    },
-  ];
-
-  return (
-    <div>
-      <div style={{ display: 'flex' }}>
-        <div>
-          <p>Choose a prompt:</p>
-          {promptOptions.map((option, index) => {
-            return (
-              <label key={index}>
-                <input
-                  type='radio'
-                  value={option.option}
-                  checked={selectedOption === option.option}
-                  onChange={handlePromptChange}
-                />
-                {option.label}
-                <br />
-              </label>
-            );
-          })}
-        </div>
-        <div>
-          <p>Choose a model:</p>
-          {chatgptModels.map((option, index) => {
-            return (
-              <label key={index}>
-                <input
-                  type='radio'
-                  value={option.option}
-                  checked={selectedModel === option.option}
-                  onChange={handleModelChange}
-                />
-                {option.label}
-                <br />
-              </label>
-            );
-          })}
-        </div>
-        <div>
-          <p>Choose a audio:</p>
-          {audioOptions.map((option, index) => {
-            return (
-              <label key={index}>
-                <input
-                  type='radio'
-                  value={option.option}
-                  checked={selectedWithAudio === option.option}
-                  onChange={handleWithAudioChange}
-                />
-                {option.label}
-                <br />
-              </label>
-            );
-          })}
-        </div>
-      </div>
-
-      <p>Selected Prompt: {selectedOption}</p>
-      <p>Selected Model: {selectedModel}</p>
-      {selectedWithAudio && <p>With Audio: {selectedModel}</p>}
-    </div>
-  );
-};
-
-export default function Home(props) {
-  const sentenceList = props?.satoriData;
-  const [wordBank, setWordBank] = useState([]);
-  const [sentenceListState, setSentenceListState] = useState(sentenceList);
-  const [wordBankForGeneratedWords, setWordBankForGeneratedWords] = useState(
-    [],
-  );
-  const [response, setResponse] = useState([]);
-  const [flashCardWordDone, setFlashCardWordDone] = useState('');
-  const [isLoadingResponse, setLoadingResponse] = useState(false);
-  const [isHandleAllSentence, setHandleAllSentence] = useState(false);
-  const [mp3Bank, setMp3Bank] = useState([]);
 
   const handleAddToWordBank = (wordData) => {
     const isWordInWord = wordBank.find(
@@ -395,13 +282,14 @@ export default function Home(props) {
         handleRemoveFromBank={handleRemoveFromBank}
       />
       {isLoadingResponse && <LoadingStatus />}
-      <RadioButtonExample />
       {wordBank?.length > 0 && (
         <GetContentActions
-          handleChatGPTRes={handleChatGPTRes}
-          isLoadingResponse={isLoadingResponse}
-          handleClearWordBank={handleClearWordBank}
-          handleAllSentences={handleAllSentences}
+          selectedOption={selectedOption}
+          handlePromptChange={handlePromptChange}
+          selectedModel={selectedModel}
+          handleModelChange={handleModelChange}
+          selectedWithAudio={selectedWithAudio}
+          handleWithAudioChange={handleWithAudioChange}
         />
       )}
       {response?.length > 0 ? (
