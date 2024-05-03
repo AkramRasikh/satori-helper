@@ -1,11 +1,10 @@
 import satoriCardsBulkAPI from '../api/satori-cards-bulk';
 import LearningBase from '@/components/LearningBase';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ResponseSection from '@/components/ResponseSection';
 import WordBankSection from '@/components/WordBankSection';
 import LoadingStatus from '@/components/LoadingStatus';
 import { v4 as uuidv4 } from 'uuid';
-import { combinePrompt } from '@/prompts';
 import '../app/styles/globals.css';
 import FlashCardDoneToast from '@/components/FlashCardDoneToast';
 import chatGptAPI from './api/chatgpt';
@@ -15,6 +14,7 @@ import getNarakeetAudio from './api/narakeet';
 import handleSatoriFlashcardAPI from './api/satori-flashcard';
 import underlineTargetWords from './api/underline-target-words';
 import GetContentActions from '@/components/GetContentActions';
+import SelectAllButtons from '@/components/SelectAllButtons';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -26,12 +26,14 @@ export default function Home(props) {
   const [response, setResponse] = useState([]);
   const [flashCardWordDone, setFlashCardWordDone] = useState('');
   const [isLoadingResponse, setLoadingResponse] = useState(false);
-  const [isHandleAllSentence, setHandleAllSentence] = useState(false);
   const [mp3Bank, setMp3Bank] = useState([]);
 
   const [selectedPrompt, setSelectedPrompt] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedWithAudio, setWithAudio] = useState('');
+
+  const numberOfWordsToStudy = sentenceList.length;
+  const numberOfWordsInWordBank = wordBank.length;
 
   const handlePromptChange = (event) => {
     setSelectedPrompt(event.target.value);
@@ -165,20 +167,6 @@ export default function Home(props) {
     setWordBank([]);
   };
 
-  useEffect(() => {
-    const callHandler = async () => {
-      await handleChatGPTRes({
-        prompt: combinePrompt,
-        model: 'gpt-4',
-        audio: true,
-      });
-    };
-    if (isHandleAllSentence && sentenceListState?.length > 0) {
-      callHandler();
-      setHandleAllSentence(false);
-    }
-  }, [isHandleAllSentence, sentenceListState]);
-
   const handleAllSentences = () => {
     sentenceList.forEach((sentenceSnippet) => {
       handleAddToWordBank({
@@ -187,7 +175,6 @@ export default function Home(props) {
         definition: sentenceSnippet.definition,
       });
     });
-    setHandleAllSentence(true);
   };
 
   const handleChatGPTRes = async () => {
@@ -273,12 +260,17 @@ export default function Home(props) {
         wordBank={wordBank}
         handleFlashCard={handleFlashCard}
       />
+      {isLoadingResponse && <LoadingStatus />}
+      <SelectAllButtons
+        numberOfWordsInWordBank={numberOfWordsInWordBank}
+        numberOfWordsToStudy={numberOfWordsToStudy}
+        handleAllSentences={handleAllSentences}
+        handleClearWordBank={handleClearWordBank}
+      />
       <WordBankSection
         wordBank={wordBank}
         handleRemoveFromBank={handleRemoveFromBank}
       />
-      {isLoadingResponse && <LoadingStatus />}
-      <button onClick={handleChatGPTRes}>handleChatGPTRes</button>
       {wordBank?.length > 0 && (
         <GetContentActions
           selectedPrompt={selectedPrompt}
