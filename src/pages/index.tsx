@@ -241,9 +241,6 @@ export default function Home(props) {
   const getCorrespondingAudio = async (japaneseSentenceData, audio) => {
     if (!japaneseSentenceData) return null;
     try {
-      const apiEndPoint =
-        audio === 'narakeet' ? '/api/narakeet' : '/api/chatgpt-tts';
-
       const responseFiles =
         audio === 'narakeet'
           ? await getNarakeetAudio({
