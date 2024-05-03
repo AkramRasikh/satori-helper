@@ -21,7 +21,6 @@ const ResponseSectionContentContainer = ({
   const [noKanjiSentence, setNoKanjiSentence] = useState('');
   const [matchedWords, setMatchedWords] = useState([]);
   const [tried, setTried] = useState(false);
-  const sentenceRef = useRef();
 
   const baseAssetsURL = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT;
   const audioFile = baseAssetsURL + '/audio/' + detail.id + '.mp3';
@@ -37,22 +36,6 @@ const ResponseSectionContentContainer = ({
   const handleDeleteClick = () => {
     handleDeleteSentence(detail.id);
   };
-
-  function underlineWordsInSentence(sentence) {
-    const pattern = new RegExp([...matchedWords, ...wordBank].join('|'), 'g');
-
-    const underlinedSentence = sentence.replace(
-      pattern,
-      (match) => `<u>${match}</u>`,
-    );
-
-    if (sentenceRef?.current) {
-      setTimeout(
-        () => (sentenceRef.current.innerHTML = underlinedSentence),
-        100,
-      );
-    }
-  }
 
   useEffect(() => {
     // figure this shit
@@ -122,8 +105,6 @@ const ResponseSectionContentContainer = ({
     return null;
   }
 
-  const underlinedSentence = underlineWordsInSentence(japaneseSentence);
-
   return (
     <li style={{ marginBottom: '10px' }}>
       <div
@@ -133,14 +114,12 @@ const ResponseSectionContentContainer = ({
         }}
       >
         <p
-          ref={sentenceRef}
+          dangerouslySetInnerHTML={{ __html: detail.underlinedText }}
           style={{
             margin: '5px 0',
             background: isNowPlaying === inArrayIndex ? 'yellow' : 'none',
           }}
-        >
-          {underlinedSentence}
-        </p>
+        />
         <ResponseCTAs
           loadingResponse={loadingResponse}
           handleDeleteClick={handleDeleteClick}

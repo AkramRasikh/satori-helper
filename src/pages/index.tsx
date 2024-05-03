@@ -22,7 +22,7 @@ export default function Home(props) {
   const [wordBankForGeneratedWords, setWordBankForGeneratedWords] = useState(
     [],
   );
-  const [response, setResponse] = useState();
+  const [response, setResponse] = useState([]);
   const [flashCardWordDone, setFlashCardWordDone] = useState('');
   const [isLoadingResponse, setLoadingResponse] = useState(false);
   const [isHandleAllSentence, setHandleAllSentence] = useState(false);
@@ -50,6 +50,41 @@ export default function Home(props) {
       return 'Hard 👎';
     }
     return '';
+  };
+
+  const fetchKuromojiDictionary = async (japaneseSentence, thisWordBank) => {
+    console.log('## fetchKuromojiDictionary', {
+      japaneseSentence,
+      thisWordBank,
+    });
+
+    try {
+      const response = await fetch('/api/kuromoji', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          japaneseSentence: japaneseSentence,
+          targetWords: thisWordBank,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      console.log('## fetchKuromojiDictionary response: ', response);
+      const text = await response.text();
+      console.log('## fetchKuromojiDictionary text: ', text);
+
+      const parsedRed = JSON.parse(text);
+      console.log('## fetchKuromojiDictionary parsedRed: ', parsedRed);
+      return parsedRed;
+    } catch (error) {
+      console.error('Error fetching Kuromoji dictionary:', error);
+      throw error;
+    }
   };
 
   const handleFlashCard = async (flashCardNumber, cardId) => {
@@ -87,13 +122,33 @@ export default function Home(props) {
     setWordBank(filteredWordBank);
   };
 
-  const addIdToResponse = (parsedResponse) => {
-    const responseWithId = parsedResponse.map((item) => ({
-      id: uuidv4(),
-      targetLang: item.targetLang,
-      eng: item.baseLang,
-      moodUsed: item?.moodUsed,
-    }));
+  const underlineWordsInSentence = async (sentence, thisWordBank) => {
+    const matchedWords = await fetchKuromojiDictionary(sentence, thisWordBank);
+    const pattern = new RegExp(
+      [...matchedWords, ...thisWordBank].join('|'),
+      'g',
+    );
+    const underlinedSentence = sentence.replace(
+      pattern,
+      (match) => `<u>${match}</u>`,
+    );
+
+    return underlinedSentence;
+  };
+
+  const addIdToResponse = async (parsedResponse, thisWordBank) => {
+    const responseWithId = await Promise.all(
+      parsedResponse.map(async (item) => ({
+        id: uuidv4(),
+        targetLang: item.targetLang,
+        eng: item.baseLang,
+        moodUsed: item?.moodUsed,
+        underlinedText: await underlineWordsInSentence(
+          item.targetLang,
+          thisWordBank,
+        ),
+      })),
+    );
     return responseWithId;
   };
 
@@ -170,12 +225,13 @@ export default function Home(props) {
 
       if (!finalPrompt) return;
       const res = await chatGptAPI({ sentence: finalPrompt, model });
-      const structuredJapEngRes = addIdToResponse(res);
+      const thisWordBank = wordBank.map((word) => word.word);
+      const structuredJapEngRes = await addIdToResponse(res, thisWordBank);
 
       setResponse((prev) => [
         ...prev,
         {
-          wordBank: wordBank.map((word) => word.word),
+          wordBank: thisWordBank,
           response: structuredJapEngRes,
         },
       ]);
