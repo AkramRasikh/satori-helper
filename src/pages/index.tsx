@@ -279,6 +279,8 @@ export default function Home(props) {
           handleModelChange={handleModelChange}
           selectedWithAudio={selectedWithAudio}
           handleWithAudioChange={handleWithAudioChange}
+          handleChatGPTRes={handleChatGPTRes}
+          isLoadingResponse={isLoadingResponse}
         />
       )}
       {response?.length > 0 ? (

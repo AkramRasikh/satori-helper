@@ -7,7 +7,7 @@ const SelectAllButtons = ({
   return numberOfWordsInWordBank < numberOfWordsToStudy ? (
     <button
       style={{
-        margin: 'auto auto auto 10px',
+        margin: '10px auto',
         height: 'fit-content',
         padding: '15px',
         borderRadius: '15px',
@@ -21,7 +21,7 @@ const SelectAllButtons = ({
   ) : numberOfWordsInWordBank === numberOfWordsToStudy ? (
     <button
       style={{
-        margin: 'auto auto auto 10px',
+        margin: '10px auto',
         height: 'fit-content',
         padding: '15px',
         borderRadius: '15px',

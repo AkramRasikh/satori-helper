@@ -7,7 +7,7 @@ import {
 
 const promptOptions = [
   {
-    label: 'Get story',
+    label: 'Get a story',
     option: storyPrompt,
   },
   {
@@ -56,60 +56,83 @@ const GetContentActions = ({
   handleModelChange,
   selectedWithAudio,
   handleWithAudioChange,
+  handleChatGPTRes,
+  isLoadingResponse,
 }) => {
+  const disabledBtn = !selectedPrompt || !selectedModel || isLoadingResponse;
   return (
-    <div style={{ display: 'flex' }}>
-      <div>
-        <p>Choose a prompt:</p>
-        {promptOptions.map((option, index) => {
-          return (
-            <label key={index}>
-              <input
-                type='radio'
-                value={option.option}
-                checked={selectedPrompt === option.option}
-                onChange={handlePromptChange}
-              />
-              {option.label}
-              <br />
-            </label>
-          );
-        })}
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+        <div>
+          <p>Choose a prompt:</p>
+          {promptOptions.map((option, index) => {
+            return (
+              <label key={index}>
+                <input
+                  style={{ margin: '7px' }}
+                  type='radio'
+                  value={option.option}
+                  checked={selectedPrompt === option.option}
+                  onChange={handlePromptChange}
+                />
+                {option.label}
+                <br />
+              </label>
+            );
+          })}
+        </div>
+        <div>
+          <p>Choose a model:</p>
+          {chatgptModels.map((option, index) => {
+            return (
+              <label key={index}>
+                <input
+                  style={{ margin: '7px' }}
+                  type='radio'
+                  value={option.option}
+                  checked={selectedModel === option.option}
+                  onChange={handleModelChange}
+                />
+                {option.label}
+                <br />
+              </label>
+            );
+          })}
+        </div>
+        <div>
+          <p>Choose a audio:</p>
+          {audioOptions.map((option, index) => {
+            return (
+              <label key={index}>
+                <input
+                  style={{ margin: '7px' }}
+                  type='radio'
+                  value={option.option}
+                  checked={selectedWithAudio === option.option}
+                  onChange={handleWithAudioChange}
+                />
+                {option.label}
+                <br />
+              </label>
+            );
+          })}
+        </div>
       </div>
-      <div>
-        <p>Choose a model:</p>
-        {chatgptModels.map((option, index) => {
-          return (
-            <label key={index}>
-              <input
-                type='radio'
-                value={option.option}
-                checked={selectedModel === option.option}
-                onChange={handleModelChange}
-              />
-              {option.label}
-              <br />
-            </label>
-          );
-        })}
-      </div>
-      <div>
-        <p>Choose a audio:</p>
-        {audioOptions.map((option, index) => {
-          return (
-            <label key={index}>
-              <input
-                type='radio'
-                value={option.option}
-                checked={selectedWithAudio === option.option}
-                onChange={handleWithAudioChange}
-              />
-              {option.label}
-              <br />
-            </label>
-          );
-        })}
-      </div>
+      <button
+        style={{
+          margin: '10px auto',
+          height: 'fit-content',
+          padding: '15px',
+          borderRadius: '15px',
+          border: 'none',
+          cursor: 'pointer',
+          display: 'block',
+        }}
+        onClick={handleChatGPTRes}
+        disabled={disabledBtn}
+      >
+        Lets go!
+      </button>{' '}
     </div>
   );
 };
