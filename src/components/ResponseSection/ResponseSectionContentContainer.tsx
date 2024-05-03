@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ResponseCTAs from '../ResponseCTAs';
 import AudioPlayer from '../AudioPlayer';
 import getChatGptTTS from '@/pages/api/tts-audio';
