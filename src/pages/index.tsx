@@ -6,7 +6,12 @@ import WordBankSection from '@/components/WordBankSection';
 import GetContentActions from '@/components/GetContentCTAs';
 import LoadingStatus from '@/components/LoadingStatus';
 import { v4 as uuidv4 } from 'uuid';
-import { combinePrompt } from '@/prompts';
+import {
+  combinePrompt,
+  moodIntensivePrompt,
+  nonIndicativeIntensivePrompt,
+  storyPrompt,
+} from '@/prompts';
 import '../app/styles/globals.css';
 import FlashCardDoneToast from '@/components/FlashCardDoneToast';
 import chatGptAPI from './api/chatgpt';
@@ -15,6 +20,129 @@ import getChatGptTTS from './api/tts-audio';
 import getNarakeetAudio from './api/narakeet';
 import handleSatoriFlashcardAPI from './api/satori-flashcard';
 import underlineTargetWords from './api/underline-target-words';
+
+const RadioButtonExample = () => {
+  const [selectedOption, setSelectedPrompt] = useState('');
+  const [selectedModel, setSelectedModel] = useState('');
+  const [selectedWithAudio, setWithAudio] = useState('');
+
+  const handlePromptChange = (event) => {
+    setSelectedPrompt(event.target.value);
+  };
+
+  const handleModelChange = (event) => {
+    setSelectedModel(event.target.value);
+  };
+  const handleWithAudioChange = (event) => {
+    setWithAudio(event.target.value);
+  };
+
+  const promptOptions = [
+    {
+      label: 'Get story',
+      option: storyPrompt,
+    },
+    {
+      label: 'Combine words',
+      option: combinePrompt,
+    },
+    {
+      label: 'Mixed moods combine',
+      option: moodIntensivePrompt,
+    },
+    {
+      label: 'Non Indicative mood',
+      option: nonIndicativeIntensivePrompt,
+    },
+  ];
+  const chatgptModels = [
+    {
+      label: 'gpt-4',
+      option: 'gpt-4',
+    },
+    {
+      label: 'gpt-3.5-turbo',
+      option: 'gpt-3.5-turbo',
+    },
+  ];
+
+  const audioOptions = [
+    {
+      label: 'With Audio (ChatGPT)',
+      option: 'chatgpt',
+    },
+    {
+      label: 'No Audio',
+      option: 'No Audio',
+    },
+    {
+      label: 'With Audio (Narakeet)',
+      option: 'Narakeet',
+    },
+  ];
+
+  return (
+    <div>
+      <div style={{ display: 'flex' }}>
+        <div>
+          <p>Choose a prompt:</p>
+          {promptOptions.map((option, index) => {
+            return (
+              <label key={index}>
+                <input
+                  type='radio'
+                  value={option.option}
+                  checked={selectedOption === option.option}
+                  onChange={handlePromptChange}
+                />
+                {option.label}
+                <br />
+              </label>
+            );
+          })}
+        </div>
+        <div>
+          <p>Choose a model:</p>
+          {chatgptModels.map((option, index) => {
+            return (
+              <label key={index}>
+                <input
+                  type='radio'
+                  value={option.option}
+                  checked={selectedModel === option.option}
+                  onChange={handleModelChange}
+                />
+                {option.label}
+                <br />
+              </label>
+            );
+          })}
+        </div>
+        <div>
+          <p>Choose a audio:</p>
+          {audioOptions.map((option, index) => {
+            return (
+              <label key={index}>
+                <input
+                  type='radio'
+                  value={option.option}
+                  checked={selectedWithAudio === option.option}
+                  onChange={handleWithAudioChange}
+                />
+                {option.label}
+                <br />
+              </label>
+            );
+          })}
+        </div>
+      </div>
+
+      <p>Selected Prompt: {selectedOption}</p>
+      <p>Selected Model: {selectedModel}</p>
+      {selectedWithAudio && <p>With Audio: {selectedModel}</p>}
+    </div>
+  );
+};
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -267,6 +395,7 @@ export default function Home(props) {
         handleRemoveFromBank={handleRemoveFromBank}
       />
       {isLoadingResponse && <LoadingStatus />}
+      <RadioButtonExample />
       {wordBank?.length > 0 && (
         <GetContentActions
           handleChatGPTRes={handleChatGPTRes}

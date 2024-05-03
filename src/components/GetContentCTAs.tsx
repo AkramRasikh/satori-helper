@@ -1,7 +1,7 @@
 import {
   moodIntensivePrompt,
   nonIndicativeIntensivePrompt,
-  storyPromptFormatted,
+  storyPrompt,
 } from '@/prompts';
 
 const GetContentActions = ({
@@ -30,12 +30,12 @@ const GetContentActions = ({
     },
     {
       text: 'Get a story!',
-      onClickHandler: () => handleChatGPTRes({ prompt: storyPromptFormatted }),
+      onClickHandler: () => handleChatGPTRes({ prompt: storyPrompt }),
     },
     {
       text: 'Get a story! GPT 4',
       onClickHandler: () =>
-        handleChatGPTRes({ prompt: storyPromptFormatted, model: 'gpt-4' }),
+        handleChatGPTRes({ prompt: storyPrompt, model: 'gpt-4' }),
     },
     {
       text: 'Combine words',

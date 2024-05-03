@@ -15,12 +15,6 @@ const jsonReturnFormat = [
 ];
 
 export const storyPrompt = `
-  Make the following words make sense together in as short few lined 
-  story in Japanese. Note the word context is there to help make sense
-  of the words
-`;
-
-export const storyPromptFormatted = `
   I have a list of words in Japanese I am learning. I want you to make a short story with the word list below.
   Maximum of a paragraph and have a ratio of ideally at least one target word being used per a sentence.
   Using the words multiple times would be preferred but shouldn't feel forced.
