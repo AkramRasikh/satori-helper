@@ -37,15 +37,15 @@ const chatgptModels = [
 const audioOptions = [
   {
     label: 'With Audio (ChatGPT)',
-    option: 'chatgpt',
+    option: '*',
   },
   {
     label: 'No Audio',
-    option: 'No Audio',
+    option: '',
   },
   {
     label: 'With Audio (Narakeet)',
-    option: 'Narakeet',
+    option: 'narakeet',
   },
 ];
 

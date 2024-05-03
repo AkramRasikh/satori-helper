@@ -191,15 +191,9 @@ export default function Home(props) {
   };
 
   const handleChatGPTRes = async () => {
-    // {
-    //   prompt,
-    //   model = 'gpt-3.5-turbo',
-    //   audio,
-    // }
-    // const;
     try {
       setLoadingResponse(true);
-      let finalPrompt = prompt;
+      let finalPrompt = selectedPrompt;
       let wordBankToText = '';
 
       wordBank.forEach((wordBankData) => {
@@ -210,7 +204,10 @@ export default function Home(props) {
       finalPrompt = finalPrompt + '\n' + wordBankToText;
 
       if (!finalPrompt) return;
-      const res = await chatGptAPI({ sentence: finalPrompt, model });
+      const res = await chatGptAPI({
+        sentence: finalPrompt,
+        model: selectedModel,
+      });
       const thisWordBank = wordBank.map((word) => word.word);
       const structuredJapEngRes = await addIdToResponse(res, thisWordBank);
 
@@ -226,11 +223,11 @@ export default function Home(props) {
           new Set([...prev, ...wordBank.map((wordObj) => wordObj.word)]),
         ),
       );
-      if (audio) {
+      if (selectedWithAudio) {
         await Promise.all(
           structuredJapEngRes.map(
             async (sentenceData) =>
-              await getCorrespondingAudio(sentenceData, audio),
+              await getCorrespondingAudio(sentenceData, selectedWithAudio),
           ),
         );
       }
@@ -284,6 +281,7 @@ export default function Home(props) {
         handleRemoveFromBank={handleRemoveFromBank}
       />
       {isLoadingResponse && <LoadingStatus />}
+      <button onClick={handleChatGPTRes}>handleChatGPTRes</button>
       {wordBank?.length > 0 && (
         <GetContentActions
           selectedPrompt={selectedPrompt}
