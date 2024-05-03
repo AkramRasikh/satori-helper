@@ -50,7 +50,7 @@ const audioOptions = [
 ];
 
 const GetContentActions = ({
-  selectedOption,
+  selectedPrompt,
   handlePromptChange,
   selectedModel,
   handleModelChange,
@@ -67,7 +67,7 @@ const GetContentActions = ({
               <input
                 type='radio'
                 value={option.option}
-                checked={selectedOption === option.option}
+                checked={selectedPrompt === option.option}
                 onChange={handlePromptChange}
               />
               {option.label}

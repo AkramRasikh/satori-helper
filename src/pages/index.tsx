@@ -29,7 +29,7 @@ export default function Home(props) {
   const [isHandleAllSentence, setHandleAllSentence] = useState(false);
   const [mp3Bank, setMp3Bank] = useState([]);
 
-  const [selectedOption, setSelectedPrompt] = useState('');
+  const [selectedPrompt, setSelectedPrompt] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedWithAudio, setWithAudio] = useState('');
 
@@ -190,11 +190,13 @@ export default function Home(props) {
     setHandleAllSentence(true);
   };
 
-  const handleChatGPTRes = async ({
-    prompt,
-    model = 'gpt-3.5-turbo',
-    audio,
-  }) => {
+  const handleChatGPTRes = async () => {
+    // {
+    //   prompt,
+    //   model = 'gpt-3.5-turbo',
+    //   audio,
+    // }
+    // const;
     try {
       setLoadingResponse(true);
       let finalPrompt = prompt;
@@ -284,7 +286,7 @@ export default function Home(props) {
       {isLoadingResponse && <LoadingStatus />}
       {wordBank?.length > 0 && (
         <GetContentActions
-          selectedOption={selectedOption}
+          selectedPrompt={selectedPrompt}
           handlePromptChange={handlePromptChange}
           selectedModel={selectedModel}
           handleModelChange={handleModelChange}
