@@ -64,7 +64,7 @@ const GetContentActions = ({
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
         <div>
-          <p>Choose a prompt:</p>
+          <p style={{ margin: '5px' }}>Choose a prompt:</p>
           {promptOptions.map((option, index) => {
             return (
               <label key={index}>
@@ -82,7 +82,7 @@ const GetContentActions = ({
           })}
         </div>
         <div>
-          <p>Choose a model:</p>
+          <p style={{ margin: '5px' }}>Choose a model:</p>
           {chatgptModels.map((option, index) => {
             return (
               <label key={index}>
@@ -100,7 +100,7 @@ const GetContentActions = ({
           })}
         </div>
         <div>
-          <p>Choose a audio:</p>
+          <p style={{ margin: '5px' }}>Choose a audio:</p>
           {audioOptions.map((option, index) => {
             return (
               <label key={index}>
