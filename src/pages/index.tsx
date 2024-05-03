@@ -14,6 +14,7 @@ import getSatoriAudio from '@/api/audio';
 import getChatGptTTS from './api/tts-audio';
 import getNarakeetAudio from './api/narakeet';
 import handleSatoriFlashcardAPI from './api/satori-flashcard';
+import underlineTargetWords from './api/underline-target-words';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -52,41 +53,6 @@ export default function Home(props) {
     return '';
   };
 
-  const fetchKuromojiDictionary = async (japaneseSentence, thisWordBank) => {
-    console.log('## fetchKuromojiDictionary', {
-      japaneseSentence,
-      thisWordBank,
-    });
-
-    try {
-      const response = await fetch('/api/kuromoji', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          japaneseSentence: japaneseSentence,
-          targetWords: thisWordBank,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      console.log('## fetchKuromojiDictionary response: ', response);
-      const text = await response.text();
-      console.log('## fetchKuromojiDictionary text: ', text);
-
-      const parsedRed = JSON.parse(text);
-      console.log('## fetchKuromojiDictionary parsedRed: ', parsedRed);
-      return parsedRed;
-    } catch (error) {
-      console.error('Error fetching Kuromoji dictionary:', error);
-      throw error;
-    }
-  };
-
   const handleFlashCard = async (flashCardNumber, cardId) => {
     const wordToBeRemoved = sentenceListState.find(
       (el) => el.cardId === cardId,
@@ -123,7 +89,10 @@ export default function Home(props) {
   };
 
   const underlineWordsInSentence = async (sentence, thisWordBank) => {
-    const matchedWords = await fetchKuromojiDictionary(sentence, thisWordBank);
+    const matchedWords = await underlineTargetWords({
+      sentence,
+      wordBank: thisWordBank,
+    });
     const pattern = new RegExp(
       [...matchedWords, ...thisWordBank].join('|'),
       'g',
