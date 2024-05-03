@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ResponseCTAs from '../ResponseCTAs';
 import AudioPlayer from '../AudioPlayer';
 import getChatGptTTS from '@/pages/api/tts-audio';
@@ -6,7 +6,6 @@ import getKanjiToHiragana from '@/pages/api/kanji-to-hiragana';
 
 const ResponseSectionContentContainer = ({
   detail,
-  wordBank,
   handleDeleteSentence,
   mp3Bank,
   setRefs,
@@ -19,8 +18,6 @@ const ResponseSectionContentContainer = ({
   const [audioUrlIsAvailable, setAudioUrlIsAvailable] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [noKanjiSentence, setNoKanjiSentence] = useState('');
-  const [matchedWords, setMatchedWords] = useState([]);
-  const [tried, setTried] = useState(false);
 
   const baseAssetsURL = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT;
   const audioFile = baseAssetsURL + '/audio/' + detail.id + '.mp3';
@@ -36,39 +33,6 @@ const ResponseSectionContentContainer = ({
   const handleDeleteClick = () => {
     handleDeleteSentence(detail.id);
   };
-
-  useEffect(() => {
-    // figure this shit
-    const fetchKuromojiDictionary = async () => {
-      try {
-        const response = await fetch('/api/kuromoji', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            japaneseSentence: japaneseSentence,
-            targetWords: wordBank,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const resText = JSON.parse(await response.text());
-
-        setMatchedWords(resText);
-        setTried(true);
-      } catch (error) {
-        console.error('Error fetching Kuromoji dictionary:', error);
-        throw error;
-      }
-    };
-    if (japaneseSentence && !tried && matchedWords?.length === 0) {
-      fetchKuromojiDictionary();
-    }
-  }, [japaneseSentence, matchedWords?.length, tried, wordBank]);
 
   const handleGetAudio = async () => {
     if (!japaneseSentence) return null;

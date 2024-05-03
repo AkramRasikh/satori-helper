@@ -76,7 +76,6 @@ const ResponseSectionItem = ({
               key={index}
               inArrayIndex={index}
               detail={detail}
-              wordBank={wordBank}
               handleDeleteSentence={handleDeleteSentence}
               mp3Bank={mp3Bank}
               setRefs={setRefs}
