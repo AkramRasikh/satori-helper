@@ -17,7 +17,6 @@ import handleSatoriFlashcardAPI from './api/satori-flashcard';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
-  const wordBankRef = useRef([]);
   const [wordBank, setWordBank] = useState([]);
   const [sentenceListState, setSentenceListState] = useState(sentenceList);
   const [wordBankForGeneratedWords, setWordBankForGeneratedWords] = useState(
@@ -197,17 +196,15 @@ export default function Home(props) {
   }) => {
     try {
       setLoadingResponse(true);
-      let finalPrompt;
+      let finalPrompt = prompt;
+      let wordBankToText = '';
 
-      if (wordBankRef.current) {
-        const elements = wordBankRef.current?.querySelectorAll('*');
-        let text = '';
-        elements.forEach((element) => {
-          text += element.textContent + ' ';
-          text = text.replace(/❌/g, '');
-        });
-        finalPrompt = prompt + text.trim();
-      }
+      wordBank.forEach((wordBankData) => {
+        const fullText = `${wordBankData.word} context: ${wordBankData.context}\n`;
+        wordBankToText = wordBankToText + fullText;
+      });
+
+      finalPrompt = finalPrompt + '\n' + wordBankToText;
 
       if (!finalPrompt) return;
       const res = await chatGptAPI({ sentence: finalPrompt, model });
@@ -279,7 +276,6 @@ export default function Home(props) {
         handleFlashCard={handleFlashCard}
       />
       <WordBankSection
-        wordBankRef={wordBankRef}
         wordBank={wordBank}
         handleRemoveFromBank={handleRemoveFromBank}
       />

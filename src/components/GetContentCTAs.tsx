@@ -1,4 +1,8 @@
-import { combinePrompt, storyPromptFormatted } from '@/prompts';
+import {
+  moodIntensivePrompt,
+  nonIndicativeIntensivePrompt,
+  storyPromptFormatted,
+} from '@/prompts';
 
 const GetContentActions = ({
   handleChatGPTRes,
@@ -31,22 +35,30 @@ const GetContentActions = ({
     {
       text: 'Get a story! GPT 4',
       onClickHandler: () =>
-        handleChatGPTRes({ prompt: storyPromptFormatted, model: 'gpt-4' }), // needs works,
+        handleChatGPTRes({ prompt: storyPromptFormatted, model: 'gpt-4' }),
     },
     {
       text: 'Combine words',
-      onClickHandler: () => handleChatGPTRes({ prompt: combinePrompt }),
+      onClickHandler: () => handleChatGPTRes({ prompt: moodIntensivePrompt }),
     },
     {
       text: 'Combine words (GPT4)',
       onClickHandler: () =>
-        handleChatGPTRes({ prompt: combinePrompt, model: 'gpt-4' }),
+        handleChatGPTRes({ prompt: moodIntensivePrompt, model: 'gpt-4' }),
+    },
+    {
+      text: 'Combine words (GPT4) + non-indicative',
+      onClickHandler: () =>
+        handleChatGPTRes({
+          prompt: nonIndicativeIntensivePrompt,
+          model: 'gpt-4',
+        }),
     },
     {
       text: 'Combine words + Audio',
       onClickHandler: () =>
         handleChatGPTRes({
-          prompt: combinePrompt,
+          prompt: moodIntensivePrompt,
           model: 'gpt-3.5-turbo',
           audio: '*',
         }),
@@ -55,7 +67,7 @@ const GetContentActions = ({
       text: 'Combine words + Audio (GPT4)',
       onClickHandler: () =>
         handleChatGPTRes({
-          prompt: combinePrompt,
+          prompt: moodIntensivePrompt,
           model: 'gpt-4',
           audio: '*',
         }),
@@ -64,7 +76,7 @@ const GetContentActions = ({
       text: 'Combine words + Audio (GPT4) + Narakeet',
       onClickHandler: () =>
         handleChatGPTRes({
-          prompt: combinePrompt,
+          prompt: moodIntensivePrompt,
           model: 'gpt-4',
           audio: 'narakeet',
         }),

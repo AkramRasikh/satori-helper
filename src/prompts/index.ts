@@ -35,7 +35,6 @@ export const combinePrompt = `
   Don’t make them very similar to the examples given in the context
 
   I also want them in the format of an array of objects:
-
   ${JSON.stringify(jsonReturnFormat)}
 `;
 
@@ -46,6 +45,17 @@ export const moodIntensivePrompt = `
   Don’t make them very similar to the examples given in the context.
   I'd also like a diversity of mood expressions where possible (out of the indicative, subjunctive, imperative, conditional, iterrogative and optative mood)
 
-  I also want them in the format as follows (Japanese and English translation):
+  Only respond in the below format of JSON as I will parse the response:
+  ${JSON.stringify(jsonReturnFormat)}
+  `;
+
+export const nonIndicativeIntensivePrompt = `
+  I am studying these words. I have given context to them too.
+  Give me simple sentences and ideally combine them where possible.
+  For example if the words plate and dinosaur were in the list, a sentence like "I tried to smash the dinosaurs head with the plate" will suffice.
+  Don’t make them very similar to the examples given in the context.
+  I'd also like a diversity of mood expressions where possible (out of the subjunctive, imperative, conditional, iterrogative, optative mood but NOT indicative)
+
+  Only respond in the below format of JSON as I will parse the response:
   ${JSON.stringify(jsonReturnFormat)}
   `;
