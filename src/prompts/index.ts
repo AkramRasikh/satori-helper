@@ -6,6 +6,12 @@ const jsonReturnFormat = [
     moodUsed:
       'Insert mood(s) used and explanations where possible (subjunctive, indicative, imperative, conditional, iterrogative and optative mood)',
   },
+  {
+    targetLang: 'そうだな、じゃあレンタカーでも借りて、箱根にでも行こう.',
+    baseLang: "I know, then let's rent a car and go to Hakone",
+    moodUsed:
+      'Insert mood(s) used and explanations where possible (subjunctive, indicative, imperative, conditional, iterrogative and optative mood)',
+  },
 ];
 
 export const storyPrompt = `
