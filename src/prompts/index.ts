@@ -28,6 +28,25 @@ export const storyPrompt = `
   List of words:
 `;
 
+const moodPlus = `
+I'd also like a diversity of mood expressions where possible (out of the indicative, subjunctive, imperative, conditional, iterrogative and optative mood).
+`;
+
+export const dialoguePrompt = `
+  I have a list of words in Japanese I am learning. I want you to make a short dialogue with the word list below.
+  I want a ratio of ideally at least one target word being used per a sentence.
+  Using the words multiple times would be preferred but shouldn't feel forced.
+  ${moodPlus}
+  
+  I also want them in the format as follows (Japanese and English translation):
+
+  ${JSON.stringify(jsonReturnFormat)}
+
+  Using the words multiple times is a bonus and in a combined way would be ideal but not a requirement at the expense of comprehension
+
+  List of words:
+`;
+
 export const combinePrompt = `
   I am studying these words. I have given context to them too.
   Give me simple sentences and ideally combine them where possible.

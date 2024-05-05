@@ -1,5 +1,6 @@
 import {
   combinePrompt,
+  dialoguePrompt,
   moodIntensivePrompt,
   nonIndicativeIntensivePrompt,
   storyPrompt,
@@ -13,6 +14,10 @@ const promptOptions = [
   {
     label: 'Combine words',
     option: combinePrompt,
+  },
+  {
+    label: 'Short dialogue',
+    option: dialoguePrompt,
   },
   {
     label: 'Mixed moods combine',

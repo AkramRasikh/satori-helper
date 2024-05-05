@@ -30,7 +30,7 @@ const SelectAllButtons = ({
       }}
       onClick={handleClearWordBank}
     >
-      Unselect all words
+      Clear word bank
     </button>
   ) : null;
 };
