@@ -18,6 +18,7 @@ import SelectAllButtons from '@/components/SelectAllButtons';
 import TextInput from '@/components/TextInput';
 import { getThoughtsToBilingualText } from '@/prompts/utils';
 import MyContentSection from '@/components/MyContentSection';
+import PersonalWordBankStudySection from '@/components/PersonalWordBankStudySection';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -237,7 +238,6 @@ export default function Home(props) {
       isDivider: true,
     };
     const contentWithDivider = [...translatedText, divider];
-    console.log('## contentWithDivider: ', contentWithDivider);
 
     await fetch('/api/save-content', {
       method: 'POST',
@@ -252,12 +252,7 @@ export default function Home(props) {
 
         return jsonED;
       })
-      .then((data) =>
-        console.log('## handleMyTextTranslated then data: ', data),
-      )
-      .catch((error) =>
-        console.error('## handleMyTextTranslated Error:', error),
-      );
+      .catch((error) => console.error('## saveToJSON Error:', error));
   };
 
   const handleMyTextTranslated = async () => {
@@ -351,6 +346,7 @@ export default function Home(props) {
           isLoadingResponse={isLoadingResponse}
         />
       )}
+      <PersonalWordBankStudySection />
       {response?.length > 0 ? (
         <ResponseSection
           response={response}

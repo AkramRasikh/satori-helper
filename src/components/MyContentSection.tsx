@@ -21,6 +21,7 @@ const IndividualSentenceContext = ({ content }) => {
       return {
         word: item,
         contexts: [contextId],
+        daysReviewed: [], // [new Date]
       };
     });
 
@@ -33,11 +34,8 @@ const IndividualSentenceContext = ({ content }) => {
     })
       .then(async (response) => {
         const jsonED = await response.json();
-        console.log('## saveToWordBank jsonED: ', jsonED);
-
         return jsonED;
       })
-      .then((data) => console.log('## saveToWordBank then data: ', data))
       .catch((error) => console.error('## saveToWordBank Error:', error));
   };
 
@@ -53,7 +51,7 @@ const IndividualSentenceContext = ({ content }) => {
     <div onMouseUp={handleHighlight}>
       <p>targetLang: {content.targetLang}</p>
       <p>baseLang: {content.baseLang}</p>
-      <p>notes: {content.notes}</p>
+      {content?.notes && <p>notes: {content.notes}</p>}
       {myContentWordBank?.length > 0 && (
         <p>
           Word bank:{' '}
