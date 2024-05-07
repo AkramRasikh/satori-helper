@@ -15,6 +15,8 @@ import handleSatoriFlashcardAPI from './api/satori-flashcard';
 import underlineTargetWords from './api/underline-target-words';
 import GetContentActions from '@/components/GetContentActions';
 import SelectAllButtons from '@/components/SelectAllButtons';
+import TextInput from '@/components/TextInput';
+import { getThoughtsToBilingualText } from '@/prompts/utils';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -31,8 +33,11 @@ export default function Home(props) {
   const [selectedPrompt, setSelectedPrompt] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedWithAudio, setWithAudio] = useState('');
+  const [inputValue, setInputValue] = useState('');
+  const [themeValue, setThemeValue] = useState('');
+  const [translatedText, setTranslatedText] = useState([]);
 
-  const numberOfWordsToStudy = sentenceList.length;
+  const numberOfWordsToStudy = sentenceList?.length;
   const numberOfWordsInWordBank = wordBank.length;
 
   const handlePromptChange = (event) => {
@@ -127,7 +132,7 @@ export default function Home(props) {
       parsedResponse.map(async (item) => ({
         id: uuidv4(),
         targetLang: item.targetLang,
-        eng: item.baseLang,
+        baseLang: item.baseLang,
         moodUsed: item?.moodUsed,
         underlinedText: await underlineWordsInSentence(
           item.targetLang,
@@ -225,6 +230,49 @@ export default function Home(props) {
     }
   };
 
+  const saveToJSON = async () => {
+    console.log('## translatedText: ', translatedText);
+
+    await fetch('/api/save-content', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(translatedText),
+    })
+      .then(async (response) => {
+        const jsonED = await response.json();
+        console.log('## jsonED: ', jsonED);
+
+        return jsonED;
+      })
+      .then((data) =>
+        console.log('## handleMyTextTranslated then data: ', data),
+      )
+      .catch((error) =>
+        console.error('## handleMyTextTranslated Error:', error),
+      );
+  };
+
+  const handleMyTextTranslated = async () => {
+    try {
+      setLoadingResponse(true);
+      const fullPrompt = getThoughtsToBilingualText(inputValue, themeValue);
+      console.log('## fullPrompt: ', fullPrompt);
+      const res = await chatGptAPI({
+        sentence: fullPrompt,
+        model: 'gpt-4',
+      });
+      console.log('## res: ', res);
+
+      setTranslatedText(res);
+    } catch (error) {
+      console.log('## handleMyTextTranslated, error');
+    } finally {
+      setLoadingResponse(false);
+    }
+  };
+
   const getCorrespondingAudio = async (japaneseSentenceData, audio) => {
     if (!japaneseSentenceData) return null;
     try {
@@ -260,6 +308,17 @@ export default function Home(props) {
         wordBank={wordBank}
         handleFlashCard={handleFlashCard}
       />
+      <TextInput
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        themeValue={themeValue}
+        setThemeValue={setThemeValue}
+        translatedText={translatedText}
+      />
+      <button onClick={handleMyTextTranslated}>Lets go</button>
+      {translatedText?.length > 0 && (
+        <button onClick={saveToJSON}>Save content</button>
+      )}
       {isLoadingResponse && <LoadingStatus />}
       <SelectAllButtons
         numberOfWordsInWordBank={numberOfWordsInWordBank}

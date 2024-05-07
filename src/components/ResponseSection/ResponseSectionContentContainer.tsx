@@ -23,7 +23,7 @@ const ResponseSectionContentContainer = ({
   const audioFile = baseAssetsURL + '/audio/' + detail.id + '.mp3';
 
   const japaneseSentence = detail.targetLang;
-  const englishSentence = detail.eng;
+  const englishSentence = detail.baseLang;
 
   const isAudioInMP3Banks =
     audioUrlIsAvailable ||

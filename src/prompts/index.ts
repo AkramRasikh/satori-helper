@@ -14,6 +14,20 @@ const jsonReturnFormat = [
   },
 ];
 
+const jsonReturnFormatWithNotes = [
+  {
+    targetLang: '妹は小さめの靴を履いて、全速力で公園を走っています.',
+    baseLang:
+      'My younger sister is wearing small shoes and running at full speed in the park.',
+    notes: '',
+  },
+  {
+    targetLang: 'そうだな、じゃあレンタカーでも借りて、箱根にでも行こう.',
+    baseLang: "I know, then let's rent a car and go to Hakone",
+    notes: '',
+  },
+];
+
 export const storyPrompt = `
   I have a list of words in Japanese I am learning. I want you to make a short story with the word list below.
   Maximum of a paragraph and have a ratio of ideally at least one target word being used per a sentence.
@@ -78,3 +92,15 @@ export const nonIndicativeIntensivePrompt = `
   Only respond in the below format of JSON as I will parse the response:
   ${JSON.stringify(jsonReturnFormat)}
   `;
+
+export const thoughtsToBilingualText = `
+  Translate in a way that is palatable to the Japanese language while still maintaining the meaning in to Japanese with bilingual text (with English) in Json format with each separate sentence. 
+  I want properties targetLang, baseLang and notes.
+
+  The property ‘notes’ for each line that is there to explain any nuisance linguistic difference that may require explanation.
+
+  Only respond in the below format of JSON as I will parse the response:
+  
+  ${JSON.stringify(jsonReturnFormatWithNotes)}
+
+`;
