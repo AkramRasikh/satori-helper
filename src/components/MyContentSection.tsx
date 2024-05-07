@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const MyContentSection = ({ translatedText }) => {
+const IndividualSentenceContext = ({ content }) => {
   const [myContentWordBank, setMyContentWordBank] = useState([]);
   const [highlightedWord, setHighlightedWord] = useState('');
 
@@ -16,14 +16,20 @@ const MyContentSection = ({ translatedText }) => {
   };
 
   const saveToWordBank = async () => {
-    console.log('## myContentWordBank: ', myContentWordBank);
+    const contextId = content.id;
+    const finalContentArr = myContentWordBank.map((item) => {
+      return {
+        word: item,
+        contexts: [contextId],
+      };
+    });
 
     await fetch('/api/save-to-wordbank', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(myContentWordBank),
+      body: JSON.stringify(finalContentArr),
     })
       .then(async (response) => {
         const jsonED = await response.json();
@@ -44,7 +50,10 @@ const MyContentSection = ({ translatedText }) => {
   };
 
   return (
-    <div id='textContainer' onMouseUp={handleHighlight}>
+    <div onMouseUp={handleHighlight}>
+      <p>targetLang: {content.targetLang}</p>
+      <p>baseLang: {content.baseLang}</p>
+      <p>notes: {content.notes}</p>
       {myContentWordBank?.length > 0 && (
         <p>
           Word bank:{' '}
@@ -62,16 +71,18 @@ const MyContentSection = ({ translatedText }) => {
       {myContentWordBank?.length > 0 && (
         <button onClick={saveToWordBank}>Add words to study bank!</button>
       )}
+    </div>
+  );
+};
 
+const MyContentSection = ({ translatedText }) => {
+  return (
+    <div>
       <ul>
         {translatedText?.map((item, index) => {
           return (
             <li key={index}>
-              <div>
-                <p>targetLang: {item.targetLang}</p>
-                <p>baseLang: {item.baseLang}</p>
-                <p>notes: {item.notes}</p>
-              </div>
+              <IndividualSentenceContext content={item} />
             </li>
           );
         })}

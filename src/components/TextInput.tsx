@@ -1,5 +1,3 @@
-import ResponseSectionItem from './ResponseSection/ResponseSectionItem';
-
 const TextInput = ({
   inputValue,
   setInputValue,
@@ -52,7 +50,7 @@ const TextInput = ({
             onChange={handleInputChange}
             style={{
               display: 'block',
-              width: '250px',
+              width: '400px',
               height: '250px',
             }}
           />

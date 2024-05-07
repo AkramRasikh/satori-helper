@@ -17,7 +17,6 @@ import GetContentActions from '@/components/GetContentActions';
 import SelectAllButtons from '@/components/SelectAllButtons';
 import TextInput from '@/components/TextInput';
 import { getThoughtsToBilingualText } from '@/prompts/utils';
-import { contentResponseMock } from '@/mocks/content-response';
 import MyContentSection from '@/components/MyContentSection';
 
 export default function Home(props) {
@@ -37,7 +36,7 @@ export default function Home(props) {
   const [selectedWithAudio, setWithAudio] = useState('');
   const [inputValue, setInputValue] = useState('');
   const [themeValue, setThemeValue] = useState('');
-  const [translatedText, setTranslatedText] = useState(contentResponseMock);
+  const [translatedText, setTranslatedText] = useState([]);
 
   const numberOfWordsToStudy = sentenceList?.length;
   const numberOfWordsInWordBank = wordBank.length;
@@ -270,9 +269,9 @@ export default function Home(props) {
         sentence: fullPrompt,
         model: 'gpt-4',
       });
-      console.log('## res: ', res);
+      const responseWithId = res.map((item) => ({ id: uuidv4(), ...item }));
 
-      setTranslatedText(res);
+      setTranslatedText(responseWithId);
     } catch (error) {
       console.log('## handleMyTextTranslated, error');
     } finally {

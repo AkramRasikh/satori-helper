@@ -6,6 +6,10 @@
 .pnp.js
 .yarn/install-state.gz
 
+# content json
+content.json
+wordbank.json
+
 # testing
 /coverage
 
