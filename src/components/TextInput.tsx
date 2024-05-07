@@ -34,40 +34,31 @@ const TextInput = ({
 
   return (
     <div>
-      <label htmlFor='textTheme'>Theme of text</label>
-      <input
-        type='text'
-        id='textTheme'
-        value={themeValue}
-        onChange={handleThemeChange}
-      />
-      <p>Theme: {themeValue}</p>
-      <label htmlFor='textInput'>Japanese Rambles:</label>
-      <input
-        type='text'
-        id='textInput'
-        value={inputValue}
-        onChange={handleInputChange}
-        style={{
-          display: 'block',
-          width: '250px',
-          height: '250px',
-        }}
-      />
-      {renderBulletPoints()}
-      <ul>
-        {translatedText?.map((item) => {
-          return (
-            <li>
-              <div>
-                <p>targetLang: {item.targetLang}</p>
-                <p>baseLang: {item.baseLang}</p>
-                <p>notes: {item.notes}</p>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+      {translatedText?.length === 0 && (
+        <>
+          <label htmlFor='textTheme'>Theme of text</label>
+          <input
+            type='text'
+            id='textTheme'
+            value={themeValue}
+            onChange={handleThemeChange}
+          />
+          <p>Theme: {themeValue}</p>
+          <label htmlFor='textInput'>Japanese Rambles:</label>
+          <input
+            type='text'
+            id='textInput'
+            value={inputValue}
+            onChange={handleInputChange}
+            style={{
+              display: 'block',
+              width: '250px',
+              height: '250px',
+            }}
+          />
+          {renderBulletPoints()}
+        </>
+      )}
     </div>
   );
 };

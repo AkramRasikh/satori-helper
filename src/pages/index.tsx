@@ -17,6 +17,8 @@ import GetContentActions from '@/components/GetContentActions';
 import SelectAllButtons from '@/components/SelectAllButtons';
 import TextInput from '@/components/TextInput';
 import { getThoughtsToBilingualText } from '@/prompts/utils';
+import { contentResponseMock } from '@/mocks/content-response';
+import MyContentSection from '@/components/MyContentSection';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -35,7 +37,7 @@ export default function Home(props) {
   const [selectedWithAudio, setWithAudio] = useState('');
   const [inputValue, setInputValue] = useState('');
   const [themeValue, setThemeValue] = useState('');
-  const [translatedText, setTranslatedText] = useState([]);
+  const [translatedText, setTranslatedText] = useState(contentResponseMock);
 
   const numberOfWordsToStudy = sentenceList?.length;
   const numberOfWordsInWordBank = wordBank.length;
@@ -232,13 +234,18 @@ export default function Home(props) {
 
   const saveToJSON = async () => {
     console.log('## translatedText: ', translatedText);
+    const divider = {
+      isDivider: true,
+    };
+    const contentWithDivider = [...translatedText, divider];
+    console.log('## contentWithDivider: ', contentWithDivider);
 
     await fetch('/api/save-content', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(translatedText),
+      body: JSON.stringify(contentWithDivider),
     })
       .then(async (response) => {
         const jsonED = await response.json();
@@ -318,6 +325,9 @@ export default function Home(props) {
       <button onClick={handleMyTextTranslated}>Lets go</button>
       {translatedText?.length > 0 && (
         <button onClick={saveToJSON}>Save content</button>
+      )}
+      {translatedText?.length > 0 && (
+        <MyContentSection translatedText={translatedText} />
       )}
       {isLoadingResponse && <LoadingStatus />}
       <SelectAllButtons
