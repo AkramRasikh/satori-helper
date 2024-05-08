@@ -218,12 +218,20 @@ export default function Home(props) {
         ),
       );
       if (selectedWithAudio) {
-        await Promise.all(
+        const res = await Promise.all(
           structuredJapEngRes.map(
             async (sentenceData) =>
               await getCorrespondingAudio(sentenceData, selectedWithAudio),
           ),
         );
+
+        setMp3Bank((prev) => {
+          if (prev?.length === 0) {
+            return res;
+          } else {
+            return [...prev, ...res];
+          }
+        });
       }
     } catch (error) {
       console.error('Error fetching response:', error);
@@ -277,7 +285,7 @@ export default function Home(props) {
   const getCorrespondingAudio = async (japaneseSentenceData, audio) => {
     if (!japaneseSentenceData) return null;
     try {
-      const responseFiles =
+      const successResIdOrSentence =
         audio === 'narakeet'
           ? await getNarakeetAudio({
               id: japaneseSentenceData.id,
@@ -287,7 +295,7 @@ export default function Home(props) {
               id: japaneseSentenceData.id,
               sentence: japaneseSentenceData.targetLang,
             });
-      setMp3Bank(responseFiles);
+      return successResIdOrSentence;
     } catch (error) {
       console.error('## Error fetching data (audio):', error);
     }
@@ -309,20 +317,22 @@ export default function Home(props) {
         wordBank={wordBank}
         handleFlashCard={handleFlashCard}
       />
-      <TextInput
+      {/* <TextInput
         inputValue={inputValue}
         setInputValue={setInputValue}
         themeValue={themeValue}
         setThemeValue={setThemeValue}
         translatedText={translatedText}
-      />
-      <button onClick={handleMyTextTranslated}>Lets go</button>
+      /> */}
+
+      {/* <AudioPlayerElement url={url} /> */}
+      {/* <button onClick={handleMyTextTranslated}>Lets go</button>
       {translatedText?.length > 0 && (
         <button onClick={saveToJSON}>Save content</button>
       )}
       {translatedText?.length > 0 && (
         <MyContentSection translatedText={translatedText} />
-      )}
+      )} */}
       {isLoadingResponse && <LoadingStatus />}
       <SelectAllButtons
         numberOfWordsInWordBank={numberOfWordsInWordBank}

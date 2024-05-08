@@ -19,16 +19,17 @@ const ResponseSectionContentContainer = ({
   const [loadingResponse, setLoadingResponse] = useState(false);
   const [noKanjiSentence, setNoKanjiSentence] = useState('');
 
-  const baseAssetsURL = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT;
-  const audioFile = baseAssetsURL + '/audio/' + detail.id + '.mp3';
-
   const japaneseSentence = detail.targetLang;
   const englishSentence = detail.baseLang;
 
-  const isAudioInMP3Banks =
-    audioUrlIsAvailable ||
-    mp3Bank.includes(detail.id + '.mp3') ||
-    mp3Bank.includes(detail.targetLang + '.mp3');
+  const isAudioInMP3Banks = audioUrlIsAvailable || mp3Bank?.includes(detail.id);
+  const getAudioURL = (mp3FileName: string) => {
+    const baseURL = process.env.NEXT_PUBLIC_FIREBASE_AUDIO_URL;
+    const firebaseToken = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_ID;
+    const url = `${baseURL}${mp3FileName}.mp3?alt=media&token=${firebaseToken}`;
+
+    return url;
+  };
 
   const handleDeleteClick = () => {
     handleDeleteSentence(detail.id);
@@ -98,7 +99,7 @@ const ResponseSectionContentContainer = ({
       )}
       {isAudioInMP3Banks && (
         <AudioPlayer
-          mp3AudioFile={audioFile}
+          mp3AudioFile={getAudioURL(detail.id)}
           setRefs={setRefs}
           inArrayIndex={inArrayIndex}
           handleWhatAudioIsPlaying={handleWhatAudioIsPlaying}
