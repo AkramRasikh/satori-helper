@@ -7,7 +7,7 @@
 .yarn/install-state.gz
 
 # content json
-/content
+content/
 # testing
 /coverage
 
