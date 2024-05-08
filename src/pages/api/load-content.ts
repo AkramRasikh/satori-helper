@@ -1,5 +1,5 @@
-import wordbank from '../wordbank.json';
-import content from '../content.json';
+import wordbank from '../../content/wordbank.json';
+import content from '../../content/content.json';
 
 // const numberToStudy = 20;
 // const maxNumberOfContexts = 5;
