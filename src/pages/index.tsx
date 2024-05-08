@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 import '../app/styles/globals.css';
 import FlashCardDoneToast from '@/components/FlashCardDoneToast';
 import chatGptAPI from './api/chatgpt';
-import getSatoriAudio from '@/api/audio';
 import getChatGptTTS from './api/tts-audio';
 import getNarakeetAudio from './api/narakeet';
 import handleSatoriFlashcardAPI from './api/satori-flashcard';
@@ -19,6 +18,7 @@ import TextInput from '@/components/TextInput';
 import { getThoughtsToBilingualText } from '@/prompts/utils';
 import MyContentSection from '@/components/MyContentSection';
 import PersonalWordBankStudySection from '@/components/PersonalWordBankStudySection';
+import structureSatoriFlashcards from '@/utils/structure-satori-data';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -371,60 +371,9 @@ export default function Home(props) {
 export async function getStaticProps() {
   try {
     const satoriData = await satoriCardsBulkAPI({ isDueAndAuto: true });
-    const getPathToWord = (inArrIndex) => {
-      const thisWordsData = satoriData[inArrIndex];
-      const expression = JSON.parse(thisWordsData.expression);
-
-      const textParts =
-        expression.paragraphs[0].sentences[0].runs[0].parts[0].parts;
-
-      const textWithKanji = textParts.map((part) => part.text).join('');
-      const textZeroKanji = textParts
-        .map((part) => part?.reading || part.text)
-        .join('');
-      return [textWithKanji, textZeroKanji];
-    };
 
     const satoriDataPlus = await Promise.all(
-      satoriData.map(async (grandItem, index) => {
-        const contexts = grandItem.contexts;
-
-        const firstContext = contexts[0];
-        const sentenceId = firstContext.sentenceId;
-        const articleCode = firstContext.articleCode;
-
-        const expression = JSON.parse(firstContext.expression);
-        const paragraphs = expression.paragraphs;
-        const firstNestedParagraph = paragraphs[0];
-        const nestedSentences = firstNestedParagraph.sentences;
-        const allParts = nestedSentences[0].runs[0].parts;
-        const definition = JSON.parse(grandItem.definition).senses[0].glosses;
-        const engTranslation = expression.notes[0].discussion;
-
-        const [textWithKanji, textZeroKanji] = getPathToWord(index);
-
-        const audioUrl = await getSatoriAudio({
-          id: sentenceId,
-          episode: articleCode,
-        });
-
-        return {
-          fullSentence: allParts
-            .map((item) => {
-              if (item.text) {
-                return item.text;
-              }
-              return item?.parts[0].text;
-            })
-            .join(''),
-          textWithKanji: textWithKanji,
-          textZeroKanji: textZeroKanji,
-          audioUrl,
-          definition: definition,
-          engTranslation: engTranslation,
-          cardId: firstContext.cardId,
-        };
-      }),
+      await structureSatoriFlashcards(satoriData),
     );
 
     return {
