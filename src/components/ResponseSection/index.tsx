@@ -1,6 +1,11 @@
 import ResponseSectionWrapper from './ResponseSectionWrapper';
 
-const ResponseSection = ({ response, handleDeleteSentence, mp3Bank }) => {
+const ResponseSection = ({
+  response,
+  handleDeleteSentence,
+  mp3Bank,
+  saveContentToFirebaseSatori,
+}) => {
   let totalSentenceCount = 0;
 
   const renderedResponse = response.map((responseItem, index) => {
@@ -19,6 +24,7 @@ const ResponseSection = ({ response, handleDeleteSentence, mp3Bank }) => {
         response={response}
         handleDeleteSentence={handleDeleteSentence}
         mp3Bank={mp3Bank}
+        saveContentToFirebaseSatori={saveContentToFirebaseSatori}
       />
     );
   });

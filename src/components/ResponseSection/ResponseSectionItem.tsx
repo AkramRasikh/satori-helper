@@ -7,6 +7,7 @@ const ResponseSectionItem = ({
   wordBank,
   handleDeleteSentence,
   mp3Bank,
+  saveContentToFirebaseSatori,
 }) => {
   const [audioRefs, setAudioRefs] = useState([]);
   const [audioToPlay, setAudioToPlay] = useState(0);
@@ -83,6 +84,7 @@ const ResponseSectionItem = ({
               handleWhatAudioIsEnded={handleWhatAudioIsEnded}
               isNowPlaying={isNowPlaying}
               setMasterPlayPressed={setMasterPlayPressed}
+              saveContentToFirebaseSatori={saveContentToFirebaseSatori}
             />
           );
         })}

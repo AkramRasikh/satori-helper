@@ -119,30 +119,35 @@ export default function Home(props) {
       sentence,
       wordBank: thisWordBank,
     });
+
     const pattern = new RegExp(
       [...matchedWords, ...thisWordBank].join('|'),
       'g',
     );
-    const underlinedSentence = sentence.replace(
+    const underlinedText = sentence.replace(
       pattern,
       (match) => `<u>${match}</u>`,
     );
 
-    return underlinedSentence;
+    return { underlinedText, matchedWords };
   };
 
   const addIdToResponse = async (parsedResponse, thisWordBank) => {
     const responseWithId = await Promise.all(
-      parsedResponse.map(async (item) => ({
-        id: uuidv4(),
-        targetLang: item.targetLang,
-        baseLang: item.baseLang,
-        moodUsed: item?.moodUsed,
-        underlinedText: await underlineWordsInSentence(
+      parsedResponse.map(async (item) => {
+        const { underlinedText, matchedWords } = await underlineWordsInSentence(
           item.targetLang,
           thisWordBank,
-        ),
-      })),
+        );
+        return {
+          id: uuidv4(),
+          targetLang: item.targetLang,
+          baseLang: item.baseLang,
+          moodUsed: item?.moodUsed,
+          underlinedText,
+          matchedWords,
+        };
+      }),
     );
     return responseWithId;
   };
@@ -242,14 +247,20 @@ export default function Home(props) {
     }
   };
 
-  const saveContentToFirebase = async () => {
+  const saveContentToFirebaseSatori = async ({ ref, contentObject }) => {
+    const id = contentObject.id;
+    const hasAudio = mp3Bank.some((sentenceId) => sentenceId === id);
+
+    const finalEntryObject = {
+      ...contentObject,
+      hasAudio,
+    };
+
     try {
       setLoadingResponse(true);
       const res = await saveContentAPI({
-        ref: 'japaneseContent',
-        contentEntry: {
-          'general-ting-01': translatedText,
-        },
+        ref,
+        contentEntry: finalEntryObject,
       });
       console.log('## Saved!: ', res);
     } catch (error) {
@@ -330,7 +341,7 @@ export default function Home(props) {
         wordBank={wordBank}
         handleFlashCard={handleFlashCard}
       />
-      <TextInput
+      {/* <TextInput
         inputValue={inputValue}
         setInputValue={setInputValue}
         themeValue={themeValue}
@@ -344,7 +355,7 @@ export default function Home(props) {
       )}
       {translatedText?.length > 0 && (
         <MyContentSection translatedText={translatedText} />
-      )}
+      )} */}
       {isLoadingResponse && <LoadingStatus />}
       <SelectAllButtons
         numberOfWordsInWordBank={numberOfWordsInWordBank}
@@ -368,12 +379,13 @@ export default function Home(props) {
           isLoadingResponse={isLoadingResponse}
         />
       )}
-      <PersonalWordBankStudySection />
+      {/* <PersonalWordBankStudySection /> */}
       {response?.length > 0 ? (
         <ResponseSection
           response={response}
           handleDeleteSentence={handleDeleteSentence}
           mp3Bank={mp3Bank}
+          saveContentToFirebaseSatori={saveContentToFirebaseSatori}
         />
       ) : null}
     </div>

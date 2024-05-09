@@ -3,6 +3,7 @@ const ResponseCTAs = ({
   handleDeleteClick,
   handleGetAudio,
   getKanjiFreeSentence,
+  handleSaveToSatori,
 }) => {
   const ctaArr = [
     {
@@ -16,6 +17,10 @@ const ResponseCTAs = ({
     {
       text: 'Remove Kanji',
       onClickHandler: getKanjiFreeSentence,
+    },
+    {
+      text: 'Save sentence',
+      onClickHandler: handleSaveToSatori,
     },
   ];
   return (

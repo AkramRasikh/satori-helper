@@ -14,6 +14,7 @@ const ResponseSectionContentContainer = ({
   handleWhatAudioIsEnded,
   isNowPlaying,
   setMasterPlayPressed,
+  saveContentToFirebaseSatori,
 }) => {
   const [audioUrlIsAvailable, setAudioUrlIsAvailable] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
@@ -65,6 +66,12 @@ const ResponseSectionContentContainer = ({
       setLoadingResponse(false);
     }
   };
+  const handleSaveToSatori = () => {
+    saveContentToFirebaseSatori({
+      contentObject: detail,
+      ref: 'satoriContent',
+    });
+  };
 
   if (!detail) {
     return null;
@@ -90,6 +97,7 @@ const ResponseSectionContentContainer = ({
           handleDeleteClick={handleDeleteClick}
           handleGetAudio={handleGetAudio}
           getKanjiFreeSentence={getKanjiFreeSentence}
+          handleSaveToSatori={handleSaveToSatori}
         />
       </div>
       {noKanjiSentence && <p style={{ margin: '5px 0' }}>{noKanjiSentence}</p>}
