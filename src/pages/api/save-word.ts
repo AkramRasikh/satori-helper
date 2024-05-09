@@ -1,5 +1,5 @@
 // /update-content
-const saveContentAPI = async ({ ref, contentEntry }) => {
+const saveWordAPI = async ({ ref, contentEntry }) => {
   const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/update-content';
   try {
     const response = await fetch(url, {
@@ -28,4 +28,4 @@ const saveContentAPI = async ({ ref, contentEntry }) => {
   }
 };
 
-export default saveContentAPI;
+export default saveWordAPI;

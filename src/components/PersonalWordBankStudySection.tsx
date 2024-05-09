@@ -1,13 +1,21 @@
-import loadInPersonalStudyContent from '@/pages/api/load-content';
+import { loadInContent } from '@/pages/api/load-content';
 import { useState } from 'react';
 
 const PersonalWordBankStudySection = () => {
   const [loadedData, setLoadedData] = useState([]);
   const handleLoadPersonalStudyWords = async () => {
     try {
-      const res = await loadInPersonalStudyContent();
+      const res = await loadInContent({ ref: 'japaneseContent' });
       console.log('## handleLoadPersonalStudyWords res: ', res);
-      setLoadedData(res);
+      const keys = Object.keys(res);
+      const mappedResponse = keys.map((item) => {
+        return {
+          title: item,
+          content: res[item],
+        };
+      });
+
+      setLoadedData(mappedResponse);
     } catch (error) {
       console.log('## handleLoadPersonalStudyWords erro: ', error);
     }
@@ -35,12 +43,34 @@ const PersonalWordBankStudySection = () => {
     return <p>{sentence}</p>;
   };
 
+  console.log('## loadedData: ', loadedData);
+
   return (
     <div>
-      <h3>Study section</h3>
       <button onClick={handleLoadPersonalStudyWords}>Load in words</button>
+      <div>Content</div>
       <ul>
-        {loadedData?.map((item, index) => {
+        {loadedData?.map((item) => {
+          return (
+            <li key={item.title}>
+              <p>Title: {item.title}</p>
+              <div>
+                {item.content?.map((content) => {
+                  return (
+                    <div key={content.id}>
+                      <p>targetLang: {content.targetLang}</p>
+                      <p>baseLang: {content.baseLang}</p>
+                      {content.notes && <p>notes: {content.notes}</p>}
+                    </div>
+                  );
+                })}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      <ul>
+        {/* {loadedData?.map((item, index) => {
           const contextData = item.contextData; // [{}]
           const timesReviewed = item.daysReviewed?.length; // [{}]
           return (
@@ -66,7 +96,7 @@ const PersonalWordBankStudySection = () => {
               </div>
             </li>
           );
-        })}
+        })} */}
       </ul>
     </div>
   );

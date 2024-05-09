@@ -19,6 +19,8 @@ import { getThoughtsToBilingualText } from '@/prompts/utils';
 import MyContentSection from '@/components/MyContentSection';
 import PersonalWordBankStudySection from '@/components/PersonalWordBankStudySection';
 import structureSatoriFlashcards from '@/utils/structure-satori-data';
+import saveContentAPI from './api/save-content';
+import saveWordAPI from './api/save-word';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -240,27 +242,38 @@ export default function Home(props) {
     }
   };
 
-  const saveToJSON = async () => {
-    console.log('## translatedText: ', translatedText);
-    const divider = {
-      isDivider: true,
-    };
-    const contentWithDivider = [...translatedText, divider];
+  const saveContentToFirebase = async () => {
+    try {
+      setLoadingResponse(true);
+      const res = await saveContentAPI({
+        ref: 'japaneseContent',
+        contentEntry: {
+          'general-ting-01': translatedText,
+        },
+      });
+      console.log('## Saved!: ', res);
+    } catch (error) {
+      //
+    } finally {
+      setLoadingResponse(false);
+    }
+  };
 
-    await fetch('/api/save-content', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(contentWithDivider),
-    })
-      .then(async (response) => {
-        const jsonED = await response.json();
-        console.log('## jsonED: ', jsonED);
-
-        return jsonED;
-      })
-      .catch((error) => console.error('## saveToJSON Error:', error));
+  const saveWordToFirebase = async () => {
+    try {
+      setLoadingResponse(true);
+      const res = await saveWordAPI({
+        ref: 'japanese',
+        contentEntry: {
+          'general-ting-01': translatedText,
+        },
+      });
+      console.log('## Saved!: ', res);
+    } catch (error) {
+      //
+    } finally {
+      setLoadingResponse(false);
+    }
   };
 
   const handleMyTextTranslated = async () => {
@@ -317,22 +330,21 @@ export default function Home(props) {
         wordBank={wordBank}
         handleFlashCard={handleFlashCard}
       />
-      {/* <TextInput
+      <TextInput
         inputValue={inputValue}
         setInputValue={setInputValue}
         themeValue={themeValue}
         setThemeValue={setThemeValue}
         translatedText={translatedText}
-      /> */}
+      />
 
-      {/* <AudioPlayerElement url={url} /> */}
-      {/* <button onClick={handleMyTextTranslated}>Lets go</button>
+      <button onClick={handleMyTextTranslated}>Lets go</button>
       {translatedText?.length > 0 && (
-        <button onClick={saveToJSON}>Save content</button>
+        <button onClick={saveContentToFirebase}>Save content</button>
       )}
       {translatedText?.length > 0 && (
         <MyContentSection translatedText={translatedText} />
-      )} */}
+      )}
       {isLoadingResponse && <LoadingStatus />}
       <SelectAllButtons
         numberOfWordsInWordBank={numberOfWordsInWordBank}
