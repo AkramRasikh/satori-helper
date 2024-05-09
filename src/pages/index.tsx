@@ -18,7 +18,6 @@ import TextInput from '@/components/TextInput';
 import { getThoughtsToBilingualText } from '@/prompts/utils';
 import MyContentSection from '@/components/MyContentSection';
 import PersonalWordBankStudySection from '@/components/PersonalWordBankStudySection';
-import structureSatoriFlashcards from '@/utils/structure-satori-data';
 import saveContentAPI from './api/save-content';
 import saveWordAPI from './api/save-word';
 
