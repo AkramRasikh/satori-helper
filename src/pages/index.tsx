@@ -1,4 +1,4 @@
-import satoriCardsBulkAPI from '../api/satori-cards-bulk';
+import satoriCardsBulkAPI from './api/satori-cards-bulk';
 import LearningBase from '@/components/LearningBase';
 import { useState } from 'react';
 import ResponseSection from '@/components/ResponseSection';
@@ -394,15 +394,11 @@ export default function Home(props) {
 
 export async function getStaticProps() {
   try {
-    const satoriData = await satoriCardsBulkAPI({ isDueAndAuto: true });
-
-    const satoriDataPlus = await Promise.all(
-      await structureSatoriFlashcards(satoriData),
-    );
+    const satoriData = await satoriCardsBulkAPI();
 
     return {
       props: {
-        satoriData: satoriDataPlus,
+        satoriData: satoriData,
       },
     };
   } catch (error) {

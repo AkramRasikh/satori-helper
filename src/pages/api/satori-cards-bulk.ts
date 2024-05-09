@@ -1,7 +1,6 @@
-const getSatoriAudio = async ({ id, episode }) => {
+const satoriCardsBulkAPI = async () => {
   const sessionToken = process.env.NEXT_PUBLIC_SESSION_TOKEN as string;
-
-  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/satori-audio';
+  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/satori-data-with-fb';
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -9,22 +8,19 @@ const getSatoriAudio = async ({ id, episode }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id,
-        episode,
         sessionToken,
+        ref: 'satoriContent',
       }),
     });
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
     const responseToJSON = await response.json();
 
-    return responseToJSON.url;
+    const endData = responseToJSON;
+
+    return endData;
   } catch (error) {
-    console.log('## Error chatGPT to text: ', error);
+    console.error('## Error fetching data:', error);
   }
 };
 
-export default getSatoriAudio;
+export default satoriCardsBulkAPI;
