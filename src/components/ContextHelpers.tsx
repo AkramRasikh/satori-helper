@@ -4,12 +4,16 @@ import AudioPlayerElement from './AudioPlayer/AudioPlayerElement';
 
 const ContextHelpers = ({ contextHelperData }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const up = '▲';
+  const down = '▼';
+
   return (
     <div>
       <div
         style={{
           borderRadius: '15px',
           padding: '5px',
+          display: 'flex',
         }}
       >
         <button
@@ -24,7 +28,7 @@ const ContextHelpers = ({ contextHelperData }) => {
           }}
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? 'Close' : 'Open!'}
+          {isOpen ? 'Close' : 'Open!'} {isOpen ? down : up}
         </button>
         <h2
           style={{
