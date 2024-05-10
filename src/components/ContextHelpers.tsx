@@ -12,13 +12,14 @@ const ContextHelpers = ({ contextHelperData }) => {
       <div
         style={{
           borderRadius: '15px',
-          padding: '5px',
+          padding: '15px',
           display: 'flex',
         }}
       >
         <button
           style={{
             margin: 'auto 0',
+            marginRight: '5px',
             height: 'fit-content',
             padding: '15px',
             borderRadius: '15px',
@@ -28,15 +29,8 @@ const ContextHelpers = ({ contextHelperData }) => {
           }}
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? 'Close' : 'Open!'} {isOpen ? down : up}
+          Context Helper Data {isOpen ? down : up}
         </button>
-        <h2
-          style={{
-            marginLeft: '5px',
-          }}
-        >
-          Context Helper Data{' '}
-        </h2>
       </div>
       {isOpen && (
         <ul>

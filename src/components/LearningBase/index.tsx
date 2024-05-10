@@ -56,7 +56,7 @@ const LearningBase = ({
             justifyContent: 'flex-start',
             gap: '8px',
             padding: '5px 0',
-            marginTop: '0px',
+            margin: '0px',
           }}
         >
           {sentenceList?.map((sentenceSnippet, index) => {
