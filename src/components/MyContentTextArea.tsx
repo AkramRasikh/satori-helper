@@ -1,4 +1,4 @@
-const TextInput = ({
+const MyContentTextArea = ({
   inputValue,
   setInputValue,
   themeValue,
@@ -11,24 +11,6 @@ const TextInput = ({
   const handleThemeChange = (event) => {
     setThemeValue(event.target.value);
   };
-
-  const renderBulletPoints = () => {
-    if (!inputValue) return null;
-
-    // Split inputValue by '*' character
-    const parts = inputValue.split('*');
-
-    // Render each part as a list item
-    return (
-      <ul>
-        {parts.map((part, index) => (
-          <li key={index}>{part.trim()}</li>
-        ))}
-      </ul>
-    );
-  };
-
-  console.log('## translatedText: ', translatedText);
 
   return (
     <div>
@@ -61,11 +43,10 @@ const TextInput = ({
               margin: 'auto',
             }}
           />
-          {renderBulletPoints()}
         </div>
       )}
     </div>
   );
 };
 
-export default TextInput;
+export default MyContentTextArea;
