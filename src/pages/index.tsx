@@ -13,14 +13,8 @@ import getNarakeetAudio from './api/narakeet';
 import handleSatoriFlashcardAPI from './api/satori-flashcard';
 import underlineTargetWords from './api/underline-target-words';
 import GetContentActions from '@/components/GetContentActions';
-import SelectAllButtons from '@/components/SelectAllButtons';
-import TextInput from '@/components/TextInput';
-import { getThoughtsToBilingualText } from '@/prompts/utils';
-import MyContentSection from '@/components/MyContentSection';
-import PersonalWordBankStudySection from '@/components/PersonalWordBankStudySection';
 import saveContentAPI from './api/save-content';
 import saveWordAPI from './api/save-word';
-import { getAdditionalSatoriContext } from './api/get-additional-satori-context';
 import ContextHelpers from '@/components/ContextHelpers';
 
 export default function Home(props) {
@@ -39,9 +33,6 @@ export default function Home(props) {
   const [selectedPrompt, setSelectedPrompt] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedWithAudio, setWithAudio] = useState('');
-  const [inputValue, setInputValue] = useState('');
-  const [themeValue, setThemeValue] = useState('');
-  const [translatedText, setTranslatedText] = useState([]);
 
   const numberOfWordsToStudy = sentenceList?.length;
   const numberOfWordsInWordBank = wordBank.length;
@@ -272,42 +263,6 @@ export default function Home(props) {
     }
   };
 
-  const saveWordToFirebase = async () => {
-    try {
-      setLoadingResponse(true);
-      const res = await saveWordAPI({
-        ref: 'japanese',
-        contentEntry: {
-          'general-ting-01': translatedText,
-        },
-      });
-      console.log('## Saved!: ', res);
-    } catch (error) {
-      //
-    } finally {
-      setLoadingResponse(false);
-    }
-  };
-
-  const handleMyTextTranslated = async () => {
-    try {
-      setLoadingResponse(true);
-      const fullPrompt = getThoughtsToBilingualText(inputValue, themeValue);
-      console.log('## fullPrompt: ', fullPrompt);
-      const res = await chatGptAPI({
-        sentence: fullPrompt,
-        model: 'gpt-4',
-      });
-      const responseWithId = res.map((item) => ({ id: uuidv4(), ...item }));
-
-      setTranslatedText(responseWithId);
-    } catch (error) {
-      console.log('## handleMyTextTranslated, error');
-    } finally {
-      setLoadingResponse(false);
-    }
-  };
-
   const getCorrespondingAudio = async (japaneseSentenceData, audio) => {
     if (!japaneseSentenceData) return null;
     try {
@@ -347,21 +302,6 @@ export default function Home(props) {
         handleAllSentences={handleAllSentences}
         handleClearWordBank={handleClearWordBank}
       />
-      {/* <TextInput
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        themeValue={themeValue}
-        setThemeValue={setThemeValue}
-        translatedText={translatedText}
-      />
-
-      <button onClick={handleMyTextTranslated}>Lets go</button>
-      {translatedText?.length > 0 && (
-        <button onClick={saveContentToFirebase}>Save content</button>
-      )}
-      {translatedText?.length > 0 && (
-        <MyContentSection translatedText={translatedText} />
-      )} */}
       {isLoadingResponse && <LoadingStatus />}
       <WordBankSection
         wordBank={wordBank}
@@ -379,7 +319,6 @@ export default function Home(props) {
           isLoadingResponse={isLoadingResponse}
         />
       )}
-      {/* <PersonalWordBankStudySection /> */}
       {contextHelperData?.length ? (
         <ContextHelpers contextHelperData={contextHelperData} />
       ) : null}
