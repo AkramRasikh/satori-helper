@@ -342,6 +342,10 @@ export default function Home(props) {
         deleteWordFromSentenceList={deleteWordFromSentenceList}
         wordBank={wordBank}
         handleFlashCard={handleFlashCard}
+        numberOfWordsInWordBank={numberOfWordsInWordBank}
+        numberOfWordsToStudy={numberOfWordsToStudy}
+        handleAllSentences={handleAllSentences}
+        handleClearWordBank={handleClearWordBank}
       />
       {/* <TextInput
         inputValue={inputValue}
@@ -359,12 +363,6 @@ export default function Home(props) {
         <MyContentSection translatedText={translatedText} />
       )} */}
       {isLoadingResponse && <LoadingStatus />}
-      <SelectAllButtons
-        numberOfWordsInWordBank={numberOfWordsInWordBank}
-        numberOfWordsToStudy={numberOfWordsToStudy}
-        handleAllSentences={handleAllSentences}
-        handleClearWordBank={handleClearWordBank}
-      />
       <WordBankSection
         wordBank={wordBank}
         handleRemoveFromBank={handleRemoveFromBank}
