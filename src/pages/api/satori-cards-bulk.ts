@@ -15,9 +15,7 @@ const satoriCardsBulkAPI = async () => {
 
     const responseToJSON = await response.json();
 
-    const endData = responseToJSON;
-
-    return endData;
+    return responseToJSON;
   } catch (error) {
     console.error('## Error fetching data:', error);
   }

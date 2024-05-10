@@ -21,12 +21,7 @@ const saveContentAPI = async ({ ref, contentEntry }) => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-
-    const responseBody = await response.text();
-
-    const responseParsed = JSON.parse(responseBody);
-
-    return responseParsed;
+    return true;
   } catch (error) {
     console.log('## Error chatGPT to text: ', error);
   }

@@ -20,9 +20,12 @@ import MyContentSection from '@/components/MyContentSection';
 import PersonalWordBankStudySection from '@/components/PersonalWordBankStudySection';
 import saveContentAPI from './api/save-content';
 import saveWordAPI from './api/save-word';
+import { getAdditionalSatoriContext } from './api/get-additional-satori-context';
+import ContextHelpers from '@/components/ContextHelpers';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
+  const contextHelperData = props?.contextHelperData;
   const [wordBank, setWordBank] = useState([]);
   const [sentenceListState, setSentenceListState] = useState(sentenceList);
   const [wordBankForGeneratedWords, setWordBankForGeneratedWords] = useState(
@@ -257,11 +260,11 @@ export default function Home(props) {
 
     try {
       setLoadingResponse(true);
-      const res = await saveContentAPI({
+      await saveContentAPI({
         ref,
         contentEntry: finalEntryObject,
       });
-      console.log('## Saved!: ', res);
+      // add to state to show its added
     } catch (error) {
       //
     } finally {
@@ -379,6 +382,9 @@ export default function Home(props) {
         />
       )}
       {/* <PersonalWordBankStudySection /> */}
+      {contextHelperData?.length ? (
+        <ContextHelpers contextHelperData={contextHelperData} />
+      ) : null}
       {response?.length > 0 ? (
         <ResponseSection
           response={response}
@@ -393,18 +399,20 @@ export default function Home(props) {
 
 export async function getStaticProps() {
   try {
-    const satoriData = await satoriCardsBulkAPI();
+    const { satoriData, contextHelperData } = await satoriCardsBulkAPI();
 
     return {
       props: {
-        satoriData: satoriData,
+        satoriData,
+        contextHelperData,
       },
     };
   } catch (error) {
     console.error('Error fetching data:', error);
     return {
       props: {
-        satoriData: null,
+        satoriData: [],
+        contextHelperData: [],
       },
     };
   }
