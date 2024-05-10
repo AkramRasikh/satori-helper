@@ -33,29 +33,36 @@ const TextInput = ({
   return (
     <div>
       {translatedText?.length === 0 && (
-        <>
-          <label htmlFor='textTheme'>Theme of text</label>
-          <input
-            type='text'
-            id='textTheme'
-            value={themeValue}
-            onChange={handleThemeChange}
-          />
-          <p>Theme: {themeValue}</p>
-          <label htmlFor='textInput'>Japanese Rambles:</label>
-          <input
-            type='text'
+        <div style={{ textAlign: 'center' }}>
+          <div
+            style={{
+              marginBottom: '10px',
+            }}
+          >
+            <label htmlFor='textTheme'>Theme of text</label>
+            <input
+              type='text'
+              id='textTheme'
+              value={themeValue}
+              onChange={handleThemeChange}
+              style={{
+                marginLeft: '10px',
+              }}
+            />
+          </div>
+          <textarea
             id='textInput'
             value={inputValue}
             onChange={handleInputChange}
             style={{
               display: 'block',
-              width: '400px',
-              height: '250px',
+              width: '80%',
+              minHeight: '50px',
+              margin: 'auto',
             }}
           />
           {renderBulletPoints()}
-        </>
+        </div>
       )}
     </div>
   );

@@ -3,11 +3,13 @@ import LoadingStatus from '@/components/LoadingStatus';
 import TextInput from '@/components/TextInput';
 import { getThoughtsToBilingualText } from '@/prompts/utils';
 import { useState } from 'react';
-import chatGptAPI from './api/chatgpt';
+// import chatGptAPI from './api/chatgpt';
 import MyContentSection from '@/components/MyContentSection';
 import PersonalWordBankStudySection from '@/components/PersonalWordBankStudySection';
-import saveWordAPI from './api/save-word';
+// import saveWordAPI from './api/save-word';
 import { useRouter } from 'next/router';
+import chatGptAPI from '../api/chatgpt';
+import Header from './Header';
 
 export default function MyContentPage() {
   const [isLoadingResponse, setLoadingResponse] = useState(false);
@@ -60,26 +62,12 @@ export default function MyContentPage() {
   const saveContentToFirebase = async () => {};
 
   return (
-    <div>
-      <div
-        style={{
-          position: 'absolute',
-          right: '10px',
-        }}
-      >
-        <button
-          style={{
-            margin: 'auto 0',
-            padding: '5px',
-            borderRadius: '5px',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-          onClick={handleNavigateToMyContent}
-        >
-          /home
-        </button>
-      </div>
+    <div
+      style={{
+        padding: '15px',
+      }}
+    >
+      <Header handleNavigateToMyContent={handleNavigateToMyContent} />
       {isLoadingResponse && <LoadingStatus />}
 
       <TextInput
