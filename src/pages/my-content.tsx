@@ -7,6 +7,7 @@ import chatGptAPI from './api/chatgpt';
 import MyContentSection from '@/components/MyContentSection';
 import PersonalWordBankStudySection from '@/components/PersonalWordBankStudySection';
 import saveWordAPI from './api/save-word';
+import { useRouter } from 'next/router';
 
 export default function MyContentPage() {
   const [isLoadingResponse, setLoadingResponse] = useState(false);
@@ -14,6 +15,7 @@ export default function MyContentPage() {
   const [inputValue, setInputValue] = useState('');
   const [themeValue, setThemeValue] = useState('');
   const [translatedText, setTranslatedText] = useState([]);
+  const router = useRouter();
 
   const handleMyTextTranslated = async () => {
     try {
@@ -51,10 +53,33 @@ export default function MyContentPage() {
   //   }
   // };
 
+  const handleNavigateToMyContent = () => {
+    router.push('/');
+  };
+
   const saveContentToFirebase = async () => {};
 
   return (
-    <>
+    <div>
+      <div
+        style={{
+          position: 'absolute',
+          right: '10px',
+        }}
+      >
+        <button
+          style={{
+            margin: 'auto 0',
+            padding: '5px',
+            borderRadius: '5px',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+          onClick={handleNavigateToMyContent}
+        >
+          /home
+        </button>
+      </div>
       {isLoadingResponse && <LoadingStatus />}
 
       <TextInput
@@ -73,6 +98,6 @@ export default function MyContentPage() {
         <MyContentSection translatedText={translatedText} />
       )}
       <PersonalWordBankStudySection />
-    </>
+    </div>
   );
 }

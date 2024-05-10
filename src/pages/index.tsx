@@ -14,8 +14,8 @@ import handleSatoriFlashcardAPI from './api/satori-flashcard';
 import underlineTargetWords from './api/underline-target-words';
 import GetContentActions from '@/components/GetContentActions';
 import saveContentAPI from './api/save-content';
-import saveWordAPI from './api/save-word';
 import ContextHelpers from '@/components/ContextHelpers';
+import { useRouter } from 'next/router';
 
 export default function Home(props) {
   const sentenceList = props?.satoriData;
@@ -33,6 +33,8 @@ export default function Home(props) {
   const [selectedPrompt, setSelectedPrompt] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedWithAudio, setWithAudio] = useState('');
+
+  const router = useRouter();
 
   const numberOfWordsToStudy = sentenceList?.length;
   const numberOfWordsInWordBank = wordBank.length;
@@ -70,6 +72,11 @@ export default function Home(props) {
       return 'Hard 👎';
     }
     return '';
+  };
+
+  const handleNavigateToMyContent = () => {
+    // Navigate to another page
+    router.push('/my-content');
   };
 
   const handleFlashCard = async (flashCardNumber, cardId) => {
@@ -284,6 +291,25 @@ export default function Home(props) {
 
   return (
     <div style={{ paddingBottom: '40px' }}>
+      <div
+        style={{
+          position: 'absolute',
+          right: '10px',
+        }}
+      >
+        <button
+          style={{
+            margin: 'auto 0',
+            padding: '5px',
+            borderRadius: '5px',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+          onClick={handleNavigateToMyContent}
+        >
+          /my-content
+        </button>
+      </div>
       {flashCardWordDone && (
         <FlashCardDoneToast
           text={flashCardWordDone}
