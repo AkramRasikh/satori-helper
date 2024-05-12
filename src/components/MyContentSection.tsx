@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import AudioPlayerElement from './AudioPlayer/AudioPlayerElement';
+import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 
 const IndividualSentenceContext = ({ content }) => {
   const [myContentWordBank, setMyContentWordBank] = useState([]);
@@ -81,6 +83,7 @@ const MyContentSection = ({ translatedText }) => {
           return (
             <li key={index}>
               <IndividualSentenceContext content={item} />
+              <AudioPlayerElement url={getFirebaseAudioURL(item.id)} />
             </li>
           );
         })}

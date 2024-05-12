@@ -10,6 +10,9 @@ import PersonalWordBankStudySection from '@/components/PersonalWordBankStudySect
 import { useRouter } from 'next/router';
 import chatGptAPI from '../api/chatgpt';
 import Header from './Header';
+import getNarakeetAudio from '../api/narakeet';
+import getChatGptTTS from '../api/tts-audio';
+import saveContentAPI from '../api/save-content';
 
 export default function MyContentPage() {
   const [isLoadingResponse, setLoadingResponse] = useState(false);
@@ -18,6 +21,30 @@ export default function MyContentPage() {
   const [themeValue, setThemeValue] = useState('');
   const [translatedText, setTranslatedText] = useState([]);
   const router = useRouter();
+
+  const handleNavigateToMyContent = () => {
+    router.push('/');
+  };
+
+  const getCorrespondingAudio = async (japaneseSentenceData, audio) => {
+    if (!japaneseSentenceData) return null;
+    try {
+      const successResIdOrSentence =
+        audio === 'narakeet'
+          ? await getNarakeetAudio({
+              id: japaneseSentenceData.id,
+              sentence: japaneseSentenceData.targetLang,
+            })
+          : await getChatGptTTS({
+              id: japaneseSentenceData.id,
+              sentence: japaneseSentenceData.targetLang,
+            });
+      return successResIdOrSentence;
+    } catch (error) {
+      console.error('## Error fetching data (audio):', error);
+      return false;
+    }
+  };
 
   const handleMyTextTranslated = async () => {
     try {
@@ -28,9 +55,19 @@ export default function MyContentPage() {
         sentence: fullPrompt,
         model: 'gpt-4',
       });
-      const responseWithId = res.map((item) => ({ id: uuidv4(), ...item }));
+      const responseWithIdAndAudio = await Promise.all(
+        res.map(async (item) => {
+          const id = uuidv4();
+          return {
+            id: id,
+            ...item,
+            hasAudio: await getCorrespondingAudio({ ...item, id }, null),
+          };
+        }),
+      );
 
-      setTranslatedText(responseWithId);
+      setTranslatedText(responseWithIdAndAudio);
+      setInputValue('');
     } catch (error) {
       console.log('## handleMyTextTranslated, error');
     } finally {
@@ -55,12 +92,24 @@ export default function MyContentPage() {
   //   }
   // };
 
-  const handleNavigateToMyContent = () => {
-    router.push('/');
-  };
+  const saveContentToFirebase = async () => {
+    const contentEntry = {
+      [`${themeValue.toLowerCase()}-01`]: translatedText,
+    };
 
-  const saveContentToFirebase = async () => {};
-  const parts = inputValue?.split('*');
+    try {
+      setLoadingResponse(true);
+      await saveContentAPI({
+        ref: 'japaneseContent',
+        contentEntry,
+      });
+    } catch (error) {
+      //
+    } finally {
+      setLoadingResponse(false);
+    }
+  };
+  const parts = inputValue?.split('\n');
 
   return (
     <div
@@ -77,17 +126,44 @@ export default function MyContentPage() {
         setThemeValue={setThemeValue}
         translatedText={translatedText}
       />
-
-      {parts?.length > 0 && (
+      <div
+        style={{
+          width: '80%',
+          margin: 'auto',
+        }}
+      >
+        <button
+          onClick={handleMyTextTranslated}
+          style={{
+            marginTop: '10px',
+            padding: '5px',
+            borderRadius: '5px',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          Translate content
+        </button>
+        <button
+          onClick={saveContentToFirebase}
+          style={{
+            marginTop: '10px',
+            marginLeft: '10px',
+            padding: '5px',
+            borderRadius: '5px',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          Save to Firebase {themeValue}
+        </button>
+      </div>
+      {inputValue && (
         <ul>
           {parts.map((part, index) => (
             <li key={index}>{part.trim()}</li>
           ))}
         </ul>
-      )}
-      <button onClick={handleMyTextTranslated}>Lets go</button>
-      {translatedText?.length > 0 && (
-        <button onClick={saveContentToFirebase}>Save content</button>
       )}
       {translatedText?.length > 0 && (
         <MyContentSection translatedText={translatedText} />

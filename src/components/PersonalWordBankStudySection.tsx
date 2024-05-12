@@ -47,8 +47,6 @@ const PersonalWordBankStudySection = () => {
 
   return (
     <div>
-      <button onClick={handleLoadPersonalStudyWords}>Load in words</button>
-      <div>Content</div>
       <ul>
         {loadedData?.map((item) => {
           return (

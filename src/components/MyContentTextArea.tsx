@@ -41,6 +41,7 @@ const MyContentTextArea = ({
               width: '80%',
               minHeight: '50px',
               margin: 'auto',
+              padding: '10px',
             }}
           />
         </div>
