@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import AudioPlayerElement from './AudioPlayer/AudioPlayerElement';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 
@@ -75,17 +75,22 @@ const IndividualSentenceContext = ({ content }) => {
   );
 };
 
+const MyContentSectionContainer = ({ item }) => {
+  const ref = useRef();
+  return (
+    <li>
+      <IndividualSentenceContext content={item} />
+      <AudioPlayerElement url={getFirebaseAudioURL(item.id)} ref={ref} />
+    </li>
+  );
+};
+
 const MyContentSection = ({ translatedText }) => {
   return (
     <div>
       <ul style={{ padding: 0, listStyleType: 'none' }}>
         {translatedText?.map((item, index) => {
-          return (
-            <li key={index}>
-              <IndividualSentenceContext content={item} />
-              <AudioPlayerElement url={getFirebaseAudioURL(item.id)} />
-            </li>
-          );
+          return <MyContentSectionContainer key={index} item={item} />;
         })}
       </ul>
     </div>
