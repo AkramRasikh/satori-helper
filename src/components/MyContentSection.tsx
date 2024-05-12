@@ -51,8 +51,8 @@ const IndividualSentenceContext = ({ content }) => {
 
   return (
     <div onMouseUp={handleHighlight}>
-      <p>targetLang: {content.targetLang}</p>
-      <p>baseLang: {content.baseLang}</p>
+      <p>{content.targetLang}</p>
+      <p>{content.baseLang}</p>
       {content?.notes && <p>notes: {content.notes}</p>}
       {myContentWordBank?.length > 0 && (
         <p>
@@ -78,7 +78,7 @@ const IndividualSentenceContext = ({ content }) => {
 const MyContentSection = ({ translatedText }) => {
   return (
     <div>
-      <ul>
+      <ul style={{ padding: 0, listStyleType: 'none' }}>
         {translatedText?.map((item, index) => {
           return (
             <li key={index}>

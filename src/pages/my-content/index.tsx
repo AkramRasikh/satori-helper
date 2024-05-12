@@ -16,10 +16,75 @@ import LoadContentControls from './LoadContentControls';
 
 const japaneseContent = 'japaneseContent';
 
+const ContentActions = ({
+  handleMyTextTranslated,
+  saveContentToFirebase,
+  themeValue,
+}) => {
+  return (
+    <div
+      style={{
+        width: '80%',
+        margin: 'auto',
+      }}
+    >
+      <button
+        onClick={handleMyTextTranslated}
+        style={{
+          marginTop: '10px',
+          padding: '5px',
+          borderRadius: '5px',
+          border: 'none',
+          cursor: 'pointer',
+        }}
+      >
+        Translate content
+      </button>
+      <button
+        onClick={() => handleMyTextTranslated('narakeet')}
+        style={{
+          marginTop: '10px',
+          marginLeft: '10px',
+          padding: '5px',
+          borderRadius: '5px',
+          border: 'none',
+          cursor: 'pointer',
+        }}
+      >
+        Translate content + Nara
+      </button>
+      <div
+        style={{
+          borderRight: '1px solid black',
+          height: '100%',
+          display: 'inline',
+          marginLeft: '10px',
+        }}
+      />
+      <button
+        onClick={saveContentToFirebase}
+        style={{
+          marginTop: '10px',
+          marginLeft: '10px',
+          padding: '5px',
+          borderRadius: '5px',
+          border: 'none',
+          cursor: 'pointer',
+        }}
+      >
+        Save to Firebase {themeValue}
+      </button>
+    </div>
+  );
+};
+
 export default function MyContentPage(props) {
   const japaneseLoadedContent = props?.japaneseLoadedContent;
+
   const topics =
-    japaneseLoadedContent?.length > 0 ? Object.keys(japaneseLoadedContent) : [];
+    japaneseLoadedContent && Object.keys(japaneseLoadedContent).length > 0
+      ? Object.keys(japaneseLoadedContent)
+      : [];
 
   const [isLoadingResponse, setLoadingResponse] = useState(false);
 
@@ -125,59 +190,11 @@ export default function MyContentPage(props) {
         setThemeValue={setThemeValue}
         translatedText={translatedText}
       />
-      <div
-        style={{
-          width: '80%',
-          margin: 'auto',
-        }}
-      >
-        <button
-          onClick={handleMyTextTranslated}
-          style={{
-            marginTop: '10px',
-            padding: '5px',
-            borderRadius: '5px',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-        >
-          Translate content
-        </button>
-        <button
-          onClick={() => handleMyTextTranslated('narakeet')}
-          style={{
-            marginTop: '10px',
-            marginLeft: '10px',
-            padding: '5px',
-            borderRadius: '5px',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-        >
-          Translate content + Nara
-        </button>
-        <div
-          style={{
-            borderRight: '1px solid black',
-            height: '100%',
-            display: 'inline',
-            marginLeft: '10px',
-          }}
-        />
-        <button
-          onClick={saveContentToFirebase}
-          style={{
-            marginTop: '10px',
-            marginLeft: '10px',
-            padding: '5px',
-            borderRadius: '5px',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-        >
-          Save to Firebase {themeValue}
-        </button>
-      </div>
+      <ContentActions
+        handleMyTextTranslated={handleMyTextTranslated}
+        saveContentToFirebase={saveContentToFirebase}
+        themeValue={themeValue}
+      />
       {inputValue && (
         <ul>
           {parts.map((part, index) => (
