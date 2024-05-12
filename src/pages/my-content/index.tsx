@@ -148,6 +148,7 @@ export default function MyContentPage(props) {
           onClick={() => handleMyTextTranslated('narakeet')}
           style={{
             marginTop: '10px',
+            marginLeft: '10px',
             padding: '5px',
             borderRadius: '5px',
             border: 'none',
@@ -156,6 +157,14 @@ export default function MyContentPage(props) {
         >
           Translate content + Nara
         </button>
+        <div
+          style={{
+            borderRight: '1px solid black',
+            height: '100%',
+            display: 'inline',
+            marginLeft: '10px',
+          }}
+        />
         <button
           onClick={saveContentToFirebase}
           style={{
