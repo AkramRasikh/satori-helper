@@ -3,10 +3,8 @@ import LoadingStatus from '@/components/LoadingStatus';
 import MyContentTextArea from '@/components/MyContentTextArea';
 import { getThoughtsToBilingualText } from '@/prompts/utils';
 import { useState } from 'react';
-// import chatGptAPI from './api/chatgpt';
 import MyContentSection from '@/components/MyContentSection';
 import PersonalWordBankStudySection from '@/components/PersonalWordBankStudySection';
-// import saveWordAPI from './api/save-word';
 import { useRouter } from 'next/router';
 import chatGptAPI from '../api/chatgpt';
 import Header from './Header';
@@ -54,7 +52,7 @@ export default function MyContentPage(props) {
     }
   };
 
-  const handleMyTextTranslated = async () => {
+  const handleMyTextTranslated = async (withNara) => {
     try {
       setLoadingResponse(true);
       const fullPrompt = getThoughtsToBilingualText(inputValue, themeValue);
@@ -69,7 +67,7 @@ export default function MyContentPage(props) {
           return {
             id: id,
             ...item,
-            hasAudio: await getCorrespondingAudio({ ...item, id }, null),
+            hasAudio: await getCorrespondingAudio({ ...item, id }, withNara),
           };
         }),
       );
@@ -86,23 +84,6 @@ export default function MyContentPage(props) {
   const handleTopicLoad = (topic) => {
     setLoadedTopicData(japaneseLoadedContent[topic]);
   };
-
-  // const saveWordToFirebase = async () => {
-  //   try {
-  //     setLoadingResponse(true);
-  //     const res = await saveWordAPI({
-  //       ref: 'japanese',
-  //       contentEntry: {
-  //         'general-ting-01': translatedText,
-  //       },
-  //     });
-  //     console.log('## Saved!: ', res);
-  //   } catch (error) {
-  //     //
-  //   } finally {
-  //     setLoadingResponse(false);
-  //   }
-  // };
 
   const saveContentToFirebase = async () => {
     const contentEntry = {
@@ -161,6 +142,18 @@ export default function MyContentPage(props) {
           }}
         >
           Translate content
+        </button>
+        <button
+          onClick={() => handleMyTextTranslated('narakeet')}
+          style={{
+            marginTop: '10px',
+            padding: '5px',
+            borderRadius: '5px',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          Translate content + Nara
         </button>
         <button
           onClick={saveContentToFirebase}
