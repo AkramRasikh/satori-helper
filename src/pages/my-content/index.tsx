@@ -94,7 +94,7 @@ export default function MyContentPage() {
 
   const saveContentToFirebase = async () => {
     const contentEntry = {
-      [`${themeValue.toLowerCase()}-01`]: translatedText,
+      [themeValue.toLowerCase()]: translatedText,
     };
 
     try {
