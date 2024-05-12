@@ -18,7 +18,8 @@ const japaneseContent = 'japaneseContent';
 
 export default function MyContentPage(props) {
   const japaneseLoadedContent = props?.japaneseLoadedContent;
-  const topics = Object.keys(japaneseLoadedContent);
+  const topics =
+    japaneseLoadedContent?.length > 0 ? Object.keys(japaneseLoadedContent) : [];
 
   const [isLoadingResponse, setLoadingResponse] = useState(false);
 
