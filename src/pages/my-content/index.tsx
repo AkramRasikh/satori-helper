@@ -13,12 +13,20 @@ import Header from './Header';
 import getNarakeetAudio from '../api/narakeet';
 import getChatGptTTS from '../api/tts-audio';
 import saveContentAPI from '../api/save-content';
+import { loadInContent } from '../api/load-content';
+import LoadContentControls from './LoadContentControls';
 
-export default function MyContentPage() {
+const japaneseContent = 'japaneseContent';
+
+export default function MyContentPage(props) {
+  const japaneseLoadedContent = props?.japaneseLoadedContent;
+  const topics = Object.keys(japaneseLoadedContent);
+
   const [isLoadingResponse, setLoadingResponse] = useState(false);
 
   const [inputValue, setInputValue] = useState('');
   const [themeValue, setThemeValue] = useState('');
+  const [loadedTopicData, setLoadedTopicData] = useState([]);
   const [translatedText, setTranslatedText] = useState([]);
   const router = useRouter();
 
@@ -75,6 +83,10 @@ export default function MyContentPage() {
     }
   };
 
+  const handleTopicLoad = (topic) => {
+    setLoadedTopicData(japaneseLoadedContent[topic]);
+  };
+
   // const saveWordToFirebase = async () => {
   //   try {
   //     setLoadingResponse(true);
@@ -100,11 +112,11 @@ export default function MyContentPage() {
     try {
       setLoadingResponse(true);
       await saveContentAPI({
-        ref: 'japaneseContent',
+        ref: japaneseContent,
         contentEntry,
       });
     } catch (error) {
-      //
+      console.log('## saveContentToFirebase error: ', error);
     } finally {
       setLoadingResponse(false);
     }
@@ -119,6 +131,12 @@ export default function MyContentPage() {
     >
       <Header handleNavigateToMyContent={handleNavigateToMyContent} />
       {isLoadingResponse && <LoadingStatus />}
+      {topics?.length ? (
+        <LoadContentControls
+          topics={topics}
+          handleTopicLoad={handleTopicLoad}
+        />
+      ) : null}
       <MyContentTextArea
         inputValue={inputValue}
         setInputValue={setInputValue}
@@ -168,7 +186,32 @@ export default function MyContentPage() {
       {translatedText?.length > 0 && (
         <MyContentSection translatedText={translatedText} />
       )}
+      {loadedTopicData?.length > 0 && (
+        <MyContentSection translatedText={loadedTopicData} />
+      )}
       <PersonalWordBankStudySection />
     </div>
   );
+}
+
+export async function getStaticProps() {
+  try {
+    const japaneseLoadedContent = await loadInContent({
+      ref: japaneseContent,
+    });
+
+    return {
+      props: {
+        japaneseLoadedContent,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return {
+      props: {
+        satoriData: [],
+        contextHelperData: [],
+      },
+    };
+  }
 }
