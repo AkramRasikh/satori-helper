@@ -57,7 +57,6 @@ export default function MyContentPage(props) {
     try {
       setLoadingResponse(true);
       const fullPrompt = getThoughtsToBilingualText(inputValue, themeValue);
-      console.log('## fullPrompt: ', fullPrompt);
       const res = await chatGptAPI({
         sentence: fullPrompt,
         model: 'gpt-4',
@@ -76,7 +75,7 @@ export default function MyContentPage(props) {
       setTranslatedText(responseWithIdAndAudio);
       setInputValue('');
     } catch (error) {
-      console.log('## handleMyTextTranslated, error');
+      console.log('## handleMyTextTranslated error: ', error);
     } finally {
       setLoadingResponse(false);
     }
