@@ -5,6 +5,7 @@ import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 const IndividualSentenceContext = ({ content }) => {
   const [myContentWordBank, setMyContentWordBank] = useState([]);
   const [highlightedWord, setHighlightedWord] = useState('');
+  const [savedWords, setSavedWords] = useState([]);
 
   const handleHighlight = () => {
     const selection = window?.getSelection();
@@ -26,28 +27,39 @@ const IndividualSentenceContext = ({ content }) => {
   };
 
   const saveToWordBank = async () => {
+    const firstWord = myContentWordBank[0];
     const contextId = content.id;
-    const finalContentArr = myContentWordBank.map((item) => {
-      return {
-        word: item,
-        contexts: [contextId],
-        daysReviewed: [], // [new Date]
-      };
-    });
+    // const finalContentArr = myContentWordBank.map((item) => {
+    //   return {
+    //     word: item,
+    //     contexts: [contextId],
+    //     daysReviewed: [], // [new Date]
+    //   };
+    // });
 
-    await fetch('/api/save-to-wordbank', {
+    await fetch('http://localhost:3001/add-word', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(finalContentArr),
+      body: JSON.stringify({
+        word: firstWord,
+        contexts: [contextId],
+      }),
     })
       .then(async (response) => {
-        const jsonED = await response.json();
-        return jsonED;
+        const res = await response.json();
+
+        const wordAdded = res.word;
+
+        setSavedWords((prev) =>
+          prev?.length === 0 ? [wordAdded] : [...prev, wordAdded],
+        );
+        return res;
       })
       .catch((error) => console.error('## saveToWordBank Error:', error));
   };
+  const makeArrayUnique = (array) => [...new Set(array)];
 
   const saveHighlightedWord = () => {
     const selection = window?.getSelection();
@@ -58,9 +70,12 @@ const IndividualSentenceContext = ({ content }) => {
   };
 
   const underlineWordsInSentence = (sentence, thisWordBank) => {
-    if (thisWordBank?.length === 0) return <p>{sentence}</p>;
+    const masterBank = makeArrayUnique([...thisWordBank, ...savedWords]);
+    if (masterBank?.length === 0) return <p>{sentence}</p>;
     if (sentence) {
-      const pattern = new RegExp(thisWordBank, 'g');
+      const pattern = new RegExp(masterBank.join('|'), 'g');
+      console.log('## pattern: ', pattern);
+
       const underlinedSentence = sentence?.replace(
         pattern,
         (match) => `<u>${match}</u>`,
