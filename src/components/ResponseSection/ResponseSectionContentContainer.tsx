@@ -98,6 +98,7 @@ const ResponseSectionContentContainer = ({
           handleGetAudio={handleGetAudio}
           getKanjiFreeSentence={getKanjiFreeSentence}
           handleSaveToSatori={handleSaveToSatori}
+          isAudioInMP3Banks={isAudioInMP3Banks}
         />
       </div>
       {noKanjiSentence && <p style={{ margin: '5px 0' }}>{noKanjiSentence}</p>}

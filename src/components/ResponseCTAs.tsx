@@ -4,15 +4,16 @@ const ResponseCTAs = ({
   handleGetAudio,
   getKanjiFreeSentence,
   handleSaveToSatori,
+  isAudioInMP3Banks,
 }) => {
+  const getAudioCta = {
+    text: 'Get Audio',
+    onClickHandler: handleGetAudio,
+  };
   const ctaArr = [
     {
       text: 'Delete',
       onClickHandler: handleDeleteClick,
-    },
-    {
-      text: 'Get Audio',
-      onClickHandler: handleGetAudio,
     },
     {
       text: 'Remove Kanji',
@@ -23,6 +24,11 @@ const ResponseCTAs = ({
       onClickHandler: handleSaveToSatori,
     },
   ];
+
+  // Conditionally add the "Get Audio" button if isAudioInMP3Banks is false
+  if (!isAudioInMP3Banks) {
+    ctaArr.push(getAudioCta);
+  }
   return (
     <div style={{ margin: 'auto 0' }}>
       {ctaArr.map((cta, index) => {
