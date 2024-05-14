@@ -1,13 +1,13 @@
 const LoadContentControls = ({ topics, handleTopicLoad }) => {
   return (
-    <div>
+    <div style={{ display: 'flex' }}>
       <p>Load Content:</p>
       {topics?.map((topic) => {
         return (
           <button
             key={topic}
             style={{
-              marginTop: '10px',
+              margin: 'auto 5px',
               padding: '5px',
               borderRadius: '5px',
               border: 'none',
