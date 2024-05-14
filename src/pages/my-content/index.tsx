@@ -13,8 +13,10 @@ import getChatGptTTS from '../api/tts-audio';
 import saveContentAPI from '../api/save-content';
 import { loadInContent } from '../api/load-content';
 import LoadContentControls from './LoadContentControls';
+import { makeArrayUnique } from '@/utils/makeArrayUnique';
 
 const japaneseContent = 'japaneseContent';
+const japaneseWords = 'japaneseWords';
 
 const ContentActions = ({
   handleMyTextTranslated,
@@ -80,6 +82,14 @@ const ContentActions = ({
 
 export default function MyContentPage(props) {
   const japaneseLoadedContent = props?.japaneseLoadedContent;
+  const japaneseLoadedWords = props?.japaneseLoadedWords;
+  let pureWords = [];
+  japaneseLoadedWords?.forEach((wordData) => {
+    pureWords.push(wordData.baseForm);
+    pureWords.push(wordData.surfaceForm);
+  });
+
+  const pureWordsUnique = makeArrayUnique(pureWords);
 
   const topics =
     japaneseLoadedContent && Object.keys(japaneseLoadedContent).length > 0
@@ -206,7 +216,10 @@ export default function MyContentPage(props) {
         <MyContentSection translatedText={translatedText} />
       )}
       {loadedTopicData?.length > 0 && (
-        <MyContentSection translatedText={loadedTopicData} />
+        <MyContentSection
+          translatedText={loadedTopicData}
+          pureWordsUnique={pureWordsUnique}
+        />
       )}
       <PersonalWordBankStudySection />
     </div>
@@ -218,10 +231,15 @@ export async function getStaticProps() {
     const japaneseLoadedContent = await loadInContent({
       ref: japaneseContent,
     });
+    const japaneseLoadedWords =
+      (await loadInContent({
+        ref: japaneseWords,
+      })) || [];
 
     return {
       props: {
         japaneseLoadedContent,
+        japaneseLoadedWords,
       },
     };
   } catch (error) {

@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import AudioPlayerElement from './AudioPlayer/AudioPlayerElement';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 
-const IndividualSentenceContext = ({ content }) => {
+const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
   const [myContentWordBank, setMyContentWordBank] = useState([]);
   const [highlightedWord, setHighlightedWord] = useState('');
   const [savedWords, setSavedWords] = useState([]);
@@ -70,7 +70,11 @@ const IndividualSentenceContext = ({ content }) => {
   };
 
   const underlineWordsInSentence = (sentence, thisWordBank) => {
-    const masterBank = makeArrayUnique([...thisWordBank, ...savedWords]);
+    const masterBank = makeArrayUnique([
+      ...thisWordBank,
+      ...savedWords,
+      ...pureWordsUnique,
+    ]);
     if (masterBank?.length === 0) return <p>{sentence}</p>;
     if (sentence) {
       const pattern = new RegExp(masterBank.join('|'), 'g');
@@ -145,22 +149,31 @@ const IndividualSentenceContext = ({ content }) => {
   );
 };
 
-const MyContentSectionContainer = ({ item }) => {
+const MyContentSectionContainer = ({ item, pureWordsUnique }) => {
   const ref = useRef();
   return (
     <li>
-      <IndividualSentenceContext content={item} />
+      <IndividualSentenceContext
+        content={item}
+        pureWordsUnique={pureWordsUnique}
+      />
       <AudioPlayerElement url={getFirebaseAudioURL(item.id)} ref={ref} />
     </li>
   );
 };
 
-const MyContentSection = ({ translatedText }) => {
+const MyContentSection = ({ translatedText, pureWordsUnique }) => {
   return (
     <div>
       <ul style={{ padding: 0, listStyleType: 'none' }}>
         {translatedText?.map((item, index) => {
-          return <MyContentSectionContainer key={index} item={item} />;
+          return (
+            <MyContentSectionContainer
+              key={index}
+              item={item}
+              pureWordsUnique={pureWordsUnique}
+            />
+          );
         })}
       </ul>
     </div>
