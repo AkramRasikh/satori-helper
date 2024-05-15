@@ -30,11 +30,15 @@ const promptOptions = [
 ];
 const chatgptModels = [
   {
-    label: 'gpt-4',
+    label: 'GPT-4',
     option: 'gpt-4',
   },
   {
-    label: 'gpt-3.5-turbo',
+    label: 'GPT-4o',
+    option: 'gpt-4o',
+  },
+  {
+    label: 'GPT-3.5-turbo',
     option: 'gpt-3.5-turbo',
   },
 ];

@@ -25,16 +25,61 @@ import addJapaneseSentenceAPI from '../api/add-japanese-sentence';
 const japaneseContent = 'japaneseContent';
 const japaneseWords = 'japaneseWords';
 
+const JapaneseWordItem = ({
+  japaneseWord,
+  handleAddToWordBank,
+  getWordsContext,
+}) => {
+  const baseForm = japaneseWord.baseForm;
+  const definition = japaneseWord.definition;
+  const phonetic = japaneseWord.phonetic;
+  const transliteration = japaneseWord.transliteration;
+  const originalContext = japaneseWord.contexts[0];
+
+  return (
+    <li key={japaneseWord.id}>
+      <div style={{ display: 'flex' }}>
+        <p>
+          {baseForm} --- <span>{definition}</span> --- <span>{phonetic}</span>{' '}
+          ---- <span>{transliteration}</span>
+        </p>
+        <button
+          style={{
+            margin: 'auto 0',
+            marginLeft: '5px',
+            height: 'fit-content',
+            padding: '10px',
+            borderRadius: '15px',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'block',
+          }}
+          onClick={() =>
+            handleAddToWordBank({
+              word: baseForm,
+              context: getWordsContext(originalContext),
+            })
+          }
+        >
+          Add to wordbank
+        </button>
+      </div>
+    </li>
+  );
+};
+
 export default function MyContentPage(props) {
   const japaneseLoadedContent = props?.japaneseLoadedContent;
   const japaneseLoadedWords = props?.japaneseLoadedWords;
+  const wordsByTopics = props?.wordsByTopics;
   let pureWords = [];
   japaneseLoadedWords?.forEach((wordData) => {
     pureWords.push(wordData.baseForm);
     pureWords.push(wordData.surfaceForm);
   });
 
-  const pureWordsUnique = makeArrayUnique(pureWords);
+  const pureWordsUnique =
+    pureWords?.length > 0 ? makeArrayUnique(pureWords) : [];
 
   const topics =
     japaneseLoadedContent && Object.keys(japaneseLoadedContent).length > 0
@@ -56,10 +101,11 @@ export default function MyContentPage(props) {
   const [response, setResponse] = useState([]);
   const [mp3Bank, setMp3Bank] = useState([]);
 
-  console.log('## response: ', response);
-
   const [showTextArea, setShowTextArea] = useState(false);
   const [showLoadedWords, setShowLoadedWords] = useState(false);
+
+  const [showLoadedWordsViaTopics, setShowLoadedWordsViaTopics] =
+    useState(false);
   const [loadedTopicData, setLoadedTopicData] = useState([]);
   const [translatedText, setTranslatedText] = useState([]);
   const router = useRouter();
@@ -69,8 +115,6 @@ export default function MyContentPage(props) {
     handleClearWordBank,
     wordBank,
   } = useWordBank();
-
-  console.log('## wordBank: ', wordBank);
 
   const handlePromptChange = (event) => {
     setSelectedPrompt(event.target.value);
@@ -140,13 +184,14 @@ export default function MyContentPage(props) {
     setShowLoadedWords(!showLoadedWords);
   };
 
+  const handleLoadWordsViaTopic = () => {
+    setShowLoadedWordsViaTopics(!showLoadedWordsViaTopics);
+  };
   const handleWithAudioChange = (event) => {
     setWithAudio(event.target.value);
   };
 
   const underlineWordsInSentence = async (sentence, thisWordBank) => {
-    console.log('## underlineWordsInSentence thisWordBank: ', thisWordBank);
-
     const matchedWords = await underlineTargetWords({
       sentence,
       wordBank: thisWordBank,
@@ -165,9 +210,6 @@ export default function MyContentPage(props) {
   };
 
   const addIdToResponse = async (parsedResponse, thisWordBank) => {
-    console.log('## addIdToResponse thisWordBank: ', thisWordBank);
-    console.log('## addIdToResponse wordBank: ', wordBank);
-
     const responseWithId = await Promise.all(
       parsedResponse.map(async (item) => {
         const { underlinedText, matchedWords } = await underlineWordsInSentence(
@@ -334,7 +376,21 @@ export default function MyContentPage(props) {
         >
           Load Words
         </button>
+        <button
+          onClick={handleLoadWordsViaTopic}
+          style={{
+            height: 'fit-content',
+            padding: '10px',
+            borderRadius: '15px',
+            border: 'none',
+            cursor: 'pointer',
+            marginLeft: '5px',
+          }}
+        >
+          Load Words via topics
+        </button>
       </div>
+
       {topics?.length ? (
         <LoadContentControls
           topics={topics}
@@ -380,35 +436,14 @@ export default function MyContentPage(props) {
           <p>Word list</p>
           <button onClick={handleClearWordBank}>Clear bank</button>
           <ul>
-            {japaneseLoadedWords?.map((japaneseWord) => {
-              const baseForm = japaneseWord.baseForm;
-              const definition = japaneseWord.definition;
-              const phonetic = japaneseWord.phonetic;
-              const transliteration = japaneseWord.transliteration;
-              const originalContext = japaneseWord.contexts[0];
-
-              return (
-                <li key={japaneseWord.id}>
-                  <div>
-                    <p>
-                      {baseForm} --- <span>{definition}</span> ---{' '}
-                      <span>{phonetic}</span> ----{' '}
-                      <span>{transliteration}</span>
-                    </p>
-                    <button
-                      onClick={() =>
-                        handleAddToWordBank({
-                          word: baseForm,
-                          context: getWordsContext(originalContext),
-                        })
-                      }
-                    >
-                      Add to wordbank
-                    </button>
-                  </div>
-                </li>
-              );
-            })}
+            {japaneseLoadedWords.map((japaneseWord) => (
+              <JapaneseWordItem
+                key={japaneseWord.id}
+                japaneseWord={japaneseWord}
+                handleAddToWordBank={handleAddToWordBank}
+                getWordsContext={getWordsContext}
+              />
+            ))}
           </ul>
         </div>
       ) : null}
@@ -441,6 +476,31 @@ export default function MyContentPage(props) {
           saveContentToFirebaseSatori={saveContentToFirebaseSatori}
         />
       ) : null}
+
+      {showLoadedWordsViaTopics ? (
+        <div>
+          <p>Words by topic</p>
+          <ul>
+            {wordsByTopics?.map((topicDataArr, index) => {
+              const topicName = topics[index];
+
+              return (
+                <div key={topicName}>
+                  <p>{topicName}</p>
+                  {topicDataArr?.map((wordFromTopic) => (
+                    <JapaneseWordItem
+                      key={wordFromTopic.id}
+                      japaneseWord={wordFromTopic}
+                      handleAddToWordBank={handleAddToWordBank}
+                      getWordsContext={getWordsContext}
+                    />
+                  ))}
+                </div>
+              );
+            })}
+          </ul>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -455,10 +515,35 @@ export async function getStaticProps() {
         ref: japaneseWords,
       })) || [];
 
+    const topics =
+      japaneseLoadedContent && Object.keys(japaneseLoadedContent).length > 0
+        ? Object.keys(japaneseLoadedContent)
+        : [];
+
+    const getWordsCategorisedByArticle = () => {
+      return topics.map((topic) => {
+        const allIdsFromTopicSentences = japaneseLoadedContent[topic].map(
+          (item) => item.id,
+        );
+        const filteredContexts = japaneseLoadedWords.filter((japaneseWord) =>
+          japaneseWord.contexts.some((context) =>
+            allIdsFromTopicSentences.includes(context),
+          ),
+        );
+
+        console.log(
+          '## getWordsCategorisedByArticle allIdsFromTopicSentences: ',
+          allIdsFromTopicSentences,
+        );
+        return filteredContexts;
+      });
+    };
+
     return {
       props: {
         japaneseLoadedContent,
         japaneseLoadedWords,
+        wordsByTopics: getWordsCategorisedByArticle(),
       },
     };
   } catch (error) {
@@ -467,6 +552,7 @@ export async function getStaticProps() {
       props: {
         satoriData: [],
         contextHelperData: [],
+        wordsByTopics: [],
       },
     };
   }
