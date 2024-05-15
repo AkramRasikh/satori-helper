@@ -14,6 +14,8 @@ import saveContentAPI from '../api/save-content';
 import { loadInContent } from '../api/load-content';
 import LoadContentControls from './LoadContentControls';
 import { makeArrayUnique } from '@/utils/makeArrayUnique';
+import WordBankSection from '@/components/WordBankSection';
+import useWordBank from '@/hooks/useWordBank';
 
 const japaneseContent = 'japaneseContent';
 const japaneseWords = 'japaneseWords';
@@ -105,6 +107,14 @@ export default function MyContentPage(props) {
   const [loadedTopicData, setLoadedTopicData] = useState([]);
   const [translatedText, setTranslatedText] = useState([]);
   const router = useRouter();
+  const {
+    handleAddToWordBank,
+    handleRemoveFromBank,
+    handleClearWordBank,
+    wordBank,
+  } = useWordBank();
+
+  console.log('## wordBank: ', wordBank);
 
   const handleNavigateToMyContent = () => {
     router.push('/');
@@ -166,8 +176,6 @@ export default function MyContentPage(props) {
     setShowLoadedWords(!showLoadedWords);
   };
 
-  const handleAddToWordBank = () => {};
-
   const saveContentToFirebase = async () => {
     const contentEntry = {
       [themeValue.toLowerCase()]: translatedText,
@@ -184,6 +192,22 @@ export default function MyContentPage(props) {
     } finally {
       setLoadingResponse(false);
     }
+  };
+
+  const getWordsContext = (contextId) => {
+    for (const key in japaneseLoadedContent) {
+      if (japaneseLoadedContent.hasOwnProperty(key)) {
+        const objectsArray = japaneseLoadedContent[key];
+        // Search for the object with the matching 'id' property
+        const matchingObject = objectsArray.find((obj) => obj.id === contextId);
+        // If the object is found, return it
+        if (matchingObject) {
+          return matchingObject.targetLang;
+        }
+      }
+    }
+    // If no matching object is found, return null or handle the case accordingly
+    return '';
   };
   const parts = inputValue?.split('\n');
 
@@ -265,12 +289,14 @@ export default function MyContentPage(props) {
       {showLoadedWords ? (
         <div>
           <p>Word list</p>
+          <button onClick={handleClearWordBank}>Clear bank</button>
           <ul>
             {japaneseLoadedWords?.map((japaneseWord) => {
               const baseForm = japaneseWord.baseForm;
               const definition = japaneseWord.definition;
               const phonetic = japaneseWord.phonetic;
               const transliteration = japaneseWord.transliteration;
+              const originalContext = japaneseWord.contexts[0];
 
               return (
                 <li key={japaneseWord.id}>
@@ -280,7 +306,14 @@ export default function MyContentPage(props) {
                       <span>{phonetic}</span> ----{' '}
                       <span>{transliteration}</span>
                     </p>
-                    <button onClick={handleAddToWordBank}>
+                    <button
+                      onClick={() =>
+                        handleAddToWordBank({
+                          word: baseForm,
+                          context: getWordsContext(originalContext),
+                        })
+                      }
+                    >
                       Add to wordbank
                     </button>
                   </div>
@@ -289,6 +322,13 @@ export default function MyContentPage(props) {
             })}
           </ul>
         </div>
+      ) : null}
+
+      {wordBank?.length > 0 ? (
+        <WordBankSection
+          wordBank={wordBank}
+          handleRemoveFromBank={handleRemoveFromBank}
+        />
       ) : null}
     </div>
   );
