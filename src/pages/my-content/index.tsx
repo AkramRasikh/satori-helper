@@ -166,6 +166,8 @@ export default function MyContentPage(props) {
     setShowLoadedWords(!showLoadedWords);
   };
 
+  const handleAddToWordBank = () => {};
+
   const saveContentToFirebase = async () => {
     const contentEntry = {
       [themeValue.toLowerCase()]: translatedText,
@@ -265,10 +267,22 @@ export default function MyContentPage(props) {
           <p>Word list</p>
           <ul>
             {japaneseLoadedWords?.map((japaneseWord) => {
+              const baseForm = japaneseWord.baseForm;
+              const definition = japaneseWord.definition;
+              const phonetic = japaneseWord.phonetic;
+              const transliteration = japaneseWord.transliteration;
+
               return (
                 <li key={japaneseWord.id}>
                   <div>
-                    <p>{japaneseWord.baseForm}</p>
+                    <p>
+                      {baseForm} --- <span>{definition}</span> ---{' '}
+                      <span>{phonetic}</span> ----{' '}
+                      <span>{transliteration}</span>
+                    </p>
+                    <button onClick={handleAddToWordBank}>
+                      Add to wordbank
+                    </button>
                   </div>
                 </li>
               );
