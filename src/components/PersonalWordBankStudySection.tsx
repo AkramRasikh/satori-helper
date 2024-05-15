@@ -35,15 +35,12 @@ const PersonalWordBankStudySection = () => {
           }}
           style={{
             margin: '5px 0',
-            // background: isNowPlaying === inArrayIndex ? 'yellow' : 'none',
           }}
         />
       );
     }
     return <p>{sentence}</p>;
   };
-
-  console.log('## loadedData: ', loadedData);
 
   return (
     <div>
