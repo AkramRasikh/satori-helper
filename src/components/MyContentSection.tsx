@@ -3,7 +3,6 @@ import AudioPlayerElement from './AudioPlayer/AudioPlayerElement';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 
 const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
-  const [myContentWordBank, setMyContentWordBank] = useState([]);
   const [highlightedWord, setHighlightedWord] = useState('');
   const [savedWords, setSavedWords] = useState([]);
 
@@ -11,31 +10,16 @@ const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
     const selection = window?.getSelection();
     const highlightedText = selection.toString().trim();
     if (highlightedText !== '') {
-      console.log('## Highlighted:', highlightedText);
       setHighlightedWord(highlightedText);
-    } else {
-      setHighlightedWord('');
     }
   };
 
-  const removeFromHighlightWordBank = (wordToRemove) => {
-    if (wordToRemove) {
-      setMyContentWordBank(
-        myContentWordBank.filter((word) => word !== wordToRemove),
-      );
-    }
+  const removeFromHighlightWordBank = () => {
+    setHighlightedWord('');
   };
 
   const saveToWordBank = async () => {
-    const firstWord = myContentWordBank[0];
     const contextId = content.id;
-    // const finalContentArr = myContentWordBank.map((item) => {
-    //   return {
-    //     word: item,
-    //     contexts: [contextId],
-    //     daysReviewed: [], // [new Date]
-    //   };
-    // });
 
     await fetch('http://localhost:3001/add-word', {
       method: 'POST',
@@ -43,7 +27,7 @@ const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        word: firstWord,
+        word: highlightedWord,
         contexts: [contextId],
       }),
     })
@@ -61,17 +45,9 @@ const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
   };
   const makeArrayUnique = (array) => [...new Set(array)];
 
-  const saveHighlightedWord = () => {
-    const selection = window?.getSelection();
-    if (highlightedWord && !myContentWordBank.includes(highlightedWord)) {
-      setMyContentWordBank((prev) => [...prev, highlightedWord]);
-      selection?.removeAllRanges();
-    }
-  };
-
-  const underlineWordsInSentence = (sentence, thisWordBank) => {
+  const underlineWordsInSentence = (sentence) => {
     const masterBank = makeArrayUnique([
-      ...thisWordBank,
+      ...highlightedWord,
       ...savedWords,
       ...pureWordsUnique,
     ]);
@@ -101,49 +77,46 @@ const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
 
   return (
     <div onMouseUp={handleHighlight}>
-      {underlineWordsInSentence(content.targetLang, myContentWordBank)}
+      {underlineWordsInSentence(content.targetLang)}
       <p>{content.baseLang}</p>
       {content?.notes && <p>notes: {content.notes}</p>}
-      {myContentWordBank?.length > 0 && (
-        <p>
-          Word bank:{' '}
-          {myContentWordBank.map((word, index) => {
-            const lastInArr = myContentWordBank?.length - index;
-            return (
-              <span
-                key={index}
-                style={{
-                  margin: '5px',
-                }}
-              >
-                <button
-                  style={{
-                    border: 'none',
-                    fontSize: 10,
-                    borderRadius: '5px',
-                    padding: '5px',
-                    marginRight: '5px',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => removeFromHighlightWordBank(word)}
-                >
-                  ❌
-                </button>
-                <span>{word}</span>
-                {!lastInArr && <span>{' ,'}</span>}
-              </span>
-            );
-          })}
-        </p>
-      )}
       {highlightedWord && (
-        <button onClick={saveHighlightedWord}>
-          Highlighted word: {highlightedWord}
-        </button>
-      )}
-
-      {myContentWordBank?.length > 0 && (
-        <button onClick={saveToWordBank}>Add words to study bank!</button>
+        <p>
+          Send Word to DB:{' '}
+          <span
+            style={{
+              margin: '5px',
+            }}
+          >
+            <button
+              style={{
+                border: 'none',
+                fontSize: 10,
+                borderRadius: '5px',
+                padding: '5px',
+                marginRight: '5px',
+                cursor: 'pointer',
+              }}
+              onClick={removeFromHighlightWordBank}
+            >
+              Remove word ❌
+            </button>
+            <span>{highlightedWord}</span>
+            <button
+              style={{
+                border: 'none',
+                fontSize: 10,
+                borderRadius: '5px',
+                padding: '5px',
+                marginRight: '5px',
+                cursor: 'pointer',
+              }}
+              onClick={saveToWordBank}
+            >
+              Add word! 🍄
+            </button>
+          </span>
+        </p>
       )}
     </div>
   );

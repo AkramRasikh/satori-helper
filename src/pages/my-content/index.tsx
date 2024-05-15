@@ -100,6 +100,8 @@ export default function MyContentPage(props) {
 
   const [inputValue, setInputValue] = useState('');
   const [themeValue, setThemeValue] = useState('');
+  const [showTextArea, setShowTextArea] = useState(false);
+  const [showLoadedWords, setShowLoadedWords] = useState(false);
   const [loadedTopicData, setLoadedTopicData] = useState([]);
   const [translatedText, setTranslatedText] = useState([]);
   const router = useRouter();
@@ -160,6 +162,10 @@ export default function MyContentPage(props) {
     setLoadedTopicData(japaneseLoadedContent[topic]);
   };
 
+  const handleLoadWords = () => {
+    setShowLoadedWords(!showLoadedWords);
+  };
+
   const saveContentToFirebase = async () => {
     const contentEntry = {
       [themeValue.toLowerCase()]: translatedText,
@@ -187,24 +193,56 @@ export default function MyContentPage(props) {
     >
       <Header handleNavigateToMyContent={handleNavigateToMyContent} />
       {isLoadingResponse && <LoadingStatus />}
+      <div>
+        <button
+          onClick={() => setShowTextArea(!showTextArea)}
+          style={{
+            height: 'fit-content',
+            padding: '10px',
+            borderRadius: '15px',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          Content text
+        </button>
+        <button
+          onClick={handleLoadWords}
+          style={{
+            height: 'fit-content',
+            padding: '10px',
+            borderRadius: '15px',
+            border: 'none',
+            cursor: 'pointer',
+            marginLeft: '5px',
+          }}
+        >
+          Load Words
+        </button>
+      </div>
       {topics?.length ? (
         <LoadContentControls
           topics={topics}
           handleTopicLoad={handleTopicLoad}
         />
       ) : null}
-      <MyContentTextArea
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        themeValue={themeValue}
-        setThemeValue={setThemeValue}
-        translatedText={translatedText}
-      />
-      <ContentActions
-        handleMyTextTranslated={handleMyTextTranslated}
-        saveContentToFirebase={saveContentToFirebase}
-        themeValue={themeValue}
-      />
+      {showTextArea ? (
+        <>
+          <MyContentTextArea
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            themeValue={themeValue}
+            setThemeValue={setThemeValue}
+            translatedText={translatedText}
+          />
+
+          <ContentActions
+            handleMyTextTranslated={handleMyTextTranslated}
+            saveContentToFirebase={saveContentToFirebase}
+            themeValue={themeValue}
+          />
+        </>
+      ) : null}
       {inputValue && (
         <ul>
           {parts.map((part, index) => (
@@ -222,6 +260,22 @@ export default function MyContentPage(props) {
         />
       )}
       <PersonalWordBankStudySection />
+      {showLoadedWords ? (
+        <div>
+          <p>Word list</p>
+          <ul>
+            {japaneseLoadedWords?.map((japaneseWord) => {
+              return (
+                <li key={japaneseWord.id}>
+                  <div>
+                    <p>{japaneseWord.baseForm}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : null}
     </div>
   );
 }
