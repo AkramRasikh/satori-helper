@@ -16,71 +16,14 @@ import LoadContentControls from './LoadContentControls';
 import { makeArrayUnique } from '@/utils/makeArrayUnique';
 import WordBankSection from '@/components/WordBankSection';
 import useWordBank from '@/hooks/useWordBank';
+import GetContentActions from '@/components/GetContentActions';
+import ContentActions from './ContentActions';
+import underlineTargetWords from '../api/underline-target-words';
+import ResponseSection from '@/components/ResponseSection';
+import addJapaneseSentenceAPI from '../api/add-japanese-sentence';
 
 const japaneseContent = 'japaneseContent';
 const japaneseWords = 'japaneseWords';
-
-const ContentActions = ({
-  handleMyTextTranslated,
-  saveContentToFirebase,
-  themeValue,
-}) => {
-  return (
-    <div
-      style={{
-        width: '80%',
-        margin: 'auto',
-      }}
-    >
-      <button
-        onClick={handleMyTextTranslated}
-        style={{
-          marginTop: '10px',
-          padding: '5px',
-          borderRadius: '5px',
-          border: 'none',
-          cursor: 'pointer',
-        }}
-      >
-        Translate content
-      </button>
-      <button
-        onClick={() => handleMyTextTranslated('narakeet')}
-        style={{
-          marginTop: '10px',
-          marginLeft: '10px',
-          padding: '5px',
-          borderRadius: '5px',
-          border: 'none',
-          cursor: 'pointer',
-        }}
-      >
-        Translate content + Nara
-      </button>
-      <div
-        style={{
-          borderRight: '1px solid black',
-          height: '100%',
-          display: 'inline',
-          marginLeft: '10px',
-        }}
-      />
-      <button
-        onClick={saveContentToFirebase}
-        style={{
-          marginTop: '10px',
-          marginLeft: '10px',
-          padding: '5px',
-          borderRadius: '5px',
-          border: 'none',
-          cursor: 'pointer',
-        }}
-      >
-        Save to Firebase {themeValue}
-      </button>
-    </div>
-  );
-};
 
 export default function MyContentPage(props) {
   const japaneseLoadedContent = props?.japaneseLoadedContent;
@@ -102,6 +45,19 @@ export default function MyContentPage(props) {
 
   const [inputValue, setInputValue] = useState('');
   const [themeValue, setThemeValue] = useState('');
+
+  const [selectedPrompt, setSelectedPrompt] = useState('');
+  const [selectedModel, setSelectedModel] = useState('');
+  const [selectedWithAudio, setWithAudio] = useState('');
+  const [wordBankForGeneratedWords, setWordBankForGeneratedWords] = useState(
+    [],
+  );
+
+  const [response, setResponse] = useState([]);
+  const [mp3Bank, setMp3Bank] = useState([]);
+
+  console.log('## response: ', response);
+
   const [showTextArea, setShowTextArea] = useState(false);
   const [showLoadedWords, setShowLoadedWords] = useState(false);
   const [loadedTopicData, setLoadedTopicData] = useState([]);
@@ -115,6 +71,14 @@ export default function MyContentPage(props) {
   } = useWordBank();
 
   console.log('## wordBank: ', wordBank);
+
+  const handlePromptChange = (event) => {
+    setSelectedPrompt(event.target.value);
+  };
+
+  const handleModelChange = (event) => {
+    setSelectedModel(event.target.value);
+  };
 
   const handleNavigateToMyContent = () => {
     router.push('/');
@@ -174,6 +138,131 @@ export default function MyContentPage(props) {
 
   const handleLoadWords = () => {
     setShowLoadedWords(!showLoadedWords);
+  };
+
+  const handleWithAudioChange = (event) => {
+    setWithAudio(event.target.value);
+  };
+
+  const underlineWordsInSentence = async (sentence, thisWordBank) => {
+    console.log('## underlineWordsInSentence thisWordBank: ', thisWordBank);
+
+    const matchedWords = await underlineTargetWords({
+      sentence,
+      wordBank: thisWordBank,
+    });
+
+    const pattern = new RegExp(
+      [...matchedWords, ...thisWordBank].join('|'),
+      'g',
+    );
+    const underlinedText = sentence.replace(
+      pattern,
+      (match) => `<u>${match}</u>`,
+    );
+
+    return { underlinedText, matchedWords };
+  };
+
+  const addIdToResponse = async (parsedResponse, thisWordBank) => {
+    console.log('## addIdToResponse thisWordBank: ', thisWordBank);
+    console.log('## addIdToResponse wordBank: ', wordBank);
+
+    const responseWithId = await Promise.all(
+      parsedResponse.map(async (item) => {
+        const { underlinedText, matchedWords } = await underlineWordsInSentence(
+          item.targetLang,
+          thisWordBank,
+        );
+        return {
+          id: uuidv4(),
+          targetLang: item.targetLang,
+          baseLang: item.baseLang,
+          moodUsed: item?.moodUsed,
+          underlinedText,
+          matchedWords,
+        };
+      }),
+    );
+    return responseWithId;
+  };
+
+  const saveContentToFirebaseSatori = async ({ ref, contentObject }) => {
+    const id = contentObject.id;
+    const hasAudio = mp3Bank.some((sentenceId) => sentenceId === id);
+
+    const finalEntryObject = {
+      ...contentObject,
+      hasAudio,
+    };
+
+    try {
+      setLoadingResponse(true);
+      await addJapaneseSentenceAPI({
+        contentEntry: finalEntryObject,
+      });
+      // add to state to show its added
+    } catch (error) {
+      //
+    } finally {
+      setLoadingResponse(false);
+    }
+  };
+
+  const handleChatGPTRes = async () => {
+    try {
+      setLoadingResponse(true);
+      let finalPrompt = selectedPrompt;
+      let wordBankToText = '';
+
+      wordBank.forEach((wordBankData) => {
+        const fullText = `${wordBankData.word} context: ${wordBankData.context}\n`;
+        wordBankToText = wordBankToText + fullText;
+      });
+
+      finalPrompt = finalPrompt + '\n' + wordBankToText;
+
+      if (!finalPrompt) return;
+      const res = await chatGptAPI({
+        sentence: finalPrompt,
+        model: selectedModel,
+      });
+      const thisWordBank = wordBank.map((word) => word.word);
+      const structuredJapEngRes = await addIdToResponse(res, thisWordBank);
+
+      setResponse((prev) => [
+        ...prev,
+        {
+          wordBank: thisWordBank,
+          response: structuredJapEngRes,
+        },
+      ]);
+      setWordBankForGeneratedWords((prev) =>
+        Array.from(
+          new Set([...prev, ...wordBank.map((wordObj) => wordObj.word)]),
+        ),
+      );
+      if (selectedWithAudio) {
+        const res = await Promise.all(
+          structuredJapEngRes.map(
+            async (sentenceData) =>
+              await getCorrespondingAudio(sentenceData, selectedWithAudio),
+          ),
+        );
+
+        setMp3Bank((prev) => {
+          if (prev?.length === 0) {
+            return res;
+          } else {
+            return [...prev, ...res];
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching response:', error);
+    } finally {
+      setLoadingResponse(false);
+    }
   };
 
   const saveContentToFirebase = async () => {
@@ -328,6 +417,28 @@ export default function MyContentPage(props) {
         <WordBankSection
           wordBank={wordBank}
           handleRemoveFromBank={handleRemoveFromBank}
+        />
+      ) : null}
+
+      {wordBank?.length > 0 && (
+        <GetContentActions
+          selectedPrompt={selectedPrompt}
+          handlePromptChange={handlePromptChange}
+          selectedModel={selectedModel}
+          handleModelChange={handleModelChange}
+          selectedWithAudio={selectedWithAudio}
+          handleWithAudioChange={handleWithAudioChange}
+          handleChatGPTRes={handleChatGPTRes}
+          isLoadingResponse={isLoadingResponse}
+        />
+      )}
+
+      {response?.length > 0 ? (
+        <ResponseSection
+          response={response}
+          handleDeleteSentence={() => {}}
+          mp3Bank={mp3Bank}
+          saveContentToFirebaseSatori={saveContentToFirebaseSatori}
         />
       ) : null}
     </div>
