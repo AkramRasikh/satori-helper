@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import AudioPlayerElement from './AudioPlayer/AudioPlayerElement';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
+import { makeArrayUnique } from '@/utils/makeArrayUnique';
 
 const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
   const [highlightedWord, setHighlightedWord] = useState('');
@@ -45,7 +46,6 @@ const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
       removeFromHighlightWordBank();
     }
   };
-  const makeArrayUnique = (array) => [...new Set(array)];
 
   const underlineWordsInSentence = (sentence) => {
     const masterBank = makeArrayUnique([...savedWords, ...pureWordsUnique]);
