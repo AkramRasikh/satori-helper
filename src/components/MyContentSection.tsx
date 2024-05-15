@@ -48,46 +48,33 @@ const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
   };
 
   const underlineWordsInSentence = (sentence) => {
-    const masterBank = makeArrayUnique([...savedWords, ...pureWordsUnique]);
+    const masterBank = makeArrayUnique([
+      ...savedWords,
+      ...pureWordsUnique,
+      highlightedWord,
+    ]);
     if (masterBank?.length === 0) return <p>{sentence}</p>;
-    if (sentence) {
-      const pattern = new RegExp(masterBank.join('|'), 'g');
 
-      const underlinedSentence = sentence?.replace(
-        pattern,
-        (match) => `<u>${match}</u>`,
-      );
+    const pattern = new RegExp(masterBank.join('|'), 'g');
 
-      if (!highlightedWord) {
-        return (
-          <p
-            dangerouslySetInnerHTML={{
-              __html: underlinedSentence,
-            }}
-            style={{
-              margin: '5px 0',
-            }}
-          />
-        );
+    const underlinedSentence = sentence?.replace(pattern, (match) => {
+      if (match === highlightedWord) {
+        return `<span style="color:goldenrod">${match}</span>`;
       }
 
-      const highlightedPattern = new RegExp([highlightedWord].join('|'), 'g');
-      const amberWords = underlinedSentence?.replace(
-        highlightedPattern,
-        (match) => `<span style="color:goldenrod">${match}</span>`, // Apply style directly in the HTML string
-      );
+      return `<u>${match}</u>`;
+    });
 
-      return (
-        <p
-          dangerouslySetInnerHTML={{
-            __html: amberWords,
-          }}
-          style={{
-            margin: '5px 0',
-          }}
-        />
-      );
-    }
+    return (
+      <p
+        dangerouslySetInnerHTML={{
+          __html: underlinedSentence,
+        }}
+        style={{
+          margin: '5px 0',
+        }}
+      />
+    );
   };
 
   return (
