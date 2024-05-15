@@ -21,58 +21,73 @@ const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
   const saveToWordBank = async () => {
     const contextId = content.id;
 
-    await fetch('http://localhost:3001/add-word', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        word: highlightedWord,
-        contexts: [contextId],
-      }),
-    })
-      .then(async (response) => {
-        const res = await response.json();
+    try {
+      const response = await fetch('http://localhost:3001/add-word', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          word: highlightedWord,
+          contexts: [contextId],
+        }),
+      });
+      const res = await response.json();
 
-        const wordAdded = res.word;
+      const wordAdded = res.word;
 
-        setSavedWords((prev) =>
-          prev?.length === 0 ? [wordAdded] : [...prev, wordAdded],
-        );
-        return res;
-      })
-      .catch((error) => console.error('## saveToWordBank Error:', error));
+      setSavedWords((prev) =>
+        prev?.length === 0 ? [wordAdded] : [...prev, wordAdded],
+      );
+    } catch (error) {
+      console.error('## saveToWordBank Error:', error);
+    } finally {
+      removeFromHighlightWordBank();
+    }
   };
   const makeArrayUnique = (array) => [...new Set(array)];
 
   const underlineWordsInSentence = (sentence) => {
-    const masterBank = makeArrayUnique([
-      ...highlightedWord,
-      ...savedWords,
-      ...pureWordsUnique,
-    ]);
+    const masterBank = makeArrayUnique([...savedWords, ...pureWordsUnique]);
     if (masterBank?.length === 0) return <p>{sentence}</p>;
     if (sentence) {
       const pattern = new RegExp(masterBank.join('|'), 'g');
-      console.log('## pattern: ', pattern);
 
       const underlinedSentence = sentence?.replace(
         pattern,
         (match) => `<u>${match}</u>`,
       );
+
+      if (!highlightedWord) {
+        return (
+          <p
+            dangerouslySetInnerHTML={{
+              __html: underlinedSentence,
+            }}
+            style={{
+              margin: '5px 0',
+            }}
+          />
+        );
+      }
+
+      const highlightedPattern = new RegExp([highlightedWord].join('|'), 'g');
+      const amberWords = underlinedSentence?.replace(
+        highlightedPattern,
+        (match) => `<span style="color:goldenrod">${match}</span>`, // Apply style directly in the HTML string
+      );
+
       return (
         <p
           dangerouslySetInnerHTML={{
-            __html: underlinedSentence,
+            __html: amberWords,
           }}
           style={{
             margin: '5px 0',
-            // background: isNowPlaying === inArrayIndex ? 'yellow' : 'none',
           }}
         />
       );
     }
-    return <p>{sentence}</p>;
   };
 
   return (
@@ -91,10 +106,9 @@ const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
             <button
               style={{
                 border: 'none',
-                fontSize: 10,
                 borderRadius: '5px',
                 padding: '5px',
-                marginRight: '5px',
+                marginRight: '10px',
                 cursor: 'pointer',
               }}
               onClick={removeFromHighlightWordBank}
@@ -105,15 +119,14 @@ const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
             <button
               style={{
                 border: 'none',
-                fontSize: 10,
                 borderRadius: '5px',
                 padding: '5px',
-                marginRight: '5px',
+                marginLeft: '10px',
                 cursor: 'pointer',
               }}
               onClick={saveToWordBank}
             >
-              Add word! 🍄
+              Add word 🤙🏽
             </button>
           </span>
         </p>
