@@ -50,7 +50,7 @@ const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
   const underlineWordsInSentence = (sentence) => {
     const masterBank = makeArrayUnique([
       ...savedWords,
-      ...pureWordsUnique,
+      ...(pureWordsUnique || []),
       highlightedWord,
     ]);
     if (masterBank?.length === 0) return <p>{sentence}</p>;

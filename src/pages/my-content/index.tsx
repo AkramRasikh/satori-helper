@@ -24,6 +24,7 @@ import addJapaneseSentenceAPI from '../api/add-japanese-sentence';
 
 const japaneseContent = 'japaneseContent';
 const japaneseWords = 'japaneseWords';
+const japaneseSentences = 'japaneseSentences';
 
 const JapaneseWordItem = ({
   japaneseWord,
@@ -514,31 +515,60 @@ export async function getStaticProps() {
       (await loadInContent({
         ref: japaneseWords,
       })) || [];
+    const japaneseLoadedSentences =
+      (await loadInContent({
+        ref: japaneseSentences,
+      })) || [];
 
     const topics =
       japaneseLoadedContent && Object.keys(japaneseLoadedContent).length > 0
         ? Object.keys(japaneseLoadedContent)
         : [];
 
-    const getWordsCategorisedByArticle = () => {
-      return topics.map((topic) => {
-        const allIdsFromTopicSentences = japaneseLoadedContent[topic].map(
-          (item) => item.id,
-        );
-        const filteredContexts = japaneseLoadedWords.filter((japaneseWord) =>
+    const getAdditionalContexts = (wordFormsArr) => {
+      const [baseWord, surfaceWord] = wordFormsArr;
+      let additionalContext: string[] = [];
+      japaneseLoadedSentences.forEach((sentence) => {
+        if (sentence.matchedWords.includes(baseWord)) {
+          additionalContext.push(sentence.id);
+        } else if (sentence.matchedWords.includes(surfaceWord))
+          additionalContext.push(sentence.id);
+      });
+      return additionalContext;
+    };
+
+    const wordsByTopics = topics.map((topic) => {
+      const allIdsFromTopicSentences = japaneseLoadedContent[topic].map(
+        (item) => item.id,
+      );
+      const filteredWordsThatHaveMatchingContext = japaneseLoadedWords.filter(
+        (japaneseWord) =>
           japaneseWord.contexts.some((context) =>
             allIdsFromTopicSentences.includes(context),
           ),
-        );
-        return filteredContexts;
-      });
-    };
+      );
+      const wordsWithAdditionalContextAdded =
+        filteredWordsThatHaveMatchingContext.map((japaneseWord) => {
+          const contexts = japaneseWord.contexts;
+          return {
+            ...japaneseWord,
+            contexts: [
+              ...contexts,
+              ...getAdditionalContexts([
+                japaneseWord.baseForm,
+                japaneseWord.surfaceForm,
+              ]),
+            ],
+          };
+        });
+      return wordsWithAdditionalContextAdded;
+    });
 
     return {
       props: {
         japaneseLoadedContent,
         japaneseLoadedWords,
-        wordsByTopics: getWordsCategorisedByArticle(),
+        wordsByTopics,
       },
     };
   } catch (error) {
