@@ -1,25 +1,29 @@
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 import { useEffect, useRef, useState } from 'react';
 
-const SatoriLine = ({ item }) => {
+const SatoriLine = ({ item, masterPlay, setMasterPlay }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
+  const isCurrentlyPlaying = masterPlay === item.id;
 
   const audioPlay = () => {
-    console.log('## SatoriLine audioPlay');
     setIsPlaying(true);
+    setMasterPlay(item.id);
   };
   const audioPause = () => {
-    console.log('## SatoriLine audioPause');
     setIsPlaying(false);
   };
   const audioEnded = () => {
-    console.log('## SatoriLine audioEnded');
     setIsPlaying(false);
   };
-  const handleAudioError = () => {
-    console.log('## SatoriLine handleAudioError');
-  };
+  const handleAudioError = () => {};
+
+  useEffect(() => {
+    if (audioRef.current && !isCurrentlyPlaying) {
+      audioRef.current?.pause();
+      audioRef.current.currentTime = 0;
+    }
+  }, [masterPlay, audioRef.current]);
 
   const handlePlay = () => {
     audioRef.current?.play();
@@ -60,7 +64,13 @@ const SatoriLine = ({ item }) => {
       >
         {isPlaying ? '⏸️' : '▶️'}
       </button>
-      <span>{item.targetLang}</span>
+      <span
+        style={{
+          background: isCurrentlyPlaying ? 'yellow' : 'none',
+        }}
+      >
+        {item.targetLang}
+      </span>
       {item.hasAudio ? (
         <audio ref={audioRef} src={getFirebaseAudioURL(item.hasAudio)} />
       ) : null}
@@ -69,12 +79,20 @@ const SatoriLine = ({ item }) => {
 };
 
 const SatoriStyleReader = ({ content }) => {
+  const [masterPlay, setMasterPlay] = useState('');
   return (
     <div>
       <h3>Satori Style</h3>
       <div>
         {content?.map((item) => {
-          return <SatoriLine key={item.id} item={item} />;
+          return (
+            <SatoriLine
+              key={item.id}
+              item={item}
+              setMasterPlay={setMasterPlay}
+              masterPlay={masterPlay}
+            />
+          );
         })}
       </div>
     </div>
