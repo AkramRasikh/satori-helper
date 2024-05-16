@@ -21,57 +21,16 @@ import ContentActions from './ContentActions';
 import underlineTargetWords from '../api/underline-target-words';
 import ResponseSection from '@/components/ResponseSection';
 import addJapaneseSentenceAPI from '../api/add-japanese-sentence';
+import JapaneseWordItem from './JapaneseWordItem';
 
 const japaneseContent = 'japaneseContent';
 const japaneseWords = 'japaneseWords';
 const japaneseSentences = 'japaneseSentences';
 
-const JapaneseWordItem = ({
-  japaneseWord,
-  handleAddToWordBank,
-  getWordsContext,
-}) => {
-  const baseForm = japaneseWord.baseForm;
-  const definition = japaneseWord.definition;
-  const phonetic = japaneseWord.phonetic;
-  const transliteration = japaneseWord.transliteration;
-  const originalContext = japaneseWord.contexts[0];
-
-  return (
-    <li key={japaneseWord.id}>
-      <div style={{ display: 'flex' }}>
-        <p>
-          {baseForm} --- <span>{definition}</span> --- <span>{phonetic}</span>{' '}
-          ---- <span>{transliteration}</span>
-        </p>
-        <button
-          style={{
-            margin: 'auto 0',
-            marginLeft: '5px',
-            height: 'fit-content',
-            padding: '10px',
-            borderRadius: '15px',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'block',
-          }}
-          onClick={() =>
-            handleAddToWordBank({
-              word: baseForm,
-              context: getWordsContext(originalContext),
-            })
-          }
-        >
-          Add to wordbank
-        </button>
-      </div>
-    </li>
-  );
-};
-
 export default function MyContentPage(props) {
   const japaneseLoadedContent = props?.japaneseLoadedContent;
   const japaneseLoadedWords = props?.japaneseLoadedWords;
+  const japaneseLoadedSentences = props?.japaneseLoadedSentences;
   const wordsByTopics = props?.wordsByTopics;
   let pureWords = [];
   japaneseLoadedWords?.forEach((wordData) => {
@@ -208,6 +167,13 @@ export default function MyContentPage(props) {
     );
 
     return { underlinedText, matchedWords };
+  };
+
+  const getLinkedJapaneseSentences = (contextIds) => {
+    const contextsForJapaneseWords = japaneseLoadedSentences.filter(
+      (sentence) => contextIds.includes(sentence.id),
+    );
+    return contextsForJapaneseWords;
   };
 
   const addIdToResponse = async (parsedResponse, thisWordBank) => {
@@ -527,14 +493,16 @@ export async function getStaticProps() {
 
     const getAdditionalContexts = (wordFormsArr) => {
       const [baseWord, surfaceWord] = wordFormsArr;
-      let additionalContext: string[] = [];
-      japaneseLoadedSentences.forEach((sentence) => {
+
+      return japaneseLoadedSentences.filter((sentence) => {
         if (sentence.matchedWords.includes(baseWord)) {
-          additionalContext.push(sentence.id);
-        } else if (sentence.matchedWords.includes(surfaceWord))
-          additionalContext.push(sentence.id);
+          return true;
+        }
+        if (sentence.matchedWords.includes(surfaceWord)) {
+          return true;
+        }
+        return false;
       });
-      return additionalContext;
     };
 
     const wordsByTopics = topics.map((topic) => {
@@ -550,10 +518,14 @@ export async function getStaticProps() {
       const wordsWithAdditionalContextAdded =
         filteredWordsThatHaveMatchingContext.map((japaneseWord) => {
           const contexts = japaneseWord.contexts;
+          const originalContext = japaneseLoadedContent[topic].find(
+            (contentWidget) => contentWidget.id === contexts[0],
+          );
+
           return {
             ...japaneseWord,
             contexts: [
-              ...contexts,
+              originalContext,
               ...getAdditionalContexts([
                 japaneseWord.baseForm,
                 japaneseWord.surfaceForm,
@@ -561,6 +533,7 @@ export async function getStaticProps() {
             ],
           };
         });
+
       return wordsWithAdditionalContextAdded;
     });
 
@@ -568,6 +541,7 @@ export async function getStaticProps() {
       props: {
         japaneseLoadedContent,
         japaneseLoadedWords,
+        japaneseLoadedSentences,
         wordsByTopics,
       },
     };

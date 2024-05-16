@@ -75,7 +75,6 @@ const loadInPersonalStudyContent = async () => {
         const contextDataArr = contextData.filter((context) =>
           contextIdsArr?.includes(context.id),
         );
-        console.log('## contextDataArr: ', contextDataArr);
 
         return {
           ...item,
