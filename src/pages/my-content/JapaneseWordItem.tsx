@@ -2,21 +2,7 @@ import AudioPlayerElement from '@/components/AudioPlayer/AudioPlayerElement';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 import { useState } from 'react';
 
-const JapaneseWordItem = ({
-  japaneseWord,
-  handleAddToWordBank,
-  getWordsContext,
-}) => {
-  const [showMoreContexts, setShowMoreContexts] = useState(false);
-  const baseForm = japaneseWord.baseForm;
-  const definition = japaneseWord.definition;
-  const phonetic = japaneseWord.phonetic;
-  const transliteration = japaneseWord.transliteration;
-  const contexts = japaneseWord.contexts;
-  const originalContext = contexts[0];
-
-  const hasMoreContexts = contexts?.length > 1;
-
+const OneContext = ({ context, japaneseWord, isOriginal }) => {
   const underlineWordsInSentence = (sentence, thisWordBank) => {
     console.log('## underlineWordsInSentence: ', {
       sentence,
@@ -32,7 +18,9 @@ const JapaneseWordItem = ({
       return (
         <p
           dangerouslySetInnerHTML={{
-            __html: `Original Context: ${underlinedSentence}`,
+            __html: isOriginal
+              ? `Original Context: ${underlinedSentence}`
+              : underlinedSentence,
           }}
           style={{
             margin: '5px 0',
@@ -42,6 +30,37 @@ const JapaneseWordItem = ({
     }
     return <p>{sentence}</p>;
   };
+
+  return (
+    <div>
+      {underlineWordsInSentence(context.targetLang, [
+        japaneseWord.baseForm,
+        japaneseWord.surfaceForm,
+      ])}
+      <p>baseLang: {context.baseLang}</p>
+      {context.notes && <p>notes: {context.notes}</p>}
+      {context.hasAudio && (
+        <AudioPlayerElement url={getFirebaseAudioURL(context.id)} />
+      )}
+    </div>
+  );
+};
+
+const JapaneseWordItem = ({
+  japaneseWord,
+  handleAddToWordBank,
+  getWordsContext,
+}) => {
+  const [showMoreContexts, setShowMoreContexts] = useState(false);
+  const baseForm = japaneseWord.baseForm;
+  const definition = japaneseWord.definition;
+  const phonetic = japaneseWord.phonetic;
+  const transliteration = japaneseWord.transliteration;
+  const contexts = japaneseWord.contexts;
+  const originalContext = contexts[0];
+
+  const hasMoreContexts = contexts?.length > 1;
+
   return (
     <li key={japaneseWord.id}>
       <div style={{ display: 'flex' }}>
@@ -71,23 +90,28 @@ const JapaneseWordItem = ({
         </button>
       </div>
       <div style={{ border: '1px solid gray' }}>
-        <div style={{ display: 'flex' }}>
-          <p>Orignal Context</p>{' '}
-          {hasMoreContexts ? (
-            <button onClick={() => setShowMoreContexts(!showMoreContexts)}>
-              Show more context
-            </button>
-          ) : null}
-        </div>
-        {underlineWordsInSentence(originalContext.targetLang, [
-          japaneseWord.baseForm,
-          japaneseWord.surfaceForm,
-        ])}
-        <p>baseLang: {originalContext.baseLang}</p>
-        {originalContext.notes && <p>notes: {originalContext.notes}</p>}
-        {originalContext.hasAudio && (
-          <AudioPlayerElement url={getFirebaseAudioURL(originalContext.id)} />
-        )}
+        {hasMoreContexts ? (
+          <button onClick={() => setShowMoreContexts(!showMoreContexts)}>
+            Show more context
+          </button>
+        ) : null}
+        <OneContext
+          japaneseWord={japaneseWord}
+          context={originalContext}
+          isOriginal
+        />
+        {showMoreContexts &&
+          contexts?.map((context, index) => {
+            if (index === 0) return null;
+            return (
+              <OneContext
+                key={context.id}
+                japaneseWord={japaneseWord}
+                context={context}
+                isOriginal={false}
+              />
+            );
+          })}
       </div>
     </li>
   );
