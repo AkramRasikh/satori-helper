@@ -26,6 +26,7 @@ const SatoriLine = ({ item, masterPlay, setMasterPlay }) => {
   }, [masterPlay, audioRef.current]);
 
   const handlePlay = () => {
+    audioRef.current.currentTime = 0;
     audioRef.current?.play();
   };
   const handlePauuse = () => {
