@@ -82,7 +82,7 @@ const JapaneseWordItem = ({
           onClick={() =>
             handleAddToWordBank({
               word: baseForm,
-              context: getWordsContext(originalContext),
+              context: getWordsContext(originalContext.id),
             })
           }
         >
