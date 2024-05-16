@@ -22,6 +22,7 @@ import underlineTargetWords from '../api/underline-target-words';
 import ResponseSection from '@/components/ResponseSection';
 import addJapaneseSentenceAPI from '../api/add-japanese-sentence';
 import JapaneseWordItem from './JapaneseWordItem';
+import SatoriStyleReader from '@/components/SatoriStyleReader';
 
 const japaneseContent = 'japaneseContent';
 const japaneseWords = 'japaneseWords';
@@ -391,6 +392,9 @@ export default function MyContentPage(props) {
       {translatedText?.length > 0 && (
         <MyContentSection translatedText={translatedText} />
       )}
+      {loadedTopicData?.length > 0 ? (
+        <SatoriStyleReader content={loadedTopicData} />
+      ) : null}
       {loadedTopicData?.length > 0 && (
         <MyContentSection
           translatedText={loadedTopicData}
