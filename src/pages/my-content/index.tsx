@@ -530,11 +530,6 @@ export async function getStaticProps() {
             allIdsFromTopicSentences.includes(context),
           ),
         );
-
-        console.log(
-          '## getWordsCategorisedByArticle allIdsFromTopicSentences: ',
-          allIdsFromTopicSentences,
-        );
         return filteredContexts;
       });
     };
