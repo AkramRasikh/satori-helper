@@ -67,7 +67,10 @@ export default function MyContentPage(props) {
 
   const [showLoadedWordsViaTopics, setShowLoadedWordsViaTopics] =
     useState(false);
-  const [loadedTopicData, setLoadedTopicData] = useState([]);
+  const [loadedTopicData, setLoadedTopicData] = useState({
+    topics: '',
+    content: [],
+  });
   const [translatedText, setTranslatedText] = useState([]);
   const router = useRouter();
   const {
@@ -138,7 +141,7 @@ export default function MyContentPage(props) {
   };
 
   const handleTopicLoad = (topic) => {
-    setLoadedTopicData(japaneseLoadedContent[topic]);
+    setLoadedTopicData({ topic, content: japaneseLoadedContent[topic] });
   };
 
   const handleLoadWords = () => {
@@ -392,15 +395,20 @@ export default function MyContentPage(props) {
       {translatedText?.length > 0 && (
         <MyContentSection translatedText={translatedText} />
       )}
-      {loadedTopicData?.length > 0 ? (
-        <SatoriStyleReader content={loadedTopicData} />
+      {loadedTopicData.content?.length > 0 ? (
+        <SatoriStyleReader
+          content={loadedTopicData.content}
+          topic={loadedTopicData.topic}
+          // japaneseLoadedWords={japaneseLoadedWords}
+          pureWordsUnique={pureWordsUnique}
+        />
       ) : null}
-      {loadedTopicData?.length > 0 && (
+      {/* {loadedTopicData?.length > 0 && (
         <MyContentSection
           translatedText={loadedTopicData}
           pureWordsUnique={pureWordsUnique}
         />
-      )}
+      )} */}
       <PersonalWordBankStudySection />
       {showLoadedWords ? (
         <div>

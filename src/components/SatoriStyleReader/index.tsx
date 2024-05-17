@@ -1,7 +1,12 @@
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 import { useEffect, useRef, useState } from 'react';
 
-const SatoriLine = ({ item, masterPlay, setMasterPlay }) => {
+const SatoriLine = ({
+  item,
+  masterPlay,
+  setMasterPlay,
+  underlineWordsInSentence,
+}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
   const isCurrentlyPlaying = masterPlay === item.id;
@@ -70,7 +75,7 @@ const SatoriLine = ({ item, masterPlay, setMasterPlay }) => {
           background: isCurrentlyPlaying ? 'yellow' : 'none',
         }}
       >
-        {item.targetLang}
+        {underlineWordsInSentence(item.targetLang)}
       </span>
       {item.hasAudio ? (
         <audio ref={audioRef} src={getFirebaseAudioURL(item.hasAudio)} />
@@ -79,11 +84,31 @@ const SatoriLine = ({ item, masterPlay, setMasterPlay }) => {
   );
 };
 
-const SatoriStyleReader = ({ content }) => {
+const SatoriStyleReader = ({ content, topic, pureWordsUnique }) => {
   const [masterPlay, setMasterPlay] = useState('');
+  const underlineWordsInSentence = (sentence) => {
+    if (sentence) {
+      const pattern = new RegExp(pureWordsUnique.join('|'), 'g');
+      const underlinedSentence = sentence?.replace(
+        pattern,
+        (match) => `<u>${match}</u>`,
+      );
+      return (
+        <span
+          dangerouslySetInnerHTML={{
+            __html: underlinedSentence,
+          }}
+          style={{
+            margin: '5px 0',
+          }}
+        />
+      );
+    }
+    return <p>{sentence}</p>;
+  };
   return (
     <div>
-      <h3>Satori Style</h3>
+      <h3>{topic}:</h3>
       <div>
         {content?.map((item) => {
           return (
@@ -92,6 +117,7 @@ const SatoriStyleReader = ({ content }) => {
               item={item}
               setMasterPlay={setMasterPlay}
               masterPlay={masterPlay}
+              underlineWordsInSentence={underlineWordsInSentence}
             />
           );
         })}
