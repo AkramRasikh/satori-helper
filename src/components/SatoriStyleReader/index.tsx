@@ -1,3 +1,4 @@
+import useHighlightWordToWordBank from '@/hooks/useHighlightWordToWordBank';
 import JapaneseWordItem from '@/pages/my-content/JapaneseWordItem';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 import { useEffect, useRef, useState } from 'react';
@@ -6,7 +7,8 @@ const SatoriLine = ({
   item,
   masterPlay,
   setMasterPlay,
-  underlineWordsInSentence,
+  getSafeText,
+  handleHighlight,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
@@ -75,12 +77,54 @@ const SatoriLine = ({
         style={{
           background: isCurrentlyPlaying ? 'yellow' : 'none',
         }}
+        onMouseUp={handleHighlight}
       >
-        {underlineWordsInSentence(item.targetLang)}
+        {getSafeText(item.targetLang)}
       </span>
       {item.hasAudio ? (
         <audio ref={audioRef} src={getFirebaseAudioURL(item.hasAudio)} />
       ) : null}
+    </div>
+  );
+};
+
+const SwitchButton = ({ isInHighlightMode, setIsInHighlightMode }) => {
+  const toggleSwitch = () => {
+    setIsInHighlightMode((prevState) => !prevState);
+  };
+
+  const switchContainerStyle = {
+    display: 'inline-block',
+    padding: '10px',
+    margin: 'auto',
+    cursor: 'pointer',
+  };
+
+  const switchStyle = {
+    width: '50px',
+    height: '25px',
+    backgroundColor: isInHighlightMode ? 'green' : 'red',
+    borderRadius: '25px',
+    position: 'relative',
+    transition: 'background-color 0.3s',
+  };
+
+  const switchHandleStyle = {
+    width: '23px',
+    height: '23px',
+    backgroundColor: 'white',
+    borderRadius: '50%',
+    position: 'absolute',
+    top: '1px',
+    left: isInHighlightMode ? '26px' : '1px',
+    transition: 'left 0.3s',
+  };
+
+  return (
+    <div style={switchContainerStyle} onClick={toggleSwitch}>
+      <div style={switchStyle}>
+        <div style={switchHandleStyle} />
+      </div>
     </div>
   );
 };
@@ -94,29 +138,91 @@ const SatoriStyleReader = ({
   getWordsContext,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
-  const underlineWordsInSentence = (sentence) => {
-    if (sentence) {
-      const pattern = new RegExp(pureWordsUnique.join('|'), 'g');
-      const underlinedSentence = sentence?.replace(
-        pattern,
-        (match) => `<u>${match}</u>`,
-      );
-      return (
-        <span
-          dangerouslySetInnerHTML={{
-            __html: underlinedSentence,
-          }}
-          style={{
-            margin: '5px 0',
-          }}
-        />
-      );
-    }
-    return <p>{sentence}</p>;
+  const [isInHighlightMode, setIsInHighlightMode] = useState(false);
+  const selection = window?.getSelection();
+
+  const {
+    handleHighlight,
+    saveToWordBank,
+    underlineWordsInSentence,
+    removeFromHighlightWordBank,
+    highlightedWord,
+  } = useHighlightWordToWordBank(content, pureWordsUnique, selection);
+
+  const savedWordsDefinition = selectedTopicWords.filter(
+    (word) =>
+      word.baseForm === highlightedWord || word.surfaceForm === highlightedWord,
+  );
+
+  const getSafeText = (targetText) => {
+    const text = underlineWordsInSentence(targetText, isInHighlightMode);
+
+    return (
+      <p
+        dangerouslySetInnerHTML={{ __html: text }}
+        style={{
+          margin: '5px 0',
+          display: 'inline',
+        }}
+      />
+    );
   };
+
   return (
     <div>
-      <h3>{topic}:</h3>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <h3>{topic}:</h3>
+        <div style={{ display: 'flex' }}>
+          <div style={{ margin: 'auto' }}>
+            <span>{isInHighlightMode ? 'Highlight mode' : 'Review mode'}</span>
+          </div>
+          <SwitchButton
+            isInHighlightMode={isInHighlightMode}
+            setIsInHighlightMode={setIsInHighlightMode}
+          />
+        </div>
+        {highlightedWord && isInHighlightMode && (
+          <p>
+            Send Word to DB:{' '}
+            <span
+              style={{
+                margin: '5px',
+              }}
+            >
+              <button
+                style={{
+                  border: 'none',
+                  borderRadius: '5px',
+                  padding: '5px',
+                  marginRight: '10px',
+                  cursor: 'pointer',
+                }}
+                onClick={removeFromHighlightWordBank}
+              >
+                Remove word ❌
+              </button>
+              <span>{highlightedWord}</span>
+              <button
+                style={{
+                  border: 'none',
+                  borderRadius: '5px',
+                  padding: '5px',
+                  marginLeft: '10px',
+                  cursor: 'pointer',
+                }}
+                onClick={saveToWordBank}
+              >
+                Add word 🤙🏽
+              </button>
+            </span>
+          </p>
+        )}
+      </div>
       <div>
         {content?.map((item) => {
           return (
@@ -126,22 +232,20 @@ const SatoriStyleReader = ({
               setMasterPlay={setMasterPlay}
               masterPlay={masterPlay}
               underlineWordsInSentence={underlineWordsInSentence}
+              getSafeText={getSafeText}
+              handleHighlight={handleHighlight}
             />
           );
         })}
       </div>
-      <div>
-        {selectedTopicWords?.map((wordFromTopic) => {
-          return (
-            <JapaneseWordItem
-              key={wordFromTopic.id}
-              japaneseWord={wordFromTopic}
-              handleAddToWordBank={handleAddToWordBank}
-              getWordsContext={getWordsContext}
-            />
-          );
-        })}
-      </div>
+      {savedWordsDefinition?.map((wordFromTopic) => (
+        <JapaneseWordItem
+          key={wordFromTopic.id}
+          japaneseWord={wordFromTopic}
+          handleAddToWordBank={handleAddToWordBank}
+          getWordsContext={getWordsContext}
+        />
+      ))}
     </div>
   );
 };

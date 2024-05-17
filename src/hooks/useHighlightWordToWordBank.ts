@@ -44,7 +44,7 @@ const useHighlightWordToWordBank = (content, pureWordsUnique, selection) => {
     }
   };
 
-  const underlineWordsInSentence = (sentence) => {
+  const underlineWordsInSentence = (sentence, isInHighlightMode) => {
     const masterBank = makeArrayUnique([
       ...savedWords,
       ...(pureWordsUnique || []),
@@ -55,7 +55,7 @@ const useHighlightWordToWordBank = (content, pureWordsUnique, selection) => {
     const pattern = new RegExp(masterBank.join('|'), 'g');
 
     const underlinedSentence = sentence?.replace(pattern, (match) => {
-      if (match === highlightedWord) {
+      if (match === highlightedWord && isInHighlightMode) {
         return `<span style="color:goldenrod">${match}</span>`;
       }
 

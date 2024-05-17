@@ -137,11 +137,7 @@ export default function MyContentPage(props) {
   });
   const [translatedText, setTranslatedText] = useState([]);
 
-  // wordsByTopics?.map((topicDataArr, index) => {
   const selectedTopic = loadedTopicData?.topic;
-
-  const loadedTopicDataz =
-    loadedTopicData.topic && wordsByTopics?.length ? wordsByTopics?.filter : '';
 
   const selectedTopicIndex = topics?.findIndex(
     (topic) => topic === selectedTopic,
