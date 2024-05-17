@@ -1,102 +1,35 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import AudioPlayerElement from './AudioPlayer/AudioPlayerElement';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
-import { makeArrayUnique } from '@/utils/makeArrayUnique';
-
-const useHighlightWordToWordBank = (content, pureWordsUnique) => {
-  const [highlightedWord, setHighlightedWord] = useState('');
-  const [savedWords, setSavedWords] = useState([]);
-
-  const handleHighlight = () => {
-    const selection = window?.getSelection();
-    const highlightedText = selection.toString().trim();
-    if (highlightedText !== '') {
-      setHighlightedWord(highlightedText);
-    }
-  };
-
-  const removeFromHighlightWordBank = () => {
-    setHighlightedWord('');
-  };
-
-  const saveToWordBank = async () => {
-    const contextId = content.id;
-
-    try {
-      const response = await fetch('http://localhost:3001/add-word', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          word: highlightedWord,
-          contexts: [contextId],
-        }),
-      });
-      const res = await response.json();
-
-      const wordAdded = res.word;
-
-      setSavedWords((prev) =>
-        prev?.length === 0 ? [wordAdded] : [...prev, wordAdded],
-      );
-    } catch (error) {
-      console.error('## saveToWordBank Error:', error);
-    } finally {
-      removeFromHighlightWordBank();
-    }
-  };
-
-  const underlineWordsInSentence = (sentence) => {
-    const masterBank = makeArrayUnique([
-      ...savedWords,
-      ...(pureWordsUnique || []),
-      highlightedWord,
-    ]);
-    if (masterBank?.length === 0) return <p>{sentence}</p>;
-
-    const pattern = new RegExp(masterBank.join('|'), 'g');
-
-    const underlinedSentence = sentence?.replace(pattern, (match) => {
-      if (match === highlightedWord) {
-        return `<span style="color:goldenrod">${match}</span>`;
-      }
-
-      return `<u>${match}</u>`;
-    });
-
-    return (
-      <p
-        dangerouslySetInnerHTML={{
-          __html: underlinedSentence,
-        }}
-        style={{
-          margin: '5px 0',
-        }}
-      />
-    );
-  };
-
-  return {
-    handleHighlight,
-    saveToWordBank,
-    underlineWordsInSentence,
-    removeFromHighlightWordBank,
-    highlightedWord,
-  };
-};
+import useHighlightWordToWordBank from '@/hooks/useHighlightWordToWordBank';
 
 const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
+  const selection = window?.getSelection();
   const {
     handleHighlight,
     saveToWordBank,
     underlineWordsInSentence,
     highlightedWord,
     removeFromHighlightWordBank,
-  } = useHighlightWordToWordBank(content, pureWordsUnique);
+  } = useHighlightWordToWordBank(content, pureWordsUnique, selection);
+
+  const getSafeText = () => {
+    const text = underlineWordsInSentence(content.targetLang);
+    if (text) {
+      return (
+        <p
+          dangerouslySetInnerHTML={{ __html: text }}
+          style={{
+            margin: '5px 0',
+          }}
+        />
+      );
+    }
+    return <p>{text}</p>;
+  };
   return (
     <div onMouseUp={handleHighlight}>
-      {underlineWordsInSentence(content.targetLang)}
+      {getSafeText()}
       <p>{content.baseLang}</p>
       {content?.notes && <p>notes: {content.notes}</p>}
       {highlightedWord && (
