@@ -52,6 +52,7 @@ const JapaneseWordItem = ({
   getWordsContext,
 }) => {
   const [showMoreContexts, setShowMoreContexts] = useState(false);
+  const [showMoreInfo, setShowMoreInfo] = useState(false);
   const baseForm = japaneseWord.baseForm;
   const definition = japaneseWord.definition;
   const phonetic = japaneseWord.phonetic;
@@ -62,7 +63,7 @@ const JapaneseWordItem = ({
   const hasMoreContexts = contexts?.length > 1;
 
   return (
-    <li key={japaneseWord.id}>
+    <li key={japaneseWord.id} style={{ listStyleType: 'none' }}>
       <div style={{ display: 'flex' }}>
         <p>
           {baseForm} --- <span>{definition}</span> --- <span>{phonetic}</span>{' '}
@@ -88,31 +89,48 @@ const JapaneseWordItem = ({
         >
           Add to wordbank
         </button>
+        <button
+          style={{
+            margin: 'auto 0',
+            marginLeft: '5px',
+            height: 'fit-content',
+            padding: '10px',
+            borderRadius: '15px',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'block',
+          }}
+          onClick={() => setShowMoreInfo(!showMoreInfo)}
+        >
+          More
+        </button>
       </div>
-      <div style={{ border: '1px solid gray' }}>
-        {hasMoreContexts ? (
-          <button onClick={() => setShowMoreContexts(!showMoreContexts)}>
-            Show more context
-          </button>
-        ) : null}
-        <OneContext
-          japaneseWord={japaneseWord}
-          context={originalContext}
-          isOriginal
-        />
-        {showMoreContexts &&
-          contexts?.map((context, index) => {
-            if (index === 0) return null;
-            return (
-              <OneContext
-                key={context.id}
-                japaneseWord={japaneseWord}
-                context={context}
-                isOriginal={false}
-              />
-            );
-          })}
-      </div>
+      {showMoreInfo && (
+        <div style={{ border: '1px solid gray' }}>
+          {hasMoreContexts ? (
+            <button onClick={() => setShowMoreContexts(!showMoreContexts)}>
+              Show more context
+            </button>
+          ) : null}
+          <OneContext
+            japaneseWord={japaneseWord}
+            context={originalContext}
+            isOriginal
+          />
+          {showMoreContexts &&
+            contexts?.map((context, index) => {
+              if (index === 0) return null;
+              return (
+                <OneContext
+                  key={context.id}
+                  japaneseWord={japaneseWord}
+                  context={context}
+                  isOriginal={false}
+                />
+              );
+            })}
+        </div>
+      )}
     </li>
   );
 };

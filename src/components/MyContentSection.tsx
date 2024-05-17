@@ -3,7 +3,7 @@ import AudioPlayerElement from './AudioPlayer/AudioPlayerElement';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 import { makeArrayUnique } from '@/utils/makeArrayUnique';
 
-const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
+const useHighlightWordToWordBank = (content, pureWordsUnique) => {
   const [highlightedWord, setHighlightedWord] = useState('');
   const [savedWords, setSavedWords] = useState([]);
 
@@ -77,6 +77,23 @@ const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
     );
   };
 
+  return {
+    handleHighlight,
+    saveToWordBank,
+    underlineWordsInSentence,
+    removeFromHighlightWordBank,
+    highlightedWord,
+  };
+};
+
+const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
+  const {
+    handleHighlight,
+    saveToWordBank,
+    underlineWordsInSentence,
+    highlightedWord,
+    removeFromHighlightWordBank,
+  } = useHighlightWordToWordBank(content, pureWordsUnique);
   return (
     <div onMouseUp={handleHighlight}>
       {underlineWordsInSentence(content.targetLang)}
@@ -139,7 +156,7 @@ const MyContentSection = ({ translatedText, pureWordsUnique }) => {
   return (
     <div>
       <ul style={{ padding: 0, listStyleType: 'none' }}>
-        {translatedText?.map((item, index) => {
+        {translatedText.content?.map((item, index) => {
           return (
             <MyContentSectionContainer
               key={index}

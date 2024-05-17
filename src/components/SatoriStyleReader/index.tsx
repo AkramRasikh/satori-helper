@@ -1,3 +1,4 @@
+import JapaneseWordItem from '@/pages/my-content/JapaneseWordItem';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 import { useEffect, useRef, useState } from 'react';
 
@@ -84,7 +85,14 @@ const SatoriLine = ({
   );
 };
 
-const SatoriStyleReader = ({ content, topic, pureWordsUnique }) => {
+const SatoriStyleReader = ({
+  content,
+  topic,
+  pureWordsUnique,
+  selectedTopicWords,
+  handleAddToWordBank,
+  getWordsContext,
+}) => {
   const [masterPlay, setMasterPlay] = useState('');
   const underlineWordsInSentence = (sentence) => {
     if (sentence) {
@@ -118,6 +126,18 @@ const SatoriStyleReader = ({ content, topic, pureWordsUnique }) => {
               setMasterPlay={setMasterPlay}
               masterPlay={masterPlay}
               underlineWordsInSentence={underlineWordsInSentence}
+            />
+          );
+        })}
+      </div>
+      <div>
+        {selectedTopicWords?.map((wordFromTopic) => {
+          return (
+            <JapaneseWordItem
+              key={wordFromTopic.id}
+              japaneseWord={wordFromTopic}
+              handleAddToWordBank={handleAddToWordBank}
+              getWordsContext={getWordsContext}
             />
           );
         })}

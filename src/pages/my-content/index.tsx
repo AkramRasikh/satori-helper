@@ -28,6 +28,70 @@ const japaneseContent = 'japaneseContent';
 const japaneseWords = 'japaneseWords';
 const japaneseSentences = 'japaneseSentences';
 
+const HeaderCTAs = ({
+  setShowTextArea,
+  showTextArea,
+  handleLoadWords,
+  handleLoadWordsViaTopic,
+  handleLoadWordsSelectedTopicsWords,
+}) => {
+  return (
+    <div>
+      <button
+        onClick={() => setShowTextArea(!showTextArea)}
+        style={{
+          height: 'fit-content',
+          padding: '10px',
+          borderRadius: '15px',
+          border: 'none',
+          cursor: 'pointer',
+        }}
+      >
+        Content text
+      </button>
+      {/* <button
+        onClick={handleLoadWords}
+        style={{
+          height: 'fit-content',
+          padding: '10px',
+          borderRadius: '15px',
+          border: 'none',
+          cursor: 'pointer',
+          marginLeft: '5px',
+        }}
+      >
+        Load Words
+      </button> */}
+      {/* <button
+        onClick={handleLoadWordsViaTopic}
+        style={{
+          height: 'fit-content',
+          padding: '10px',
+          borderRadius: '15px',
+          border: 'none',
+          cursor: 'pointer',
+          marginLeft: '5px',
+        }}
+      >
+        Load Words via topics
+      </button>
+      <button
+        onClick={handleLoadWordsSelectedTopicsWords}
+        style={{
+          height: 'fit-content',
+          padding: '10px',
+          borderRadius: '15px',
+          border: 'none',
+          cursor: 'pointer',
+          marginLeft: '5px',
+        }}
+      >
+        Load selected topics words
+      </button> */}
+    </div>
+  );
+};
+
 export default function MyContentPage(props) {
   const japaneseLoadedContent = props?.japaneseLoadedContent;
   const japaneseLoadedWords = props?.japaneseLoadedWords;
@@ -68,10 +132,25 @@ export default function MyContentPage(props) {
   const [showLoadedWordsViaTopics, setShowLoadedWordsViaTopics] =
     useState(false);
   const [loadedTopicData, setLoadedTopicData] = useState({
-    topics: '',
+    topic: '',
     content: [],
   });
   const [translatedText, setTranslatedText] = useState([]);
+
+  // wordsByTopics?.map((topicDataArr, index) => {
+  const selectedTopic = loadedTopicData?.topic;
+
+  const loadedTopicDataz =
+    loadedTopicData.topic && wordsByTopics?.length ? wordsByTopics?.filter : '';
+
+  const selectedTopicIndex = topics?.findIndex(
+    (topic) => topic === selectedTopic,
+  );
+
+  const selectedTopicWords = selectedTopic
+    ? wordsByTopics[selectedTopicIndex]
+    : null;
+
   const router = useRouter();
   const {
     handleAddToWordBank,
@@ -200,6 +279,8 @@ export default function MyContentPage(props) {
     return responseWithId;
   };
 
+  const handleLoadWordsSelectedTopicsWords = () => {};
+
   const saveContentToFirebaseSatori = async ({ ref, contentObject }) => {
     const id = contentObject.id;
     const hasAudio = mp3Bank.some((sentenceId) => sentenceId === id);
@@ -321,46 +402,13 @@ export default function MyContentPage(props) {
     >
       <Header handleNavigateToMyContent={handleNavigateToMyContent} />
       {isLoadingResponse && <LoadingStatus />}
-      <div>
-        <button
-          onClick={() => setShowTextArea(!showTextArea)}
-          style={{
-            height: 'fit-content',
-            padding: '10px',
-            borderRadius: '15px',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-        >
-          Content text
-        </button>
-        <button
-          onClick={handleLoadWords}
-          style={{
-            height: 'fit-content',
-            padding: '10px',
-            borderRadius: '15px',
-            border: 'none',
-            cursor: 'pointer',
-            marginLeft: '5px',
-          }}
-        >
-          Load Words
-        </button>
-        <button
-          onClick={handleLoadWordsViaTopic}
-          style={{
-            height: 'fit-content',
-            padding: '10px',
-            borderRadius: '15px',
-            border: 'none',
-            cursor: 'pointer',
-            marginLeft: '5px',
-          }}
-        >
-          Load Words via topics
-        </button>
-      </div>
+      <HeaderCTAs
+        setShowTextArea={setShowTextArea}
+        showTextArea={showTextArea}
+        handleLoadWords={handleLoadWords}
+        handleLoadWordsViaTopic={handleLoadWordsViaTopic}
+        handleLoadWordsSelectedTopicsWords={handleLoadWordsSelectedTopicsWords}
+      />
 
       {topics?.length ? (
         <LoadContentControls
@@ -401,14 +449,17 @@ export default function MyContentPage(props) {
           topic={loadedTopicData.topic}
           // japaneseLoadedWords={japaneseLoadedWords}
           pureWordsUnique={pureWordsUnique}
+          selectedTopicWords={selectedTopicWords}
+          handleAddToWordBank={handleAddToWordBank}
+          getWordsContext={getWordsContext}
         />
       ) : null}
-      {/* {loadedTopicData?.length > 0 && (
+      {loadedTopicData?.content?.length > 0 && (
         <MyContentSection
           translatedText={loadedTopicData}
           pureWordsUnique={pureWordsUnique}
         />
-      )} */}
+      )}
       <PersonalWordBankStudySection />
       {showLoadedWords ? (
         <div>
@@ -459,7 +510,11 @@ export default function MyContentPage(props) {
       {showLoadedWordsViaTopics ? (
         <div>
           <p>Words by topic</p>
-          <ul>
+          <ul
+            style={{
+              padding: 0,
+            }}
+          >
             {wordsByTopics?.map((topicDataArr, index) => {
               const topicName = topics[index];
 
