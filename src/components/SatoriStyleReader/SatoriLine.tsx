@@ -1,5 +1,5 @@
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import useSatoriAudio from './useSatoriAudio';
 
 const SatoriLine = ({
