@@ -443,19 +443,18 @@ export default function MyContentPage(props) {
         <SatoriStyleReader
           content={loadedTopicData.content}
           topic={loadedTopicData.topic}
-          // japaneseLoadedWords={japaneseLoadedWords}
           pureWordsUnique={pureWordsUnique}
           selectedTopicWords={selectedTopicWords}
           handleAddToWordBank={handleAddToWordBank}
           getWordsContext={getWordsContext}
         />
       ) : null}
-      {loadedTopicData?.content?.length > 0 && (
+      {/* {loadedTopicData?.content?.length > 0 && (
         <MyContentSection
           translatedText={loadedTopicData}
           pureWordsUnique={pureWordsUnique}
         />
-      )}
+      )} */}
       <PersonalWordBankStudySection />
       {showLoadedWords ? (
         <div>
