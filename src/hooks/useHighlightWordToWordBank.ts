@@ -48,7 +48,7 @@ const useHighlightWordToWordBank = (content, pureWordsUnique, selection) => {
     const masterBank = makeArrayUnique([
       ...savedWords,
       ...(pureWordsUnique || []),
-      highlightedWord,
+      ...(isInHighlightMode ? [highlightedWord] : []),
     ]);
     if (masterBank?.length === 0) return sentence;
 
