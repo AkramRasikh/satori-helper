@@ -1,7 +1,14 @@
 const LoadContentControls = ({ topics, handleTopicLoad }) => {
   return (
-    <div style={{ display: 'flex' }}>
-      <p>Load Content:</p>
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+      }}
+    >
+      <p>
+        <u>Content available:</u>
+      </p>
       {topics?.map((topic) => {
         return (
           <button

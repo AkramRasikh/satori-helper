@@ -45,13 +45,20 @@ const SatoriStyleReader = ({
 
   return (
     <div>
+      <h3
+        style={{
+          textAlign: 'center',
+          margin: '0',
+        }}
+      >
+        {topic}:
+      </h3>
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
         }}
       >
-        <h3>{topic}:</h3>
         <div style={{ display: 'flex' }}>
           <div style={{ margin: 'auto' }}>
             <span>{isInHighlightMode ? 'Highlight mode' : 'Review mode'}</span>
@@ -106,7 +113,6 @@ const SatoriStyleReader = ({
               item={item}
               setMasterPlay={setMasterPlay}
               masterPlay={masterPlay}
-              underlineWordsInSentence={underlineWordsInSentence}
               getSafeText={getSafeText}
               handleHighlight={handleHighlight}
             />
