@@ -8,6 +8,9 @@ const SatoriLine = ({
   setMasterPlay,
   getSafeText,
   handleHighlight,
+  handleDefinition,
+  arrIndex,
+  theseDefinitionsAreOpen,
 }) => {
   const audioRef = useRef(null);
   const isCurrentlyPlaying = masterPlay === item.id;
@@ -28,15 +31,30 @@ const SatoriLine = ({
         style={{
           border: 'none',
           background: 'none',
-          margin: '2px',
           borderRadius: '5px',
+          padding: '5px',
+          cursor: 'pointer',
         }}
       >
         {isPlaying ? '⏸️' : '▶️'}
       </button>
+      <button
+        onClick={() => handleDefinition(arrIndex)}
+        id='check-definitiions'
+        style={{
+          border: 'none',
+          background: 'none',
+          borderRadius: '5px',
+          padding: '5px',
+          cursor: 'pointer',
+        }}
+      >
+        🧐
+      </button>
       <span
         style={{
           background: isCurrentlyPlaying ? 'yellow' : 'none',
+          borderBottom: theseDefinitionsAreOpen ? '1px solid blue' : 'none',
         }}
         onMouseUp={handleHighlight}
       >

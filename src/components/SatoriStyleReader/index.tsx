@@ -3,6 +3,7 @@ import JapaneseWordItem from '@/pages/my-content/JapaneseWordItem';
 import { useState } from 'react';
 import SatoriLine from './SatoriLine';
 import SwitchButton from '../SwitchButton';
+import SatoriHighlightReviewActions from './SatoriHighlightReviewActions';
 
 const SatoriStyleReader = ({
   content,
@@ -14,6 +15,8 @@ const SatoriStyleReader = ({
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [isInHighlightMode, setIsInHighlightMode] = useState(false);
+  const [thisSentenceStudyWordsIndex, setThisSentenceStudyWordsIndex] =
+    useState();
   const selection = window?.getSelection();
 
   const {
@@ -24,10 +27,27 @@ const SatoriStyleReader = ({
     highlightedWord,
   } = useHighlightWordToWordBank(content, pureWordsUnique, selection);
 
-  const savedWordsDefinition = selectedTopicWords.filter(
-    (word) =>
-      word.baseForm === highlightedWord || word.surfaceForm === highlightedWord,
-  );
+  // const savedWordsDefinition = selectedTopicWords.filter(
+  //   (word) =>
+  //     word.baseForm === highlightedWord || word.surfaceForm === highlightedWord,
+  // );
+
+  const getThisSentenceStudyWords = () => {
+    if (!thisSentenceStudyWordsIndex) return null;
+
+    const thisLine = content[thisSentenceStudyWordsIndex].targetLang;
+    const wordsFromThisSentence = selectedTopicWords.filter(
+      (word) =>
+        thisLine.includes(word.baseForm) || thisLine.includes(word.surfaceForm),
+    );
+    return wordsFromThisSentence;
+  };
+
+  const handleDefinition = (index) => {
+    setThisSentenceStudyWordsIndex(index);
+  };
+
+  const thisSentenceStudyWords = getThisSentenceStudyWords();
 
   const getSafeText = (targetText) => {
     const text = underlineWordsInSentence(targetText, isInHighlightMode);
@@ -69,44 +89,15 @@ const SatoriStyleReader = ({
           />
         </div>
         {highlightedWord && isInHighlightMode && (
-          <p>
-            Send Word to DB:{' '}
-            <span
-              style={{
-                margin: '5px',
-              }}
-            >
-              <button
-                style={{
-                  border: 'none',
-                  borderRadius: '5px',
-                  padding: '5px',
-                  marginRight: '10px',
-                  cursor: 'pointer',
-                }}
-                onClick={removeFromHighlightWordBank}
-              >
-                Remove word ❌
-              </button>
-              <span>{highlightedWord}</span>
-              <button
-                style={{
-                  border: 'none',
-                  borderRadius: '5px',
-                  padding: '5px',
-                  marginLeft: '10px',
-                  cursor: 'pointer',
-                }}
-                onClick={saveToWordBank}
-              >
-                Add word 🤙🏽
-              </button>
-            </span>
-          </p>
+          <SatoriHighlightReviewActions
+            removeFromHighlightWordBank={removeFromHighlightWordBank}
+            highlightedWord={highlightedWord}
+            saveToWordBank={saveToWordBank}
+          />
         )}
       </div>
       <div>
-        {content?.map((item) => {
+        {content?.map((item, index) => {
           return (
             <SatoriLine
               key={item.id}
@@ -115,11 +106,17 @@ const SatoriStyleReader = ({
               masterPlay={masterPlay}
               getSafeText={getSafeText}
               handleHighlight={handleHighlight}
+              handleDefinition={handleDefinition}
+              arrIndex={index}
+              theseDefinitionsAreOpen={
+                index === thisSentenceStudyWordsIndex &&
+                thisSentenceStudyWords?.length > 0
+              }
             />
           );
         })}
       </div>
-      {savedWordsDefinition?.map((wordFromTopic) => (
+      {thisSentenceStudyWords?.map((wordFromTopic) => (
         <JapaneseWordItem
           key={wordFromTopic.id}
           japaneseWord={wordFromTopic}
@@ -127,6 +124,14 @@ const SatoriStyleReader = ({
           getWordsContext={getWordsContext}
         />
       ))}
+      {/* {savedWordsDefinition?.map((wordFromTopic) => (
+        <JapaneseWordItem
+          key={wordFromTopic.id}
+          japaneseWord={wordFromTopic}
+          handleAddToWordBank={handleAddToWordBank}
+          getWordsContext={getWordsContext}
+        />
+      ))} */}
     </div>
   );
 };
