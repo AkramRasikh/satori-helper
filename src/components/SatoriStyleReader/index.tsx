@@ -27,11 +27,6 @@ const SatoriStyleReader = ({
     highlightedWord,
   } = useHighlightWordToWordBank(content, pureWordsUnique, selection);
 
-  // const savedWordsDefinition = selectedTopicWords.filter(
-  //   (word) =>
-  //     word.baseForm === highlightedWord || word.surfaceForm === highlightedWord,
-  // );
-
   const getThisSentenceStudyWords = () => {
     if (!thisSentenceStudyWordsIndex) return null;
 
@@ -44,7 +39,11 @@ const SatoriStyleReader = ({
   };
 
   const handleDefinition = (index) => {
-    setThisSentenceStudyWordsIndex(index);
+    if (index === thisSentenceStudyWordsIndex) {
+      setThisSentenceStudyWordsIndex(undefined);
+    } else {
+      setThisSentenceStudyWordsIndex(index);
+    }
   };
 
   const thisSentenceStudyWords = getThisSentenceStudyWords();

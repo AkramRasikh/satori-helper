@@ -3,21 +3,26 @@ import { useState } from 'react';
 
 const useHighlightWordToWordBank = (content, pureWordsUnique, selection) => {
   const [highlightedWord, setHighlightedWord] = useState('');
+  const [highlightedWordSentenceId, setHighlightedWordSentenceId] = useState();
   const [savedWords, setSavedWords] = useState([]);
 
-  const handleHighlight = () => {
+  const handleHighlight = (sentenceId) => {
     const highlightedText = selection.toString().trim();
     if (highlightedText !== '') {
       setHighlightedWord(highlightedText);
+      setHighlightedWordSentenceId(sentenceId);
     }
   };
 
   const removeFromHighlightWordBank = () => {
     setHighlightedWord('');
+    setHighlightedWordSentenceId(undefined);
   };
 
   const saveToWordBank = async () => {
-    const contextId = content.id;
+    if (!highlightedWordSentenceId) {
+      return;
+    }
 
     try {
       const response = await fetch('http://localhost:3001/add-word', {
@@ -27,7 +32,7 @@ const useHighlightWordToWordBank = (content, pureWordsUnique, selection) => {
         },
         body: JSON.stringify({
           word: highlightedWord,
-          contexts: [contextId],
+          contexts: [highlightedWordSentenceId],
         }),
       });
       const res = await response.json();
@@ -41,6 +46,7 @@ const useHighlightWordToWordBank = (content, pureWordsUnique, selection) => {
       console.error('## saveToWordBank Error:', error);
     } finally {
       removeFromHighlightWordBank();
+      setHighlightedWordSentenceId(undefined);
     }
   };
 

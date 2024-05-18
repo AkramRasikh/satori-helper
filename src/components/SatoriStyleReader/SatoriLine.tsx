@@ -56,7 +56,7 @@ const SatoriLine = ({
           background: isCurrentlyPlaying ? 'yellow' : 'none',
           borderBottom: theseDefinitionsAreOpen ? '1px solid blue' : 'none',
         }}
-        onMouseUp={handleHighlight}
+        onMouseUp={() => handleHighlight(item.id)}
       >
         {getSafeText(item.targetLang)}
       </span>
