@@ -1,5 +1,5 @@
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import useSatoriAudio from './useSatoriAudio';
 
 const SatoriLine = ({
@@ -12,6 +12,7 @@ const SatoriLine = ({
   arrIndex,
   theseDefinitionsAreOpen,
 }) => {
+  const [showEng, setShowEng] = useState(false);
   const audioRef = useRef(null);
   const isCurrentlyPlaying = masterPlay === item.id;
 
@@ -51,6 +52,19 @@ const SatoriLine = ({
       >
         🧐
       </button>
+      <button
+        onClick={() => setShowEng(!showEng)}
+        id='show-eng'
+        style={{
+          border: 'none',
+          background: 'none',
+          borderRadius: '5px',
+          padding: '5px',
+          cursor: 'pointer',
+        }}
+      >
+        🇬🇧
+      </button>
       <span
         style={{
           background: isCurrentlyPlaying ? 'yellow' : 'none',
@@ -60,6 +74,16 @@ const SatoriLine = ({
       >
         {getSafeText(item.targetLang)}
       </span>
+      {showEng && (
+        <span
+          style={{
+            background: isCurrentlyPlaying ? 'yellow' : 'none',
+            borderBottom: theseDefinitionsAreOpen ? '1px solid blue' : 'none',
+          }}
+        >
+          {item.baseLang}
+        </span>
+      )}
       {item.hasAudio ? (
         <audio ref={audioRef} src={getFirebaseAudioURL(item.hasAudio)} />
       ) : null}
