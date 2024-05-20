@@ -56,6 +56,24 @@ export default function Home(props) {
     );
     if (!isWordInWord) {
       setWordBank((prev) => [...prev, wordData]);
+    } else {
+      setWordBank((prev) =>
+        prev.filter((wordObj) => wordObj.word !== wordData.word),
+      );
+    }
+  };
+
+  const getNarakeetAudioFunc = async ({ id, sentence }) => {
+    try {
+      setLoadingResponse(true);
+      await getNarakeetAudio({
+        id,
+        sentence,
+      });
+    } catch (error) {
+      console.error('## getNarakeetAudioFunc: ', error);
+    } finally {
+      setLoadingResponse(false);
     }
   };
 
@@ -354,6 +372,7 @@ export default function Home(props) {
           handleDeleteSentence={handleDeleteSentence}
           mp3Bank={mp3Bank}
           saveContentToFirebaseSatori={saveContentToFirebaseSatori}
+          getNarakeetAudioFunc={getNarakeetAudioFunc}
         />
       ) : null}
     </div>
