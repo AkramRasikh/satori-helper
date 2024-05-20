@@ -55,6 +55,7 @@ const audioOptions = [
   {
     label: 'With Audio (Narakeet)',
     option: 'narakeet',
+    disabled: true,
   },
 ];
 
@@ -119,6 +120,7 @@ const GetContentActions = ({
                   value={option.option}
                   checked={selectedWithAudio === option.option}
                   onChange={handleWithAudioChange}
+                  disabled={option.disabled}
                 />
                 {option.label}
                 <br />

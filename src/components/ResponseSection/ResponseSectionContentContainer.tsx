@@ -15,6 +15,7 @@ const ResponseSectionContentContainer = ({
   isNowPlaying,
   setMasterPlayPressed,
   saveContentToFirebaseSatori,
+  getNarakeetAudioFunc,
 }) => {
   const [audioUrlIsAvailable, setAudioUrlIsAvailable] = useState(false);
   const [loadingResponse, setLoadingResponse] = useState(false);
@@ -34,6 +35,13 @@ const ResponseSectionContentContainer = ({
 
   const handleDeleteClick = () => {
     handleDeleteSentence(detail.id);
+  };
+
+  const handleGetNarakeetAudioFunc = () => {
+    getNarakeetAudioFunc({
+      id: detail.id,
+      sentence: japaneseSentence,
+    });
   };
 
   const handleGetAudio = async () => {
@@ -99,6 +107,7 @@ const ResponseSectionContentContainer = ({
           getKanjiFreeSentence={getKanjiFreeSentence}
           handleSaveToSatori={handleSaveToSatori}
           isAudioInMP3Banks={isAudioInMP3Banks}
+          handleGetNarakeetAudioFunc={handleGetNarakeetAudioFunc}
         />
       </div>
       {noKanjiSentence && <p style={{ margin: '5px 0' }}>{noKanjiSentence}</p>}

@@ -5,6 +5,7 @@ const ResponseSection = ({
   handleDeleteSentence,
   mp3Bank,
   saveContentToFirebaseSatori,
+  getNarakeetAudioFunc,
 }) => {
   let totalSentenceCount = 0;
 
@@ -25,6 +26,7 @@ const ResponseSection = ({
         handleDeleteSentence={handleDeleteSentence}
         mp3Bank={mp3Bank}
         saveContentToFirebaseSatori={saveContentToFirebaseSatori}
+        getNarakeetAudioFunc={getNarakeetAudioFunc}
       />
     );
   });

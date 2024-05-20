@@ -5,6 +5,7 @@ const ResponseCTAs = ({
   getKanjiFreeSentence,
   handleSaveToSatori,
   isAudioInMP3Banks,
+  handleGetNarakeetAudioFunc,
 }) => {
   const getAudioCta = {
     text: 'Get Audio',
@@ -22,6 +23,10 @@ const ResponseCTAs = ({
     {
       text: 'Save sentence',
       onClickHandler: handleSaveToSatori,
+    },
+    {
+      text: 'Get Narakeet',
+      onClickHandler: handleGetNarakeetAudioFunc,
     },
   ];
 

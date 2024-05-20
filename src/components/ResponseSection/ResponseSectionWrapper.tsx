@@ -9,6 +9,7 @@ const ResponseSectionWrapper = ({
   mp3Bank,
   saveContentToFirebaseSatori,
   index,
+  getNarakeetAudioFunc,
 }) => {
   const [isContentOpen, setIsContentOpen] = useState(false);
   return (
@@ -26,6 +27,7 @@ const ResponseSectionWrapper = ({
           handleDeleteSentence={handleDeleteSentence}
           mp3Bank={mp3Bank}
           saveContentToFirebaseSatori={saveContentToFirebaseSatori}
+          getNarakeetAudioFunc={getNarakeetAudioFunc}
         />
       )}
     </div>

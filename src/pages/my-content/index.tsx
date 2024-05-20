@@ -277,6 +277,20 @@ export default function MyContentPage(props) {
 
   const handleLoadWordsSelectedTopicsWords = () => {};
 
+  const getNarakeetAudioFunc = async ({ id, sentence }) => {
+    try {
+      setLoadingResponse(true);
+      await getNarakeetAudio({
+        id,
+        sentence,
+      });
+    } catch (error) {
+      console.error('## getNarakeetAudioFunc: ', error);
+    } finally {
+      setLoadingResponse(false);
+    }
+  };
+
   const saveContentToFirebaseSatori = async ({ ref, contentObject }) => {
     const id = contentObject.id;
     const hasAudio = mp3Bank.some((sentenceId) => sentenceId === id);
@@ -499,6 +513,7 @@ export default function MyContentPage(props) {
           handleDeleteSentence={() => {}}
           mp3Bank={mp3Bank}
           saveContentToFirebaseSatori={saveContentToFirebaseSatori}
+          getNarakeetAudioFunc={getNarakeetAudioFunc}
         />
       ) : null}
 
