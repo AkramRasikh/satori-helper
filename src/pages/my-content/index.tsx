@@ -28,6 +28,41 @@ const japaneseContent = 'japaneseContent';
 const japaneseWords = 'japaneseWords';
 const japaneseSentences = 'japaneseSentences';
 
+const ContentCreationSection = ({
+  setInputValue,
+  setThemeValue,
+  translatedText,
+  handleMyTextTranslated,
+  saveContentToFirebase,
+  themeValue,
+  inputValue,
+  parts,
+}) => {
+  return (
+    <>
+      <MyContentTextArea
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        themeValue={themeValue}
+        setThemeValue={setThemeValue}
+        translatedText={translatedText}
+      />
+      <ContentActions
+        handleMyTextTranslated={handleMyTextTranslated}
+        saveContentToFirebase={saveContentToFirebase}
+        themeValue={themeValue}
+      />
+      {inputValue && (
+        <ul>
+          {parts.map((part, index) => (
+            <li key={index}>{part.trim()}</li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+};
+
 const HeaderCTAs = ({
   setShowTextArea,
   showTextArea,
@@ -49,7 +84,7 @@ const HeaderCTAs = ({
       >
         Content text
       </button>
-      {/* <button
+      <button
         onClick={handleLoadWords}
         style={{
           height: 'fit-content',
@@ -61,8 +96,8 @@ const HeaderCTAs = ({
         }}
       >
         Load Words
-      </button> */}
-      {/* <button
+      </button>
+      <button
         onClick={handleLoadWordsViaTopic}
         style={{
           height: 'fit-content',
@@ -87,7 +122,7 @@ const HeaderCTAs = ({
         }}
       >
         Load selected topics words
-      </button> */}
+      </button>
     </div>
   );
 };
@@ -98,16 +133,6 @@ export default function MyContentPage(props) {
   const japaneseLoadedSentences = props?.japaneseLoadedSentences;
   const wordsByTopics = props?.wordsByTopics;
 
-  if (
-    !(
-      japaneseLoadedContent.length > 0 ||
-      japaneseLoadedWords.length > 0 ||
-      japaneseLoadedSentences.length > 0 ||
-      wordsByTopics.length > 0
-    )
-  ) {
-    return <div>Siuu</div>;
-  }
   let pureWords = [];
   japaneseLoadedWords?.forEach((wordData) => {
     pureWords.push(wordData.baseForm);
@@ -130,9 +155,6 @@ export default function MyContentPage(props) {
   const [selectedPrompt, setSelectedPrompt] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedWithAudio, setWithAudio] = useState('');
-  const [wordBankForGeneratedWords, setWordBankForGeneratedWords] = useState(
-    [],
-  );
 
   const [response, setResponse] = useState([]);
   const [mp3Bank, setMp3Bank] = useState([]);
@@ -259,13 +281,6 @@ export default function MyContentPage(props) {
     return { underlinedText, matchedWords };
   };
 
-  const getLinkedJapaneseSentences = (contextIds) => {
-    const contextsForJapaneseWords = japaneseLoadedSentences.filter(
-      (sentence) => contextIds.includes(sentence.id),
-    );
-    return contextsForJapaneseWords;
-  };
-
   const addIdToResponse = async (parsedResponse, thisWordBank) => {
     const responseWithId = await Promise.all(
       parsedResponse.map(async (item) => {
@@ -302,7 +317,7 @@ export default function MyContentPage(props) {
     }
   };
 
-  const saveContentToFirebaseSatori = async ({ ref, contentObject }) => {
+  const saveContentToFirebaseSatori = async ({ contentObject }) => {
     const id = contentObject.id;
     const hasAudio = mp3Bank.some((sentenceId) => sentenceId === id);
 
@@ -352,11 +367,6 @@ export default function MyContentPage(props) {
           response: structuredJapEngRes,
         },
       ]);
-      setWordBankForGeneratedWords((prev) =>
-        Array.from(
-          new Set([...prev, ...wordBank.map((wordObj) => wordObj.word)]),
-        ),
-      );
       if (selectedWithAudio) {
         const res = await Promise.all(
           structuredJapEngRes.map(
@@ -415,6 +425,17 @@ export default function MyContentPage(props) {
   };
   const parts = inputValue?.split('\n');
 
+  if (
+    !(
+      japaneseLoadedContent.length > 0 ||
+      japaneseLoadedWords.length > 0 ||
+      japaneseLoadedSentences.length > 0 ||
+      wordsByTopics.length > 0
+    )
+  ) {
+    return <div>Siuu</div>;
+  }
+
   return (
     <div
       style={{
@@ -430,7 +451,6 @@ export default function MyContentPage(props) {
         handleLoadWordsViaTopic={handleLoadWordsViaTopic}
         handleLoadWordsSelectedTopicsWords={handleLoadWordsSelectedTopicsWords}
       />
-
       {topics?.length ? (
         <LoadContentControls
           topics={topics}
@@ -438,21 +458,16 @@ export default function MyContentPage(props) {
         />
       ) : null}
       {showTextArea ? (
-        <>
-          <MyContentTextArea
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            themeValue={themeValue}
-            setThemeValue={setThemeValue}
-            translatedText={translatedText}
-          />
-
-          <ContentActions
-            handleMyTextTranslated={handleMyTextTranslated}
-            saveContentToFirebase={saveContentToFirebase}
-            themeValue={themeValue}
-          />
-        </>
+        <ContentCreationSection
+          setInputValue={setInputValue}
+          setThemeValue={setThemeValue}
+          translatedText={translatedText}
+          handleMyTextTranslated={handleMyTextTranslated}
+          saveContentToFirebase={saveContentToFirebase}
+          themeValue={themeValue}
+          inputValue={inputValue}
+          parts={parts}
+        />
       ) : null}
       {inputValue && (
         <ul>
@@ -474,12 +489,6 @@ export default function MyContentPage(props) {
           getWordsContext={getWordsContext}
         />
       ) : null}
-      {/* {loadedTopicData?.content?.length > 0 && (
-        <MyContentSection
-          translatedText={loadedTopicData}
-          pureWordsUnique={pureWordsUnique}
-        />
-      )} */}
       <PersonalWordBankStudySection />
       {showLoadedWords ? (
         <div>
@@ -526,35 +535,6 @@ export default function MyContentPage(props) {
           saveContentToFirebaseSatori={saveContentToFirebaseSatori}
           getNarakeetAudioFunc={getNarakeetAudioFunc}
         />
-      ) : null}
-
-      {showLoadedWordsViaTopics ? (
-        <div>
-          <p>Words by topic</p>
-          <ul
-            style={{
-              padding: 0,
-            }}
-          >
-            {wordsByTopics?.map((topicDataArr, index) => {
-              const topicName = topics[index];
-
-              return (
-                <div key={topicName}>
-                  <p>{topicName}</p>
-                  {topicDataArr?.map((wordFromTopic) => (
-                    <JapaneseWordItem
-                      key={wordFromTopic.id}
-                      japaneseWord={wordFromTopic}
-                      handleAddToWordBank={handleAddToWordBank}
-                      getWordsContext={getWordsContext}
-                    />
-                  ))}
-                </div>
-              );
-            })}
-          </ul>
-        </div>
       ) : null}
     </div>
   );
