@@ -132,7 +132,7 @@ export default function MyContentPage(props) {
         res.map(async (item) => {
           const id = uuidv4();
           return {
-            id: id,
+            id,
             ...item,
             hasAudio: await getCorrespondingAudio({ ...item, id }, withNara),
           };
@@ -360,7 +360,6 @@ export default function MyContentPage(props) {
         <ContentCreationSection
           setInputValue={setInputValue}
           setThemeValue={setThemeValue}
-          translatedText={translatedText}
           handleMyTextTranslated={handleMyTextTranslated}
           saveContentToFirebase={saveContentToFirebase}
           themeValue={themeValue}
@@ -377,7 +376,6 @@ export default function MyContentPage(props) {
           getWordsContext={getWordsContext}
         />
       ) : null}
-      <PersonalWordBankStudySection />
       {showLoadedWords ? (
         <div>
           <p>Word list</p>

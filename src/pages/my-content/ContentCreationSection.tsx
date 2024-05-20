@@ -4,7 +4,6 @@ import ContentActions from './ContentActions';
 const ContentCreationSection = ({
   setInputValue,
   setThemeValue,
-  translatedText,
   handleMyTextTranslated,
   saveContentToFirebase,
   themeValue,
@@ -19,7 +18,6 @@ const ContentCreationSection = ({
         setInputValue={setInputValue}
         themeValue={themeValue}
         setThemeValue={setThemeValue}
-        translatedText={translatedText}
       />
       <ContentActions
         handleMyTextTranslated={handleMyTextTranslated}
