@@ -14,7 +14,7 @@ const IndividualSentenceContext = ({ content, pureWordsUnique }) => {
   } = useHighlightWordToWordBank(content, pureWordsUnique, selection);
 
   const getSafeText = () => {
-    const text = underlineWordsInSentence(content.targetLang);
+    const text = underlineWordsInSentence(content.targetLang, false);
     if (text) {
       return (
         <p

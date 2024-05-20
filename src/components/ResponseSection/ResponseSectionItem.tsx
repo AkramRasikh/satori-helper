@@ -38,12 +38,12 @@ const ResponseSectionItem = ({
     setAudioToPlay(0);
   };
 
-  const handleAudioEnd = (index) => {
-    console.log('## Ended? index: ', index);
-  };
-  const handleAudioPlay = (index) => {
-    console.log('## Playing? index: ', index);
-  };
+  // const handleAudioEnd = (index) => {
+  //   console.log('## Ended? index: ', index);
+  // };
+  // const handleAudioPlay = (index) => {
+  //   console.log('## Playing? index: ', index);
+  // };
 
   const handleWhatAudioIsPlaying = (index) => {
     setIsNowPlaying(index);
@@ -63,8 +63,8 @@ const ResponseSectionItem = ({
     <>
       <MasterAudioActions
         audioRefs={audioRefs}
-        handleAudioEnd={handleAudioEnd}
-        handleAudioPlay={handleAudioPlay}
+        // handleAudioEnd={handleAudioEnd}
+        // handleAudioPlay={handleAudioPlay}
         audioToPlay={audioToPlay}
         setRestart={setRestart}
         handleAudioPause={handleAudioPause}

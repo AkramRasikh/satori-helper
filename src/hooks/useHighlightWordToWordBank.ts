@@ -25,7 +25,8 @@ const useHighlightWordToWordBank = (content, pureWordsUnique, selection) => {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/add-word', {
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT;
+      const response = await fetch(baseUrl + '/add-word', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

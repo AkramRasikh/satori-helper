@@ -1,46 +1,46 @@
-import { loadInContent } from '@/pages/api/load-content';
+// import { loadInContent } from '@/pages/api/load-content';
 import { useState } from 'react';
 
 const PersonalWordBankStudySection = () => {
   const [loadedData, setLoadedData] = useState([]);
-  const handleLoadPersonalStudyWords = async () => {
-    try {
-      const res = await loadInContent({ ref: 'japaneseContent' });
-      console.log('## handleLoadPersonalStudyWords res: ', res);
-      const keys = Object.keys(res);
-      const mappedResponse = keys.map((item) => {
-        return {
-          title: item,
-          content: res[item],
-        };
-      });
+  // const handleLoadPersonalStudyWords = async () => {
+  //   try {
+  //     const res = await loadInContent({ ref: 'japaneseContent' });
+  //     console.log('## handleLoadPersonalStudyWords res: ', res);
+  //     const keys = Object.keys(res);
+  //     const mappedResponse = keys.map((item) => {
+  //       return {
+  //         title: item,
+  //         content: res[item],
+  //       };
+  //     });
 
-      setLoadedData(mappedResponse);
-    } catch (error) {
-      console.log('## handleLoadPersonalStudyWords erro: ', error);
-    }
-  };
+  //     setLoadedData(mappedResponse);
+  //   } catch (error) {
+  //     console.log('## handleLoadPersonalStudyWords erro: ', error);
+  //   }
+  // };
 
-  const underlineWordsInSentence = (sentence, thisWordBank) => {
-    if (sentence) {
-      const pattern = new RegExp(thisWordBank, 'g');
-      const underlinedSentence = sentence?.replace(
-        pattern,
-        (match) => `<u>${match}</u>`,
-      );
-      return (
-        <p
-          dangerouslySetInnerHTML={{
-            __html: `Original Context: ${underlinedSentence}`,
-          }}
-          style={{
-            margin: '5px 0',
-          }}
-        />
-      );
-    }
-    return <p>{sentence}</p>;
-  };
+  // const underlineWordsInSentence = (sentence, thisWordBank) => {
+  //   if (sentence) {
+  //     const pattern = new RegExp(thisWordBank, 'g');
+  //     const underlinedSentence = sentence?.replace(
+  //       pattern,
+  //       (match) => `<u>${match}</u>`,
+  //     );
+  //     return (
+  //       <p
+  //         dangerouslySetInnerHTML={{
+  //           __html: `Original Context: ${underlinedSentence}`,
+  //         }}
+  //         style={{
+  //           margin: '5px 0',
+  //         }}
+  //       />
+  //     );
+  //   }
+  //   return <p>{sentence}</p>;
+  // };
 
   return (
     <div>
