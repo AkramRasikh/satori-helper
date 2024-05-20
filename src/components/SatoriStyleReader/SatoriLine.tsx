@@ -65,25 +65,34 @@ const SatoriLine = ({
       >
         🇬🇧
       </button>
-      <span
+      <div
         style={{
-          background: isCurrentlyPlaying ? 'yellow' : 'none',
-          borderBottom: theseDefinitionsAreOpen ? '1px solid blue' : 'none',
+          display: showEng ? 'block' : 'inline',
         }}
-        onMouseUp={() => handleHighlight(item.id)}
       >
-        {getSafeText(item.targetLang)}
-      </span>
-      {showEng && (
         <span
           style={{
             background: isCurrentlyPlaying ? 'yellow' : 'none',
             borderBottom: theseDefinitionsAreOpen ? '1px solid blue' : 'none',
+            display: showEng ? 'block' : '',
           }}
+          onMouseUp={() => handleHighlight(item.id)}
         >
-          {item.baseLang}
+          {getSafeText(item.targetLang)}
         </span>
-      )}
+        {showEng && (
+          <span
+            style={{
+              background: isCurrentlyPlaying ? 'yellow' : 'none',
+              borderBottom: theseDefinitionsAreOpen ? '1px solid blue' : 'none',
+              display: 'block',
+            }}
+          >
+            {' '}
+            {item.baseLang}
+          </span>
+        )}
+      </div>
       {item.hasAudio ? (
         <audio ref={audioRef} src={getFirebaseAudioURL(item.hasAudio)} />
       ) : null}
