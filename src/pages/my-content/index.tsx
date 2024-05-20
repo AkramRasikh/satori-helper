@@ -1,9 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import LoadingStatus from '@/components/LoadingStatus';
-import MyContentTextArea from '@/components/MyContentTextArea';
 import { getThoughtsToBilingualText } from '@/prompts/utils';
 import { useState } from 'react';
-import MyContentSection from '@/components/MyContentSection';
 import PersonalWordBankStudySection from '@/components/PersonalWordBankStudySection';
 import { useRouter } from 'next/router';
 import chatGptAPI from '../api/chatgpt';
@@ -17,115 +15,17 @@ import { makeArrayUnique } from '@/utils/makeArrayUnique';
 import WordBankSection from '@/components/WordBankSection';
 import useWordBank from '@/hooks/useWordBank';
 import GetContentActions from '@/components/GetContentActions';
-import ContentActions from './ContentActions';
 import underlineTargetWords from '../api/underline-target-words';
 import ResponseSection from '@/components/ResponseSection';
 import addJapaneseSentenceAPI from '../api/add-japanese-sentence';
 import JapaneseWordItem from './JapaneseWordItem';
 import SatoriStyleReader from '@/components/SatoriStyleReader';
+import ContentCreationSection from './ContentCreationSection';
+import HeaderCTAs from './HeaderCTAs';
 
 const japaneseContent = 'japaneseContent';
 const japaneseWords = 'japaneseWords';
 const japaneseSentences = 'japaneseSentences';
-
-const ContentCreationSection = ({
-  setInputValue,
-  setThemeValue,
-  translatedText,
-  handleMyTextTranslated,
-  saveContentToFirebase,
-  themeValue,
-  inputValue,
-  parts,
-}) => {
-  return (
-    <>
-      <MyContentTextArea
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        themeValue={themeValue}
-        setThemeValue={setThemeValue}
-        translatedText={translatedText}
-      />
-      <ContentActions
-        handleMyTextTranslated={handleMyTextTranslated}
-        saveContentToFirebase={saveContentToFirebase}
-        themeValue={themeValue}
-      />
-      {inputValue && (
-        <ul>
-          {parts.map((part, index) => (
-            <li key={index}>{part.trim()}</li>
-          ))}
-        </ul>
-      )}
-    </>
-  );
-};
-
-const HeaderCTAs = ({
-  setShowTextArea,
-  showTextArea,
-  handleLoadWords,
-  handleLoadWordsViaTopic,
-  handleLoadWordsSelectedTopicsWords,
-}) => {
-  return (
-    <div>
-      <button
-        onClick={() => setShowTextArea(!showTextArea)}
-        style={{
-          height: 'fit-content',
-          padding: '10px',
-          borderRadius: '15px',
-          border: 'none',
-          cursor: 'pointer',
-        }}
-      >
-        Content text
-      </button>
-      <button
-        onClick={handleLoadWords}
-        style={{
-          height: 'fit-content',
-          padding: '10px',
-          borderRadius: '15px',
-          border: 'none',
-          cursor: 'pointer',
-          marginLeft: '5px',
-        }}
-      >
-        Load Words
-      </button>
-      <button
-        onClick={handleLoadWordsViaTopic}
-        style={{
-          height: 'fit-content',
-          padding: '10px',
-          borderRadius: '15px',
-          border: 'none',
-          cursor: 'pointer',
-          marginLeft: '5px',
-        }}
-      >
-        Load Words via topics
-      </button>
-      <button
-        onClick={handleLoadWordsSelectedTopicsWords}
-        style={{
-          height: 'fit-content',
-          padding: '10px',
-          borderRadius: '15px',
-          border: 'none',
-          cursor: 'pointer',
-          marginLeft: '5px',
-        }}
-      >
-        Load selected topics words
-      </button>
-    </div>
-  );
-};
 
 export default function MyContentPage(props) {
   const japaneseLoadedContent = props?.japaneseLoadedContent;
@@ -423,7 +323,6 @@ export default function MyContentPage(props) {
     // If no matching object is found, return null or handle the case accordingly
     return '';
   };
-  const parts = inputValue?.split('\n');
 
   if (
     !(
@@ -466,19 +365,8 @@ export default function MyContentPage(props) {
           saveContentToFirebase={saveContentToFirebase}
           themeValue={themeValue}
           inputValue={inputValue}
-          parts={parts}
         />
       ) : null}
-      {inputValue && (
-        <ul>
-          {parts.map((part, index) => (
-            <li key={index}>{part.trim()}</li>
-          ))}
-        </ul>
-      )}
-      {translatedText?.length > 0 && (
-        <MyContentSection translatedText={translatedText} />
-      )}
       {loadedTopicData.content?.length > 0 ? (
         <SatoriStyleReader
           content={loadedTopicData.content}
