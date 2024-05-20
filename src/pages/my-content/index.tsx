@@ -390,6 +390,8 @@ export default function MyContentPage(props) {
   };
   const parts = inputValue?.split('\n');
 
+  console.log('## siu:', { pureWordsUnique, selectedTopicWords });
+
   return (
     <div
       style={{

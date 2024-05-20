@@ -28,7 +28,7 @@ const SatoriStyleReader = ({
   } = useHighlightWordToWordBank(content, pureWordsUnique, selection);
 
   const getThisSentenceStudyWords = () => {
-    if (!thisSentenceStudyWordsIndex) return null;
+    if (typeof thisSentenceStudyWordsIndex !== 'number') return null;
 
     const thisLine = content[thisSentenceStudyWordsIndex].targetLang;
     const wordsFromThisSentence = selectedTopicWords.filter(
