@@ -97,6 +97,17 @@ export default function MyContentPage(props) {
   const japaneseLoadedWords = props?.japaneseLoadedWords;
   const japaneseLoadedSentences = props?.japaneseLoadedSentences;
   const wordsByTopics = props?.wordsByTopics;
+
+  if (
+    !(
+      japaneseLoadedContent.length > 0 ||
+      japaneseLoadedWords.length > 0 ||
+      japaneseLoadedSentences.length > 0 ||
+      wordsByTopics.length > 0
+    )
+  ) {
+    return <div>Siuu</div>;
+  }
   let pureWords = [];
   japaneseLoadedWords?.forEach((wordData) => {
     pureWords.push(wordData.baseForm);
@@ -629,6 +640,7 @@ export async function getStaticProps() {
         satoriData: [],
         contextHelperData: [],
         wordsByTopics: [],
+        japaneseLoadedSentences: [],
       },
     };
   }

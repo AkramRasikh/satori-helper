@@ -4,11 +4,6 @@ import { useState } from 'react';
 
 const OneContext = ({ context, japaneseWord, isOriginal }) => {
   const underlineWordsInSentence = (sentence, thisWordBank) => {
-    console.log('## underlineWordsInSentence: ', {
-      sentence,
-      thisWordBank,
-    });
-
     if (sentence) {
       const pattern = new RegExp(thisWordBank.join('|'), 'g');
       const underlinedSentence = sentence?.replace(
