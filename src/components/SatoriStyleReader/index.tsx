@@ -95,7 +95,7 @@ const SatoriStyleReader = ({
           />
         )}
       </div>
-      <div>
+      <div style={{ fontSize: '18px' }}>
         {content?.map((item, index) => {
           return (
             <SatoriLine
