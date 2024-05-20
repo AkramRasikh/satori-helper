@@ -48,11 +48,15 @@ const JapaneseWordItem = ({
 }) => {
   const [showMoreContexts, setShowMoreContexts] = useState(false);
   const [showMoreInfo, setShowMoreInfo] = useState(false);
-  const baseForm = japaneseWord.baseForm;
-  const definition = japaneseWord.definition;
-  const phonetic = japaneseWord.phonetic;
-  const transliteration = japaneseWord.transliteration;
-  const contexts = japaneseWord.contexts;
+  const baseForm = japaneseWord?.baseForm;
+  const definition = japaneseWord?.definition;
+  const phonetic = japaneseWord?.phonetic;
+  const transliteration = japaneseWord?.transliteration;
+  const contexts = japaneseWord?.contexts;
+
+  if (!japaneseWord) {
+    return <span>...loading!</span>;
+  }
   const originalContext = contexts[0];
 
   const hasMoreContexts = contexts?.length > 1;
