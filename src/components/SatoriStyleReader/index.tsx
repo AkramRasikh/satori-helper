@@ -6,6 +6,7 @@ import SatoriHighlightReviewActions from './SatoriHighlightReviewActions';
 import SatoriHeaderActions from './SatoriHeaderActions';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 import combineMP3Urls from '@/pages/api/combine-mp3-urls';
+import AudioPlayerElement from '../AudioPlayer/AudioPlayerElement';
 
 const SatoriStyleReader = ({
   content,
@@ -14,9 +15,11 @@ const SatoriStyleReader = ({
   selectedTopicWords,
   handleAddToWordBank,
   getWordsContext,
+  japaneseLoadedContentFullMP3s,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [isInHighlightMode, setIsInHighlightMode] = useState(false);
+  const [hasUnifiedMP3API, setHasUnifiedMP3API] = useState(false);
   const [thisSentenceStudyWordsIndex, setThisSentenceStudyWordsIndex] =
     useState();
   const selection = window?.getSelection();
@@ -28,6 +31,10 @@ const SatoriStyleReader = ({
     removeFromHighlightWordBank,
     highlightedWord,
   } = useHighlightWordToWordBank(content, pureWordsUnique, selection);
+
+  const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
+    (item) => item.name === topic,
+  );
 
   const getThisSentenceStudyWords = () => {
     if (typeof thisSentenceStudyWordsIndex !== 'number') return null;
@@ -44,7 +51,9 @@ const SatoriStyleReader = ({
     const audioFiles = content.map((item) => getFirebaseAudioURL(item.id));
     try {
       const url = await combineMP3Urls({ mp3Name: topic, audioFiles });
-      console.log('## handleUnifiedUrl url: ', url);
+      if (url) {
+        setHasUnifiedMP3API(true);
+      }
     } catch (error) {
       console.error('## handleUnifiedUrl error', error);
     }
@@ -94,7 +103,13 @@ const SatoriStyleReader = ({
           isInHighlightMode={isInHighlightMode}
           setIsInHighlightMode={setIsInHighlightMode}
         />
-        <button onClick={handleUnifiedUrl}>Get unified URL</button>
+        {hasUnifiedMP3File || hasUnifiedMP3API ? (
+          <div>
+            <AudioPlayerElement url={getFirebaseAudioURL(topic)} />
+          </div>
+        ) : (
+          <button onClick={handleUnifiedUrl}>Get unified URL</button>
+        )}
         {highlightedWord && isInHighlightMode && (
           <SatoriHighlightReviewActions
             removeFromHighlightWordBank={removeFromHighlightWordBank}

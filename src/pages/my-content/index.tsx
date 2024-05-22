@@ -376,6 +376,7 @@ export default function MyContentPage(props) {
           selectedTopicWords={selectedTopicWords}
           handleAddToWordBank={handleAddToWordBank}
           getWordsContext={getWordsContext}
+          japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
         />
       ) : null}
       {showLoadedWords ? (
