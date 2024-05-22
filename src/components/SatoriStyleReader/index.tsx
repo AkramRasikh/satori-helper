@@ -2,8 +2,10 @@ import useHighlightWordToWordBank from '@/hooks/useHighlightWordToWordBank';
 import JapaneseWordItem from '@/pages/my-content/JapaneseWordItem';
 import { useState } from 'react';
 import SatoriLine from './SatoriLine';
-import SwitchButton from '../SwitchButton';
 import SatoriHighlightReviewActions from './SatoriHighlightReviewActions';
+import SatoriHeaderActions from './SatoriHeaderActions';
+import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
+import combineMP3Urls from '@/pages/api/combine-mp3-urls';
 
 const SatoriStyleReader = ({
   content,
@@ -36,6 +38,16 @@ const SatoriStyleReader = ({
         thisLine.includes(word.baseForm) || thisLine.includes(word.surfaceForm),
     );
     return wordsFromThisSentence;
+  };
+
+  const handleUnifiedUrl = async () => {
+    const audioFiles = content.map((item) => getFirebaseAudioURL(item.id));
+    try {
+      const url = await combineMP3Urls({ mp3Name: topic, audioFiles });
+      console.log('## handleUnifiedUrl url: ', url);
+    } catch (error) {
+      console.error('## handleUnifiedUrl error', error);
+    }
   };
 
   const handleDefinition = (index) => {
@@ -78,15 +90,11 @@ const SatoriStyleReader = ({
           justifyContent: 'space-between',
         }}
       >
-        <div style={{ display: 'flex' }}>
-          <div style={{ margin: 'auto' }}>
-            <span>{isInHighlightMode ? 'Highlight mode' : 'Review mode'}</span>
-          </div>
-          <SwitchButton
-            isOn={isInHighlightMode}
-            setIsOn={setIsInHighlightMode}
-          />
-        </div>
+        <SatoriHeaderActions
+          isInHighlightMode={isInHighlightMode}
+          setIsInHighlightMode={setIsInHighlightMode}
+        />
+        <button onClick={handleUnifiedUrl}>Get unified URL</button>
         {highlightedWord && isInHighlightMode && (
           <SatoriHighlightReviewActions
             removeFromHighlightWordBank={removeFromHighlightWordBank}

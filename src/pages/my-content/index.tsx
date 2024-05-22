@@ -26,11 +26,13 @@ import HeaderCTAs from './HeaderCTAs';
 const japaneseContent = 'japaneseContent';
 const japaneseWords = 'japaneseWords';
 const japaneseSentences = 'japaneseSentences';
+const japaneseContentFullMP3s = 'japaneseContentFullMP3s';
 
 export default function MyContentPage(props) {
   const japaneseLoadedContent = props?.japaneseLoadedContent;
   const japaneseLoadedWords = props?.japaneseLoadedWords;
   const japaneseLoadedSentences = props?.japaneseLoadedSentences;
+  const japaneseLoadedContentFullMP3s = props?.japaneseLoadedContentFullMP3s;
   const wordsByTopics = props?.wordsByTopics;
 
   let pureWords = [];
@@ -440,6 +442,11 @@ export async function getStaticProps() {
         ref: japaneseSentences,
       })) || [];
 
+    const japaneseLoadedContentFullMP3s =
+      (await loadInContent({
+        ref: japaneseContentFullMP3s,
+      })) || [];
+
     const topics =
       japaneseLoadedContent && Object.keys(japaneseLoadedContent).length > 0
         ? Object.keys(japaneseLoadedContent)
@@ -496,6 +503,7 @@ export async function getStaticProps() {
         japaneseLoadedContent,
         japaneseLoadedWords,
         japaneseLoadedSentences,
+        japaneseLoadedContentFullMP3s,
         wordsByTopics,
       },
     };
@@ -507,6 +515,7 @@ export async function getStaticProps() {
         contextHelperData: [],
         wordsByTopics: [],
         japaneseLoadedSentences: [],
+        japaneseLoadedContentFullMP3s: [],
       },
     };
   }
