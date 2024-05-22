@@ -7,6 +7,7 @@ import SatoriHeaderActions from './SatoriHeaderActions';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 import combineMP3Urls from '@/pages/api/combine-mp3-urls';
 import AudioPlayerElement from '../AudioPlayer/AudioPlayerElement';
+import useGetCombinedAudioData from './useGetCombinedAudioData';
 
 const SatoriStyleReader = ({
   content,
@@ -35,6 +36,12 @@ const SatoriStyleReader = ({
   const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
     (item) => item.name === topic,
   );
+
+  const audioFiles = content.map((item) => getFirebaseAudioURL(item.id));
+
+  const durations = useGetCombinedAudioData({ hasUnifiedMP3File, audioFiles });
+
+  console.log('## durations: ', durations);
 
   const getThisSentenceStudyWords = () => {
     if (typeof thisSentenceStudyWordsIndex !== 'number') return null;
