@@ -146,14 +146,6 @@ const SatoriStyleReader = ({
           getWordsContext={getWordsContext}
         />
       ))}
-      {/* {savedWordsDefinition?.map((wordFromTopic) => (
-        <JapaneseWordItem
-          key={wordFromTopic.id}
-          japaneseWord={wordFromTopic}
-          handleAddToWordBank={handleAddToWordBank}
-          getWordsContext={getWordsContext}
-        />
-      ))} */}
     </div>
   );
 };
