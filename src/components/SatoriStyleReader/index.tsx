@@ -8,6 +8,7 @@ import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 import combineMP3Urls from '@/pages/api/combine-mp3-urls';
 import AudioPlayerElement from '../AudioPlayer/AudioPlayerElement';
 import useGetCombinedAudioData from './useGetCombinedAudioData';
+import SatoriTitle from './SatoriTitle';
 
 const SatoriStyleReader = ({
   content,
@@ -92,14 +93,7 @@ const SatoriStyleReader = ({
 
   return (
     <div>
-      <h3
-        style={{
-          textAlign: 'center',
-          margin: '0',
-        }}
-      >
-        {topic}:
-      </h3>
+      <SatoriTitle topic={topic} />
       <div
         style={{
           display: 'flex',
