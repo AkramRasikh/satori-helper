@@ -1,3 +1,4 @@
+import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 import { useEffect, useState } from 'react';
 
 const useGetCombinedAudioData = ({ hasUnifiedMP3File, audioFiles }) => {
@@ -5,24 +6,38 @@ const useGetCombinedAudioData = ({ hasUnifiedMP3File, audioFiles }) => {
 
   useEffect(() => {
     const fetchDurations = async () => {
-      let endAt = 0;
-      const durationsPromises = audioFiles.map((url) => {
-        return new Promise((resolve) => {
-          const audio = new Audio(url);
-          audio.addEventListener('loadedmetadata', () => {
-            const startAt = endAt;
-            endAt = endAt + audio.duration;
-            resolve({
-              url,
-              startAt,
-              endAt,
+      const durationsPromises = await Promise.all(
+        audioFiles.map(async (item) => {
+          const url = getFirebaseAudioURL(item.id);
+          const oneItem = await new Promise((resolve) => {
+            const audio = new Audio(url);
+            audio.addEventListener('loadedmetadata', () => {
+              resolve({
+                id: item.id,
+                duration: audio.duration,
+              });
             });
           });
-        });
-      });
 
-      const durations = await Promise.all(durationsPromises);
-      const sortedAudios = durations.sort((a, b) => a.startAt - b.startAt);
+          return oneItem;
+        }),
+      );
+
+      let endAt = 0;
+
+      const sortedAudios = audioFiles.map((audioItem) => {
+        const thisDuration = durationsPromises.find(
+          (item) => item.id === audioItem.id,
+        ).duration;
+        const startAt = endAt;
+        endAt = endAt + thisDuration;
+        return {
+          ...audioItem,
+          thisDuration,
+          startAt,
+          endAt,
+        };
+      });
       setDurations(sortedAudios);
     };
 

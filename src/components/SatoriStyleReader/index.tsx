@@ -1,6 +1,6 @@
 import useHighlightWordToWordBank from '@/hooks/useHighlightWordToWordBank';
 import JapaneseWordItem from '@/pages/my-content/JapaneseWordItem';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SatoriLine from './SatoriLine';
 import SatoriHighlightReviewActions from './SatoriHighlightReviewActions';
 import SatoriHeaderActions from './SatoriHeaderActions';
@@ -20,11 +20,49 @@ const SatoriStyleReader = ({
   japaneseLoadedContentFullMP3s,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
+  const unifiedAudioRef = useRef();
   const [isInHighlightMode, setIsInHighlightMode] = useState(false);
   const [hasUnifiedMP3API, setHasUnifiedMP3API] = useState(false);
   const [thisSentenceStudyWordsIndex, setThisSentenceStudyWordsIndex] =
     useState();
   const selection = window?.getSelection();
+
+  const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
+    (item) => item.name === topic,
+  );
+
+  const orderedContent = content.map((item, index) => {
+    return {
+      ...item,
+      position: index,
+    };
+  });
+
+  const durations = useGetCombinedAudioData({
+    hasUnifiedMP3File,
+    audioFiles: orderedContent,
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (
+        unifiedAudioRef.current &&
+        !unifiedAudioRef?.current?.paused &&
+        durations?.length > 0
+      ) {
+        const currentTime = unifiedAudioRef.current?.currentTime;
+        const currentAudioPlaying = durations.findIndex(
+          (item) => currentTime < item.endAt && currentTime > item.startAt,
+        );
+        const newId = content[currentAudioPlaying]?.id;
+        if (newId !== masterPlay) {
+          setMasterPlay(newId);
+        }
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [durations, masterPlay, content]);
 
   const {
     handleHighlight,
@@ -32,17 +70,10 @@ const SatoriStyleReader = ({
     underlineWordsInSentence,
     removeFromHighlightWordBank,
     highlightedWord,
-  } = useHighlightWordToWordBank(content, pureWordsUnique, selection);
-
-  const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
-    (item) => item.name === topic,
-  );
-
-  const audioFiles = content.map((item) => getFirebaseAudioURL(item.id));
-
-  const durations = useGetCombinedAudioData({ hasUnifiedMP3File, audioFiles });
-
-  console.log('## durations: ', durations);
+  } = useHighlightWordToWordBank({
+    pureWordsUnique,
+    selection,
+  });
 
   const getThisSentenceStudyWords = () => {
     if (typeof thisSentenceStudyWordsIndex !== 'number') return null;
@@ -106,7 +137,10 @@ const SatoriStyleReader = ({
         />
         {hasUnifiedMP3File || hasUnifiedMP3API ? (
           <div>
-            <AudioPlayerElement url={getFirebaseAudioURL(topic)} />
+            <AudioPlayerElement
+              ref={unifiedAudioRef}
+              url={getFirebaseAudioURL(topic)}
+            />
           </div>
         ) : (
           <button onClick={handleUnifiedUrl}>Get unified URL</button>

@@ -1,7 +1,7 @@
 import { makeArrayUnique } from '@/utils/makeArrayUnique';
 import { useState } from 'react';
 
-const useHighlightWordToWordBank = (content, pureWordsUnique, selection) => {
+const useHighlightWordToWordBank = ({ pureWordsUnique, selection }) => {
   const [highlightedWord, setHighlightedWord] = useState('');
   const [highlightedWordSentenceId, setHighlightedWordSentenceId] = useState();
   const [savedWords, setSavedWords] = useState([]);
