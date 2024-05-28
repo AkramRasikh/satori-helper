@@ -1,8 +1,11 @@
 import AudioPlayerElement from '@/components/AudioPlayer/AudioPlayerElement';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
-const OneContext = ({ context, japaneseWord, isOriginal }) => {
+const OneContext = ({ context, japaneseWord, isOriginal, arrIndex }) => {
+  console.log('## OneContext arrIndex: ', arrIndex);
+
+  const audioRef = useRef();
   const underlineWordsInSentence = (sentence, thisWordBank) => {
     if (sentence) {
       const pattern = new RegExp(thisWordBank.join('|'), 'g');
@@ -15,7 +18,7 @@ const OneContext = ({ context, japaneseWord, isOriginal }) => {
           dangerouslySetInnerHTML={{
             __html: isOriginal
               ? `Original Context: ${underlinedSentence}`
-              : underlinedSentence,
+              : arrIndex + ') ' + underlinedSentence,
           }}
           style={{
             margin: '5px 0',
@@ -23,19 +26,27 @@ const OneContext = ({ context, japaneseWord, isOriginal }) => {
         />
       );
     }
+
     return <p>{sentence}</p>;
   };
 
   return (
-    <div>
-      {underlineWordsInSentence(context.targetLang, [
-        japaneseWord.baseForm,
-        japaneseWord.surfaceForm,
-      ])}
-      <p>baseLang: {context.baseLang}</p>
-      {context.notes && <p>notes: {context.notes}</p>}
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div>
+        {underlineWordsInSentence(context.targetLang, [
+          japaneseWord.baseForm,
+          japaneseWord.surfaceForm,
+        ])}
+        <p style={{ margin: '5px 0' }}>{context.baseLang}</p>
+        {context.notes && (
+          <p style={{ margin: '5px 0' }}>notes: {context.notes}</p>
+        )}
+      </div>
       {context.hasAudio && (
-        <AudioPlayerElement url={getFirebaseAudioURL(context.id)} />
+        <AudioPlayerElement
+          ref={audioRef}
+          url={getFirebaseAudioURL(context.id)}
+        />
       )}
     </div>
   );
@@ -46,8 +57,8 @@ const JapaneseWordItem = ({
   handleAddToWordBank,
   getWordsContext,
 }) => {
-  const [showMoreContexts, setShowMoreContexts] = useState(false);
-  const [showMoreInfo, setShowMoreInfo] = useState(false);
+  const [showMoreContexts, setShowMoreContexts] = useState(true);
+  const [showMoreInfo, setShowMoreInfo] = useState(true);
   const baseForm = japaneseWord?.baseForm;
   const definition = japaneseWord?.definition;
   const phonetic = japaneseWord?.phonetic;
@@ -63,7 +74,7 @@ const JapaneseWordItem = ({
 
   return (
     <li key={japaneseWord.id} style={{ listStyleType: 'none' }}>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', background: 'antiquewhite' }}>
         <p>
           {baseForm} --- <span>{definition}</span> --- <span>{phonetic}</span>{' '}
           ---- <span>{transliteration}</span>
@@ -107,7 +118,19 @@ const JapaneseWordItem = ({
       {showMoreInfo && (
         <div style={{ border: '1px solid gray' }}>
           {hasMoreContexts ? (
-            <button onClick={() => setShowMoreContexts(!showMoreContexts)}>
+            <button
+              onClick={() => setShowMoreContexts(!showMoreContexts)}
+              style={{
+                margin: 'auto 0',
+                marginLeft: '5px',
+                height: 'fit-content',
+                padding: '10px',
+                borderRadius: '15px',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'block',
+              }}
+            >
               Show more context
             </button>
           ) : null}
@@ -115,6 +138,7 @@ const JapaneseWordItem = ({
             japaneseWord={japaneseWord}
             context={originalContext}
             isOriginal
+            arrIndex={0}
           />
           {showMoreContexts &&
             contexts?.map((context, index) => {
@@ -125,6 +149,7 @@ const JapaneseWordItem = ({
                   japaneseWord={japaneseWord}
                   context={context}
                   isOriginal={false}
+                  arrIndex={index}
                 />
               );
             })}

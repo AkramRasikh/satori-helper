@@ -124,17 +124,8 @@ const SatoriStyleReader = ({
 
   return (
     <div>
-      <SatoriTitle topic={topic} />
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
-        <SatoriHeaderActions
-          isInHighlightMode={isInHighlightMode}
-          setIsInHighlightMode={setIsInHighlightMode}
-        />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <SatoriTitle topic={topic} />
         {hasUnifiedMP3File || hasUnifiedMP3API ? (
           <div>
             <AudioPlayerElement
@@ -145,6 +136,18 @@ const SatoriStyleReader = ({
         ) : (
           <button onClick={handleUnifiedUrl}>Get unified URL</button>
         )}
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <SatoriHeaderActions
+          isInHighlightMode={isInHighlightMode}
+          setIsInHighlightMode={setIsInHighlightMode}
+        />
+
         {highlightedWord && isInHighlightMode && (
           <SatoriHighlightReviewActions
             removeFromHighlightWordBank={removeFromHighlightWordBank}

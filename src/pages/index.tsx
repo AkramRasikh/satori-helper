@@ -200,7 +200,7 @@ export default function Home(props) {
   };
 
   const handleAllSentences = () => {
-    sentenceList.forEach((sentenceSnippet) => {
+    sentenceListState.forEach((sentenceSnippet) => {
       handleAddToWordBank({
         word: sentenceSnippet.textWithKanji,
         context: sentenceSnippet.fullSentence,
