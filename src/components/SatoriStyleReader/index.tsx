@@ -75,6 +75,14 @@ const SatoriStyleReader = ({
     selection,
   });
 
+  const handleAudioJump = (isRewind) => {
+    if (unifiedAudioRef.current) {
+      const currentTime = unifiedAudioRef.current.currentTime;
+      const newTime = isRewind ? currentTime - 5 : currentTime + 5;
+      unifiedAudioRef.current.currentTime = Math.max(0, newTime);
+    }
+  };
+
   const getThisSentenceStudyWords = () => {
     if (typeof thisSentenceStudyWordsIndex !== 'number') return null;
 
@@ -127,7 +135,42 @@ const SatoriStyleReader = ({
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <SatoriTitle topic={topic} />
         {hasUnifiedMP3File || hasUnifiedMP3API ? (
-          <div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+            <div
+              style={{
+                display: 'flex',
+                marginRight: '10px',
+                gap: '10px',
+                flexWrap: 'wrap',
+              }}
+            >
+              <button
+                onClick={() => handleAudioJump(true)}
+                style={{
+                  margin: 'auto',
+                  height: 'fit-content',
+                  padding: '15px',
+                  borderRadius: '15px',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                ⏪ - 5
+              </button>
+              <button
+                onClick={() => handleAudioJump(false)}
+                style={{
+                  margin: 'auto',
+                  height: 'fit-content',
+                  padding: '15px',
+                  borderRadius: '15px',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                ⏩ + 5
+              </button>
+            </div>
             <AudioPlayerElement
               ref={unifiedAudioRef}
               url={getFirebaseAudioURL(topic)}
@@ -156,7 +199,7 @@ const SatoriStyleReader = ({
           />
         )}
       </div>
-      <div style={{ fontSize: '18px' }}>
+      <div style={{ fontSize: '20px' }}>
         {content?.map((item, index) => {
           return (
             <SatoriLine

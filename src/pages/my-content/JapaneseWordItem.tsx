@@ -3,8 +3,6 @@ import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 import { useRef, useState } from 'react';
 
 const OneContext = ({ context, japaneseWord, isOriginal, arrIndex }) => {
-  console.log('## OneContext arrIndex: ', arrIndex);
-
   const audioRef = useRef();
   const underlineWordsInSentence = (sentence, thisWordBank) => {
     if (sentence) {
