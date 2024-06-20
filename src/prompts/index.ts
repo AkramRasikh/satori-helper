@@ -95,6 +95,7 @@ export const nonIndicativeIntensivePrompt = `
 
 export const thoughtsToBilingualText = `
   Translate in a way that is palatable to the Japanese language while still maintaining the meaning in to Japanese with bilingual text (with English) in Json format with each separate sentence. 
+  I want it to sound like a natural speaking style.
   I want properties targetLang, baseLang and notes.
 
   The property ‘notes’ for each line that is there to explain any nuisance linguistic difference that may require explanation.
