@@ -38,7 +38,7 @@ const useHighlightWordToWordBank = ({ pureWordsUnique, selection }) => {
       });
       const res = await response.json();
 
-      const wordAdded = res.word;
+      const wordAdded = res.word.surfaceForm;
 
       setSavedWords((prev) =>
         prev?.length === 0 ? [wordAdded] : [...prev, wordAdded],
