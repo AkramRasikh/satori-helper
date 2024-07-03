@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 import LoadingStatus from '@/components/LoadingStatus';
 import { getThoughtsToBilingualText } from '@/prompts/utils';
 import { useState } from 'react';
-import PersonalWordBankStudySection from '@/components/PersonalWordBankStudySection';
 import { useRouter } from 'next/router';
 import chatGptAPI from '../api/chatgpt';
 import Header from './Header';
