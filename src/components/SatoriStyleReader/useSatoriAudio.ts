@@ -6,6 +6,8 @@ const useSatoriAudio = ({
   setMasterPlay,
   isCurrentlyPlaying,
   item,
+  isMusic,
+  handleMasterPlaySegment,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -21,16 +23,13 @@ const useSatoriAudio = ({
   };
   const handleAudioError = () => {};
 
-  useEffect(() => {
-    if (audioRef.current && !isCurrentlyPlaying) {
-      audioRef.current?.pause();
-      audioRef.current.currentTime = 0;
-    }
-  }, [masterPlay, audioRef.current]);
-
   const handlePlay = () => {
-    audioRef.current.currentTime = 0;
-    audioRef.current?.play();
+    if (isMusic && item?.startAt && audioRef?.current) {
+      handleMasterPlaySegment(item.startAt);
+    } else if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current?.play();
+    }
   };
   const handlePause = () => {
     audioRef.current?.pause();

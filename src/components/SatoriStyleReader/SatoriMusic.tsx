@@ -4,8 +4,8 @@ import SatoriLine from './SatoriLine';
 import SatoriHighlightReviewActions from './SatoriHighlightReviewActions';
 import SatoriHeaderActions from './SatoriHeaderActions';
 import { getFirebaseSongsURL } from '@/utils/getFirebaseAudioURL';
-import AudioPlayerElement from '../AudioPlayer/AudioPlayerElement';
 import SatoriTitle from './SatoriTitle';
+import SatoriAudioControls from './SatoriAudioControls';
 
 const SatoriMusic = ({
   content,
@@ -16,14 +16,24 @@ const SatoriMusic = ({
   const unifiedAudioRef = useRef();
   const [masterPlay, setMasterPlay] = useState('');
   const [isInHighlightMode, setIsInHighlightMode] = useState(false);
+  const [seperateLinesMode, setSeperateLinesMode] = useState(false);
+  const [showAllEnglish, setShowAllEnglish] = useState(false);
   const [thisSentenceStudyWordsIndex, setThisSentenceStudyWordsIndex] =
     useState();
 
   let selection;
 
+  const audioIsloaded = unifiedAudioRef?.current;
+
   useEffect(() => {
     selection = window?.getSelection();
   }, []);
+
+  const reloadURL = () => {
+    if (unifiedAudioRef.current) {
+      unifiedAudioRef.current.load();
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -58,6 +68,12 @@ const SatoriMusic = ({
     selection: null,
   });
 
+  const handleMasterPlaySegment = (startAt) => {
+    if (unifiedAudioRef.current) {
+      unifiedAudioRef.current.currentTime = startAt;
+      unifiedAudioRef.current.play();
+    }
+  };
   const handleAudioJump = (isRewind) => {
     if (unifiedAudioRef.current) {
       const currentTime = unifiedAudioRef.current.currentTime;
@@ -105,47 +121,13 @@ const SatoriMusic = ({
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <SatoriTitle topic={topic} />
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-          <div
-            style={{
-              display: 'flex',
-              marginRight: '10px',
-              gap: '10px',
-              flexWrap: 'wrap',
-            }}
-          >
-            <button
-              onClick={() => handleAudioJump(true)}
-              style={{
-                margin: 'auto',
-                height: 'fit-content',
-                padding: '15px',
-                borderRadius: '15px',
-                border: 'none',
-                cursor: 'pointer',
-              }}
-            >
-              ⏪ - 5
-            </button>
-            <button
-              onClick={() => handleAudioJump(false)}
-              style={{
-                margin: 'auto',
-                height: 'fit-content',
-                padding: '15px',
-                borderRadius: '15px',
-                border: 'none',
-                cursor: 'pointer',
-              }}
-            >
-              ⏩ + 5
-            </button>
-          </div>
-          <AudioPlayerElement
-            ref={unifiedAudioRef}
-            url={getFirebaseSongsURL(topic)}
-          />
-        </div>
+        <SatoriAudioControls
+          handleAudioJump={handleAudioJump}
+          unifiedAudioRef={unifiedAudioRef}
+          getUrl={getFirebaseSongsURL}
+          topic={topic}
+          reloadURL={reloadURL}
+        />
       </div>
       <div
         style={{
@@ -156,6 +138,10 @@ const SatoriMusic = ({
         <SatoriHeaderActions
           isInHighlightMode={isInHighlightMode}
           setIsInHighlightMode={setIsInHighlightMode}
+          seperateLinesMode={seperateLinesMode}
+          setSeperateLinesMode={setSeperateLinesMode}
+          showAllEnglish={showAllEnglish}
+          setShowAllEnglish={setShowAllEnglish}
         />
 
         {highlightedWord && isInHighlightMode && (
@@ -166,25 +152,39 @@ const SatoriMusic = ({
           />
         )}
       </div>
-      <div style={{ fontSize: '20px' }}>
-        {content?.map((item, index) => {
-          return (
-            <SatoriLine
-              key={item.id}
-              item={item}
-              setMasterPlay={setMasterPlay}
-              masterPlay={masterPlay}
-              getSafeText={getSafeText}
-              handleHighlight={handleHighlight}
-              handleDefinition={handleDefinition}
-              arrIndex={index}
-              theseDefinitionsAreOpen={
-                index === thisSentenceStudyWordsIndex &&
-                thisSentenceStudyWords?.length > 0
-              }
-            />
-          );
-        })}
+      <div
+        style={{
+          fontSize: '20px',
+          overflowY: 'scroll',
+          maxHeight: window?.innerHeight
+            ? `${window.innerHeight * 0.7}px`
+            : '500px',
+        }}
+      >
+        {audioIsloaded &&
+          content?.map((item, index) => {
+            return (
+              <SatoriLine
+                key={item.id}
+                item={item}
+                setMasterPlay={setMasterPlay}
+                masterPlay={masterPlay}
+                getSafeText={getSafeText}
+                handleHighlight={handleHighlight}
+                handleDefinition={handleDefinition}
+                arrIndex={index}
+                theseDefinitionsAreOpen={
+                  index === thisSentenceStudyWordsIndex &&
+                  thisSentenceStudyWords?.length > 0
+                }
+                seperateLinesMode={seperateLinesMode}
+                showAllEnglish={showAllEnglish}
+                masterRef={unifiedAudioRef}
+                handleMasterPlaySegment={handleMasterPlaySegment}
+                isMusic
+              />
+            );
+          })}
       </div>
     </div>
   );

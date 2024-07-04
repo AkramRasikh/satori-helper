@@ -9,6 +9,7 @@ import combineMP3Urls from '@/pages/api/combine-mp3-urls';
 import AudioPlayerElement from '../AudioPlayer/AudioPlayerElement';
 import useGetCombinedAudioData from './useGetCombinedAudioData';
 import SatoriTitle from './SatoriTitle';
+import SatoriAudioControls from './SatoriAudioControls';
 
 const SatoriStyleReader = ({
   content,
@@ -23,6 +24,9 @@ const SatoriStyleReader = ({
   const unifiedAudioRef = useRef();
   const [isInHighlightMode, setIsInHighlightMode] = useState(false);
   const [hasUnifiedMP3API, setHasUnifiedMP3API] = useState(false);
+  const [seperateLinesMode, setSeperateLinesMode] = useState(false);
+  const [showAllEnglish, setShowAllEnglish] = useState(false);
+
   const [thisSentenceStudyWordsIndex, setThisSentenceStudyWordsIndex] =
     useState();
   const selection = window?.getSelection();
@@ -75,6 +79,12 @@ const SatoriStyleReader = ({
     selection,
   });
 
+  const reloadURL = () => {
+    if (unifiedAudioRef.current) {
+      unifiedAudioRef.current.load();
+    }
+  };
+
   const handleAudioJump = (isRewind) => {
     if (unifiedAudioRef.current) {
       const currentTime = unifiedAudioRef.current.currentTime;
@@ -92,6 +102,13 @@ const SatoriStyleReader = ({
         thisLine.includes(word.baseForm) || thisLine.includes(word.surfaceForm),
     );
     return wordsFromThisSentence;
+  };
+
+  const handleMasterPlaySegment = (startAt) => {
+    if (unifiedAudioRef.current) {
+      unifiedAudioRef.current.currentTime = startAt;
+      unifiedAudioRef.current.play();
+    }
   };
 
   const handleUnifiedUrl = async () => {
@@ -135,47 +152,13 @@ const SatoriStyleReader = ({
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <SatoriTitle topic={topic} />
         {hasUnifiedMP3File || hasUnifiedMP3API ? (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-            <div
-              style={{
-                display: 'flex',
-                marginRight: '10px',
-                gap: '10px',
-                flexWrap: 'wrap',
-              }}
-            >
-              <button
-                onClick={() => handleAudioJump(true)}
-                style={{
-                  margin: 'auto',
-                  height: 'fit-content',
-                  padding: '15px',
-                  borderRadius: '15px',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                ⏪ - 5
-              </button>
-              <button
-                onClick={() => handleAudioJump(false)}
-                style={{
-                  margin: 'auto',
-                  height: 'fit-content',
-                  padding: '15px',
-                  borderRadius: '15px',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                ⏩ + 5
-              </button>
-            </div>
-            <AudioPlayerElement
-              ref={unifiedAudioRef}
-              url={getFirebaseAudioURL(topic)}
-            />
-          </div>
+          <SatoriAudioControls
+            handleAudioJump={handleAudioJump}
+            unifiedAudioRef={unifiedAudioRef}
+            getUrl={getFirebaseAudioURL}
+            topic={topic}
+            reloadURL={reloadURL}
+          />
         ) : (
           <button onClick={handleUnifiedUrl}>Get unified URL</button>
         )}
@@ -189,6 +172,10 @@ const SatoriStyleReader = ({
         <SatoriHeaderActions
           isInHighlightMode={isInHighlightMode}
           setIsInHighlightMode={setIsInHighlightMode}
+          seperateLinesMode={seperateLinesMode}
+          setSeperateLinesMode={setSeperateLinesMode}
+          showAllEnglish={showAllEnglish}
+          setShowAllEnglish={setShowAllEnglish}
         />
 
         {highlightedWord && isInHighlightMode && (
@@ -200,7 +187,7 @@ const SatoriStyleReader = ({
         )}
       </div>
       <div style={{ fontSize: '20px' }}>
-        {content?.map((item, index) => {
+        {durations?.map((item, index) => {
           return (
             <SatoriLine
               key={item.id}
@@ -215,6 +202,10 @@ const SatoriStyleReader = ({
                 index === thisSentenceStudyWordsIndex &&
                 thisSentenceStudyWords?.length > 0
               }
+              seperateLinesMode={seperateLinesMode}
+              isMusic={hasUnifiedMP3File}
+              masterRef={unifiedAudioRef}
+              handleMasterPlaySegment={handleMasterPlaySegment}
             />
           );
         })}

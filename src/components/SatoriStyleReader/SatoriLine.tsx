@@ -11,6 +11,11 @@ const SatoriLine = ({
   handleDefinition,
   arrIndex,
   theseDefinitionsAreOpen,
+  seperateLinesMode,
+  showAllEnglish,
+  isMusic,
+  masterRef,
+  handleMasterPlaySegment,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const audioRef = useRef(null);
@@ -18,14 +23,19 @@ const SatoriLine = ({
 
   const { handlePlay, handlePause, isPlaying } = useSatoriAudio({
     masterPlay,
-    audioRef,
+    audioRef: isMusic ? masterRef : audioRef,
     setMasterPlay,
     isCurrentlyPlaying,
     item,
+    isMusic,
+    handleMasterPlaySegment,
   });
 
   return (
-    <div key={item.id} style={{ display: 'inline' }}>
+    <div
+      key={item.id}
+      style={{ display: seperateLinesMode ? 'block' : 'inline' }}
+    >
       <button
         onClick={isPlaying ? handlePause : handlePlay}
         id='play-audio'
@@ -80,18 +90,21 @@ const SatoriLine = ({
         >
           {getSafeText(item.targetLang)}
         </span>
-        {showEng && (
-          <span
-            style={{
-              background: isCurrentlyPlaying ? 'yellow' : 'none',
-              borderBottom: theseDefinitionsAreOpen ? '1px solid blue' : 'none',
-              display: 'block',
-            }}
-          >
-            {' '}
-            {item.baseLang}
-          </span>
-        )}
+        {showEng ||
+          (showAllEnglish && (
+            <span
+              style={{
+                background: isCurrentlyPlaying ? 'yellow' : 'none',
+                borderBottom: theseDefinitionsAreOpen
+                  ? '1px solid blue'
+                  : 'none',
+                display: 'block',
+              }}
+            >
+              {' '}
+              {item.baseLang}
+            </span>
+          ))}
       </div>
       {item.hasAudio ? (
         <audio ref={audioRef} src={getFirebaseAudioURL(item.hasAudio)} />
