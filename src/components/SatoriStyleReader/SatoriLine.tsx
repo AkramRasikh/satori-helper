@@ -90,21 +90,18 @@ const SatoriLine = ({
         >
           {getSafeText(item.targetLang)}
         </span>
-        {showEng ||
-          (showAllEnglish && (
-            <span
-              style={{
-                background: isCurrentlyPlaying ? 'yellow' : 'none',
-                borderBottom: theseDefinitionsAreOpen
-                  ? '1px solid blue'
-                  : 'none',
-                display: 'block',
-              }}
-            >
-              {' '}
-              {item.baseLang}
-            </span>
-          ))}
+        {(showEng || showAllEnglish) && (
+          <span
+            style={{
+              background: isCurrentlyPlaying ? 'yellow' : 'none',
+              borderBottom: theseDefinitionsAreOpen ? '1px solid blue' : 'none',
+              display: 'block',
+            }}
+          >
+            {' '}
+            {item.baseLang}
+          </span>
+        )}
       </div>
       {item.hasAudio ? (
         <audio ref={audioRef} src={getFirebaseAudioURL(item.hasAudio)} />
