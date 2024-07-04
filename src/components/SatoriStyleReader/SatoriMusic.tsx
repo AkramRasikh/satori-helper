@@ -21,13 +21,9 @@ const SatoriMusic = ({
   const [thisSentenceStudyWordsIndex, setThisSentenceStudyWordsIndex] =
     useState();
 
-  let selection;
+  let selection = window?.getSelection();
 
   const audioIsloaded = unifiedAudioRef?.current;
-
-  useEffect(() => {
-    selection = window?.getSelection();
-  }, []);
 
   const reloadURL = () => {
     if (unifiedAudioRef.current) {
@@ -65,7 +61,7 @@ const SatoriMusic = ({
     highlightedWord,
   } = useHighlightWordToWordBank({
     pureWordsUnique,
-    selection: null,
+    selection,
   });
 
   const handleMasterPlaySegment = (startAt) => {
