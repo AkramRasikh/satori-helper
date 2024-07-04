@@ -6,43 +6,52 @@ export default function MusicPage(props) {
   const japaneseSongsLoaded = props?.japaneseSongs;
   console.log('## ', { japaneseSongsLoaded });
 
-  const [audioName, setAudioName] = useState('');
-  const [lyricsUrl, setLyricsUrl] = useState('');
+  const [selectedSong, setSelectedSong] = useState(null);
 
-  const handleFileName = (event) => {
-    setAudioName(event.target.value);
+  const getformattedContent = (content) => {
+    return content.map((item, index) => {
+      const isLastInArr = index + 1 === content.length;
+
+      return {
+        ...item,
+        startAt: item.time,
+        endAt: isLastInArr ? null : content[index + 1].time,
+      };
+    });
   };
-  const handleLyricsUrl = (event) => {
-    setLyricsUrl(event.target.value);
-  };
-
-  const handleSRTSubmit = async (e) => {
-    e.preventDefault();
-    if (!audioName || !lyricsUrl) {
-      return null;
-    }
-  };
-
-  const content = japaneseSongsLoaded[0].lyrics;
-  const topic = japaneseSongsLoaded[0].title;
-
-  const formattedContent = content.map((item, index) => {
-    const isLastInArr = index + 1 === content.length;
-
-    return {
-      ...item,
-      startAt: item.time,
-      endAt: isLastInArr ? null : content[index + 1].time,
-    };
-  });
 
   return (
     <div>
       <h1>Music page</h1>
-      {topic ? (
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '10px',
+        }}
+      >
+        {japaneseSongsLoaded?.map((song) => {
+          return (
+            <button
+              key={song.id}
+              onClick={() => setSelectedSong(song)}
+              style={{
+                margin: 'auto 5px',
+                padding: '5px',
+                borderRadius: '5px',
+                border: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              {song.title}
+            </button>
+          );
+        })}
+      </div>
+      {selectedSong ? (
         <SatoriMusic
-          content={formattedContent}
-          topic={topic}
+          content={getformattedContent(selectedSong.lyrics)}
+          topic={selectedSong.title}
           pureWordsUnique={[]}
           selectedTopicWords={[]}
         />
