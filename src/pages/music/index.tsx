@@ -4,7 +4,6 @@ import SatoriMusic from '@/components/SatoriStyleReader/SatoriMusic';
 
 export default function MusicPage(props) {
   const japaneseSongsLoaded = props?.japaneseSongs;
-  console.log('## ', { japaneseSongsLoaded });
 
   const [selectedSong, setSelectedSong] = useState(null);
 
