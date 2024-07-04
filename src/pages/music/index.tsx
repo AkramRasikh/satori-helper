@@ -1,11 +1,22 @@
 import { useState } from 'react';
 import { loadInContent } from '../api/load-content';
 import SatoriMusic from '@/components/SatoriStyleReader/SatoriMusic';
+import { makeArrayUnique } from '@/utils/makeArrayUnique';
 
 export default function MusicPage(props) {
   const japaneseSongsLoaded = props?.japaneseSongs;
+  const japaneseLoadedWords = props?.japaneseWords;
 
   const [selectedSong, setSelectedSong] = useState(null);
+
+  let pureWords = [];
+  japaneseLoadedWords?.forEach((wordData) => {
+    pureWords.push(wordData.baseForm);
+    pureWords.push(wordData.surfaceForm);
+  });
+
+  const pureWordsUnique =
+    pureWords?.length > 0 ? makeArrayUnique(pureWords) : [];
 
   const getformattedContent = (content) => {
     return content.map((item, index) => {
@@ -51,7 +62,7 @@ export default function MusicPage(props) {
         <SatoriMusic
           content={getformattedContent(selectedSong.lyrics)}
           topic={selectedSong.title}
-          pureWordsUnique={[]}
+          pureWordsUnique={pureWordsUnique}
           selectedTopicWords={[]}
         />
       ) : null}
@@ -62,13 +73,18 @@ export default function MusicPage(props) {
 export async function getStaticProps() {
   try {
     const japaneseSongs = (await loadInContent({ ref: 'japaneseSongs' })) || [];
+    const japaneseWords = (await loadInContent({ ref: 'japaneseWords' })) || [];
+
     return {
-      props: { japaneseSongs: japaneseSongs.filter((item) => item !== null) },
+      props: {
+        japaneseSongs: japaneseSongs.filter((item) => item !== null),
+        japaneseWords,
+      },
     };
   } catch (error) {
     console.error('Error fetching data (Music):', error);
     return {
-      props: { japaneseSongs: [] },
+      props: { japaneseSongs: [], japaneseLoadedWords: [] },
     };
   }
 }
