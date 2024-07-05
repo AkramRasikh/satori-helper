@@ -206,6 +206,7 @@ const SatoriStyleReader = ({
               isMusic={hasUnifiedMP3File}
               masterRef={unifiedAudioRef}
               handleMasterPlaySegment={handleMasterPlaySegment}
+              showAllEnglish={showAllEnglish}
             />
           );
         })}
