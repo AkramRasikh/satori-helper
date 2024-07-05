@@ -6,7 +6,6 @@ import SatoriHighlightReviewActions from './SatoriHighlightReviewActions';
 import SatoriHeaderActions from './SatoriHeaderActions';
 import { getFirebaseAudioURL } from '@/utils/getFirebaseAudioURL';
 import combineMP3Urls from '@/pages/api/combine-mp3-urls';
-import AudioPlayerElement from '../AudioPlayer/AudioPlayerElement';
 import useGetCombinedAudioData from './useGetCombinedAudioData';
 import SatoriTitle from './SatoriTitle';
 import SatoriAudioControls from './SatoriAudioControls';
@@ -42,7 +41,7 @@ const SatoriStyleReader = ({
     };
   });
 
-  const durations = useGetCombinedAudioData({
+  const { durations, fetchDurationsAgain } = useGetCombinedAudioData({
     hasUnifiedMP3File,
     audioFiles: orderedContent,
   });
@@ -158,6 +157,7 @@ const SatoriStyleReader = ({
             getUrl={getFirebaseAudioURL}
             topic={topic}
             reloadURL={reloadURL}
+            fetchDurationsAgain={fetchDurationsAgain}
           />
         ) : (
           <button onClick={handleUnifiedUrl}>Get unified URL</button>

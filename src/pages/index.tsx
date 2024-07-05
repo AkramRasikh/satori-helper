@@ -92,9 +92,8 @@ export default function Home(props) {
     return '';
   };
 
-  const handleNavigateToMyContent = () => {
-    // Navigate to another page
-    router.push('/my-content');
+  const handleNavigateTo = (param) => {
+    router.push(param);
   };
 
   const handleFlashCard = async (flashCardNumber, cardId) => {
@@ -322,10 +321,23 @@ export default function Home(props) {
             borderRadius: '5px',
             border: 'none',
             cursor: 'pointer',
+            marginRight: '10px',
           }}
-          onClick={handleNavigateToMyContent}
+          onClick={() => handleNavigateTo('/my-content')}
         >
           /my-content
+        </button>
+        <button
+          style={{
+            margin: 'auto 0',
+            padding: '5px',
+            borderRadius: '5px',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+          onClick={() => handleNavigateTo('/music')}
+        >
+          /music
         </button>
       </div>
       {flashCardWordDone && (

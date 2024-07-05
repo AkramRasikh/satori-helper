@@ -97,8 +97,8 @@ export default function MyContentPage(props) {
     setSelectedModel(event.target.value);
   };
 
-  const handleNavigateToMyContent = () => {
-    router.push('/');
+  const handleNavigateTo = (param) => {
+    router.push(param);
   };
 
   const getCorrespondingAudio = async (japaneseSentenceData, audio) => {
@@ -342,7 +342,7 @@ export default function MyContentPage(props) {
         padding: '15px',
       }}
     >
-      <Header handleNavigateToMyContent={handleNavigateToMyContent} />
+      <Header handleNavigateTo={handleNavigateTo} />
       {isLoadingResponse && <LoadingStatus />}
       <HeaderCTAs
         setShowTextArea={setShowTextArea}

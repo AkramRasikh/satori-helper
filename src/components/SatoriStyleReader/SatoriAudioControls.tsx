@@ -5,6 +5,7 @@ const SatoriAudioControls = ({
   unifiedAudioRef,
   topic,
   reloadURL,
+  fetchDurationsAgain,
   getUrl,
 }) => {
   return (
@@ -20,15 +21,28 @@ const SatoriAudioControls = ({
         <button
           onClick={reloadURL}
           style={{
-            margin: 'auto',
+            margin: 'auto 10px',
             height: 'fit-content',
-            padding: '5px',
+            padding: '15px',
             borderRadius: '15px',
             border: 'none',
             cursor: 'pointer',
           }}
         >
-          Reload
+          Reload music
+        </button>
+        <button
+          onClick={fetchDurationsAgain}
+          style={{
+            margin: 'auto 10px',
+            height: 'fit-content',
+            padding: '15px',
+            borderRadius: '15px',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          reload data
         </button>
 
         <button

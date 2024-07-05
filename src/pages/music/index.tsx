@@ -2,18 +2,24 @@ import { useState } from 'react';
 import { loadInContent } from '../api/load-content';
 import SatoriMusic from '@/components/SatoriStyleReader/SatoriMusic';
 import { makeArrayUnique } from '@/utils/makeArrayUnique';
+import { useRouter } from 'next/router';
 
 export default function MusicPage(props) {
   const japaneseSongsLoaded = props?.japaneseSongs;
   const japaneseLoadedWords = props?.japaneseWords;
 
   const [selectedSong, setSelectedSong] = useState(null);
+  const router = useRouter();
 
   let pureWords = [];
   japaneseLoadedWords?.forEach((wordData) => {
     pureWords.push(wordData.baseForm);
     pureWords.push(wordData.surfaceForm);
   });
+
+  const handleNavigateTo = (param) => {
+    router.push(param);
+  };
 
   const pureWordsUnique =
     pureWords?.length > 0 ? makeArrayUnique(pureWords) : [];
@@ -33,8 +39,24 @@ export default function MusicPage(props) {
   return (
     <div>
       <h1>Music page</h1>
+      <div style={{ textAlign: 'right' }}>
+        <button
+          style={{
+            margin: 'auto 0',
+            padding: '5px',
+            borderRadius: '5px',
+            border: 'none',
+            cursor: 'pointer',
+            marginRight: '10px',
+          }}
+          onClick={() => handleNavigateTo('/my-content')}
+        >
+          /my-content
+        </button>
+      </div>
       <div
         style={{
+          margin: '20px 0',
           display: 'flex',
           flexWrap: 'wrap',
           gap: '10px',

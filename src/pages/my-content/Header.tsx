@@ -1,4 +1,4 @@
-const Header = ({ handleNavigateToMyContent }) => {
+const Header = ({ handleNavigateTo }) => {
   return (
     <>
       <h2 style={{ margin: '5px', textAlign: 'center' }}>
@@ -18,10 +18,23 @@ const Header = ({ handleNavigateToMyContent }) => {
             borderRadius: '5px',
             border: 'none',
             cursor: 'pointer',
+            marginRight: '10px',
           }}
-          onClick={handleNavigateToMyContent}
+          onClick={() => handleNavigateTo('/')}
         >
           /home
+        </button>
+        <button
+          style={{
+            margin: 'auto 0',
+            padding: '5px',
+            borderRadius: '5px',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+          onClick={() => handleNavigateTo('/music')}
+        >
+          /music
         </button>
       </div>
     </>
