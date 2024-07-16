@@ -62,6 +62,7 @@ export default function MyContentPage(props) {
 
   const [showTextArea, setShowTextArea] = useState(false);
   const [showLoadedWords, setShowLoadedWords] = useState(false);
+  const [isBilingualContentMode, setIsBilingualContentMode] = useState(false);
 
   const [showLoadedWordsViaTopics, setShowLoadedWordsViaTopics] =
     useState(false);
@@ -121,10 +122,33 @@ export default function MyContentPage(props) {
     }
   };
 
-  const handleMyTextTranslated = async (withNara) => {
+  const isOddNumber = (number) => number % 2 !== 0;
+
+  const handleMyTextTranslated = async ({ withNara, prompt, pureJSON }) => {
     try {
       setLoadingResponse(true);
-      const fullPrompt = getThoughtsToBilingualText(inputValue, themeValue);
+
+      const formatMyBilingualText = [];
+      const splitUpText = pureJSON && inputValue?.trim().split('\n');
+      if (pureJSON) {
+        splitUpText.forEach((part, index) => {
+          const isTarget = !isOddNumber(index);
+          if (isTarget) {
+            formatMyBilingualText.push({
+              targetLang: part,
+              baseLang: splitUpText[index + 1],
+            });
+          }
+        });
+      }
+
+      const fullPrompt = getThoughtsToBilingualText({
+        inputValue,
+        themeValue,
+        prompt,
+        bilingualJson: pureJSON ? formatMyBilingualText : null,
+      });
+
       const res = await chatGptAPI({
         sentence: fullPrompt,
         model: 'gpt-4',
@@ -365,6 +389,8 @@ export default function MyContentPage(props) {
           saveContentToFirebase={saveContentToFirebase}
           themeValue={themeValue}
           inputValue={inputValue}
+          setIsBilingualContentMode={setIsBilingualContentMode}
+          isBilingualContentMode={isBilingualContentMode}
         />
       ) : null}
       {loadedTopicData.content?.length > 0 ? (

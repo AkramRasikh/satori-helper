@@ -103,5 +103,14 @@ export const thoughtsToBilingualText = `
   Only respond in the below format of JSON as I will parse the response:
   
   ${JSON.stringify(jsonReturnFormatWithNotes)}
+`;
 
+export const japaneseTextNoJapanaeseNeeded = `
+  Given the JSON below "Theme of text", I want you to translate the into english where it doesn't have a corresponding 'baseLang' property.
+
+  I want properties targetLang, baseLang and notes.
+  The property ‘notes’ for each line that is there to explain any nuisance linguistic difference that may require explanation.
+  Only respond in the below format of JSON as I will parse the response:
+
+  ${JSON.stringify(jsonReturnFormatWithNotes)}
 `;

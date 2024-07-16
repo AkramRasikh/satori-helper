@@ -1,14 +1,23 @@
 import { thoughtsToBilingualText } from '.';
 
-export const getThoughtsToBilingualText = (text, theme) => {
-  let resultText = thoughtsToBilingualText + '\n';
+export const getThoughtsToBilingualText = ({
+  inputValue,
+  themeValue,
+  prompt,
+  bilingualJson,
+}) => {
+  let resultText = (prompt || thoughtsToBilingualText) + '\n';
 
-  if (theme) {
-    resultText = resultText + 'Theme of text: ' + theme + '\n';
+  if (themeValue) {
+    resultText = resultText + 'Theme of text: ' + themeValue + '\n';
   }
 
-  if (text) {
-    resultText = resultText + text;
+  if (inputValue && !bilingualJson) {
+    resultText = resultText + inputValue;
+  }
+
+  if (bilingualJson) {
+    resultText = resultText + JSON.stringify(bilingualJson);
   }
 
   return resultText;

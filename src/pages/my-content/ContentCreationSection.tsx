@@ -1,5 +1,8 @@
 import MyContentTextArea from '@/components/MyContentTextArea';
 import ContentActions from './ContentActions';
+import BilingualSwitch from './BilingualSwitch';
+
+const isOddNumber = (number) => number % 2 !== 0;
 
 const ContentCreationSection = ({
   setInputValue,
@@ -8,11 +11,17 @@ const ContentCreationSection = ({
   saveContentToFirebase,
   themeValue,
   inputValue,
+  setIsBilingualContentMode,
+  isBilingualContentMode,
 }) => {
   const parts = inputValue?.split('\n');
 
   return (
     <>
+      <BilingualSwitch
+        setIsBilingualContentMode={setIsBilingualContentMode}
+        isBilingualContentMode={isBilingualContentMode}
+      />
       <MyContentTextArea
         inputValue={inputValue}
         setInputValue={setInputValue}
@@ -23,12 +32,19 @@ const ContentCreationSection = ({
         handleMyTextTranslated={handleMyTextTranslated}
         saveContentToFirebase={saveContentToFirebase}
         themeValue={themeValue}
+        isBilingualContentMode={isBilingualContentMode}
       />
       {inputValue && (
         <ul>
-          {parts.map((part, index) => (
-            <li key={index}>{part.trim()}</li>
-          ))}
+          {parts.map((part, index) => {
+            const langEmoji = isOddNumber(index) ? '🇬🇧' : '🇯🇵';
+            return (
+              <li key={index}>
+                <span>{langEmoji}: </span>
+                {part.trim()}
+              </li>
+            );
+          })}
         </ul>
       )}
     </>
