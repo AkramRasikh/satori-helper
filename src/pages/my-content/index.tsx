@@ -64,8 +64,6 @@ export default function MyContentPage(props) {
   const [showLoadedWords, setShowLoadedWords] = useState(false);
   const [isBilingualContentMode, setIsBilingualContentMode] = useState(false);
 
-  const [showLoadedWordsViaTopics, setShowLoadedWordsViaTopics] =
-    useState(false);
   const [loadedTopicData, setLoadedTopicData] = useState({
     topic: '',
     content: [],
@@ -181,9 +179,6 @@ export default function MyContentPage(props) {
     setShowLoadedWords(!showLoadedWords);
   };
 
-  const handleLoadWordsViaTopic = () => {
-    setShowLoadedWordsViaTopics(!showLoadedWordsViaTopics);
-  };
   const handleWithAudioChange = (event) => {
     setWithAudio(event.target.value);
   };
@@ -225,8 +220,6 @@ export default function MyContentPage(props) {
     );
     return responseWithId;
   };
-
-  const handleLoadWordsSelectedTopicsWords = () => {};
 
   const getNarakeetAudioFunc = async ({ id, sentence }) => {
     try {
@@ -372,8 +365,6 @@ export default function MyContentPage(props) {
         setShowTextArea={setShowTextArea}
         showTextArea={showTextArea}
         handleLoadWords={handleLoadWords}
-        handleLoadWordsViaTopic={handleLoadWordsViaTopic}
-        handleLoadWordsSelectedTopicsWords={handleLoadWordsSelectedTopicsWords}
       />
       {topics?.length ? (
         <LoadContentControls
