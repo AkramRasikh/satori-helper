@@ -43,11 +43,6 @@ export default function MyContentPage(props) {
   const pureWordsUnique =
     pureWords?.length > 0 ? makeArrayUnique(pureWords) : [];
 
-  const topics =
-    japaneseLoadedContent && Object.keys(japaneseLoadedContent).length > 0
-      ? Object.keys(japaneseLoadedContent)
-      : [];
-
   const [isLoadingResponse, setLoadingResponse] = useState(false);
 
   const [inputValue, setInputValue] = useState('');
@@ -71,9 +66,10 @@ export default function MyContentPage(props) {
   const [translatedText, setTranslatedText] = useState([]);
 
   const selectedTopic = loadedTopicData?.topic;
+  const topics = japaneseLoadedContent.map((topicData) => topicData.title);
 
-  const selectedTopicIndex = topics?.findIndex(
-    (topic) => topic === selectedTopic,
+  const selectedTopicIndex = japaneseLoadedContent?.findIndex(
+    (topicData) => topicData.title === selectedTopic,
   );
 
   const selectedTopicWords = selectedTopic
@@ -172,7 +168,12 @@ export default function MyContentPage(props) {
   };
 
   const handleTopicLoad = (topic) => {
-    setLoadedTopicData({ topic, content: japaneseLoadedContent[topic] });
+    setLoadedTopicData({
+      topic,
+      content: japaneseLoadedContent.find(
+        (topicData) => topicData.title === topic,
+      ).content,
+    });
   };
 
   const handleLoadWords = () => {
@@ -310,9 +311,9 @@ export default function MyContentPage(props) {
 
   const saveContentToFirebase = async () => {
     const contentEntry = {
-      [themeValue.toLowerCase()]: translatedText,
+      title: themeValue.toLowerCase(),
+      content: translatedText,
     };
-
     try {
       setLoadingResponse(true);
       await saveContentAPI({
@@ -341,6 +342,8 @@ export default function MyContentPage(props) {
     // If no matching object is found, return null or handle the case accordingly
     return '';
   };
+
+  console.log('## ', loadedTopicData.content);
 
   if (
     !(
@@ -447,9 +450,12 @@ export default function MyContentPage(props) {
 
 export async function getStaticProps() {
   try {
-    const japaneseLoadedContent = await loadInContent({
-      ref: japaneseContent,
-    });
+    const japaneseLoadedContent =
+      (
+        await loadInContent({
+          ref: japaneseContent,
+        })
+      ).filter((item) => item !== null) || [];
     const japaneseLoadedWords =
       (await loadInContent({
         ref: japaneseWords,
@@ -463,11 +469,6 @@ export async function getStaticProps() {
       (await loadInContent({
         ref: japaneseContentFullMP3s,
       })) || [];
-
-    const topics =
-      japaneseLoadedContent && Object.keys(japaneseLoadedContent).length > 0
-        ? Object.keys(japaneseLoadedContent)
-        : [];
 
     const getAdditionalContexts = (wordFormsArr) => {
       const [baseWord, surfaceWord] = wordFormsArr;
@@ -483,10 +484,8 @@ export async function getStaticProps() {
       });
     };
 
-    const wordsByTopics = topics.map((topic) => {
-      const allIdsFromTopicSentences = japaneseLoadedContent[topic].map(
-        (item) => item.id,
-      );
+    const wordsByTopics = japaneseLoadedContent.map((topic) => {
+      const allIdsFromTopicSentences = topic.content.map((item) => item.id);
       const filteredWordsThatHaveMatchingContext = japaneseLoadedWords.filter(
         (japaneseWord) =>
           japaneseWord.contexts.some((context) =>
@@ -496,7 +495,7 @@ export async function getStaticProps() {
       const wordsWithAdditionalContextAdded =
         filteredWordsThatHaveMatchingContext.map((japaneseWord) => {
           const contexts = japaneseWord.contexts;
-          const originalContext = japaneseLoadedContent[topic].find(
+          const originalContext = topic.content.find(
             (contentWidget) => contentWidget.id === contexts[0],
           );
 
