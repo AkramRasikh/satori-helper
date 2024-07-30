@@ -40,7 +40,7 @@ const ContentCreationSection = ({
             const langEmoji = isOddNumber(index) ? '🇬🇧' : '🇯🇵';
             return (
               <li key={index}>
-                <span>{langEmoji}: </span>
+                {isBilingualContentMode ? <span>{langEmoji}: </span> : null}
                 {part.trim()}
               </li>
             );
