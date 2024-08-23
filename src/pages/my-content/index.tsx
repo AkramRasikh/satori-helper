@@ -457,18 +457,24 @@ export async function getStaticProps() {
         })
       ).filter((item) => item !== null) || [];
     const japaneseLoadedWords =
-      (await loadInContent({
-        ref: japaneseWords,
-      })) || [];
+      (
+        await loadInContent({
+          ref: japaneseWords,
+        })
+      ).filter((item) => item !== null) || [];
     const japaneseLoadedSentences =
-      (await loadInContent({
-        ref: japaneseSentences,
-      })) || [];
+      (
+        await loadInContent({
+          ref: japaneseSentences,
+        })
+      ).filter((item) => item !== null) || [];
 
     const japaneseLoadedContentFullMP3s =
-      (await loadInContent({
-        ref: japaneseContentFullMP3s,
-      })) || [];
+      (
+        await loadInContent({
+          ref: japaneseContentFullMP3s,
+        })
+      ).filter((item) => item !== null) || [];
 
     const getAdditionalContexts = (wordFormsArr) => {
       const [baseWord, surfaceWord] = wordFormsArr;
@@ -485,7 +491,7 @@ export async function getStaticProps() {
     };
 
     const wordsByTopics = japaneseLoadedContent.map((topic) => {
-      const allIdsFromTopicSentences = topic.content.map((item) => item.id);
+      const allIdsFromTopicSentences = topic.content.map((item) => item?.id);
       const filteredWordsThatHaveMatchingContext = japaneseLoadedWords.filter(
         (japaneseWord) =>
           japaneseWord.contexts.some((context) =>
