@@ -9,6 +9,7 @@ import combineMP3Urls from '@/pages/api/combine-mp3-urls';
 import useGetCombinedAudioData from './useGetCombinedAudioData';
 import SatoriTitle from './SatoriTitle';
 import SatoriAudioControls from './SatoriAudioControls';
+import EditSentence from './EditSentence';
 
 const SatoriStyleReader = ({
   content,
@@ -25,6 +26,7 @@ const SatoriStyleReader = ({
   const [hasUnifiedMP3API, setHasUnifiedMP3API] = useState(false);
   const [seperateLinesMode, setSeperateLinesMode] = useState(false);
   const [showAllEnglish, setShowAllEnglish] = useState(false);
+  const [editSentence, setEditSentence] = useState('');
 
   const [thisSentenceStudyWordsIndex, setThisSentenceStudyWordsIndex] =
     useState();
@@ -146,6 +148,14 @@ const SatoriStyleReader = ({
     );
   };
 
+  useEffect(() => {
+    if (editSentence && unifiedAudioRef?.current) {
+      unifiedAudioRef.current.pause();
+    }
+  }, [unifiedAudioRef, editSentence]);
+
+  const sentenceToEdit = durations?.find((item) => item.id === editSentence);
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -186,6 +196,12 @@ const SatoriStyleReader = ({
           />
         )}
       </div>
+      {editSentence && (
+        <EditSentence
+          sentenceToEdit={sentenceToEdit}
+          setEditSentence={setEditSentence}
+        />
+      )}
       <div style={{ fontSize: '20px' }}>
         {durations?.map((item, index) => {
           return (
@@ -207,6 +223,7 @@ const SatoriStyleReader = ({
               masterRef={unifiedAudioRef}
               handleMasterPlaySegment={handleMasterPlaySegment}
               showAllEnglish={showAllEnglish}
+              setEditSentence={setEditSentence}
             />
           );
         })}

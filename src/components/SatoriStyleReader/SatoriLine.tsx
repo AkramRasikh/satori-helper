@@ -16,6 +16,7 @@ const SatoriLine = ({
   isMusic,
   masterRef,
   handleMasterPlaySegment,
+  setEditSentence,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const audioRef = useRef(null);
@@ -74,6 +75,19 @@ const SatoriLine = ({
         }}
       >
         🇬🇧
+      </button>
+      <button
+        onClick={() => setEditSentence(item.id)}
+        id='show-edit'
+        style={{
+          border: 'none',
+          background: 'none',
+          borderRadius: '5px',
+          padding: '5px',
+          cursor: 'pointer',
+        }}
+      >
+        ✍🏽
       </button>
       <div
         style={{
