@@ -17,10 +17,12 @@ const SatoriLine = ({
   masterRef,
   handleMasterPlaySegment,
   setEditSentence,
+  editSentence,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const audioRef = useRef(null);
   const isCurrentlyPlaying = masterPlay === item.id;
+  const isBeingEdited = item.id === editSentence;
 
   const { handlePlay, handlePause, isPlaying } = useSatoriAudio({
     masterPlay,
@@ -96,7 +98,11 @@ const SatoriLine = ({
       >
         <span
           style={{
-            background: isCurrentlyPlaying ? 'yellow' : 'none',
+            background: isBeingEdited
+              ? '#A24857'
+              : isCurrentlyPlaying
+              ? 'yellow'
+              : 'none',
             borderBottom: theseDefinitionsAreOpen ? '1px solid blue' : 'none',
             display: showEng ? 'block' : '',
           }}

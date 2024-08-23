@@ -21,6 +21,7 @@ import JapaneseWordItem from './JapaneseWordItem';
 import SatoriStyleReader from '@/components/SatoriStyleReader';
 import ContentCreationSection from './ContentCreationSection';
 import HeaderCTAs from './HeaderCTAs';
+import updateContentSentence from '../api/update-content-sentence';
 
 const japaneseContent = 'japaneseContent';
 const japaneseWords = 'japaneseWords';
@@ -28,7 +29,9 @@ const japaneseSentences = 'japaneseSentences';
 const japaneseContentFullMP3s = 'japaneseContentFullMP3s';
 
 export default function MyContentPage(props) {
-  const japaneseLoadedContent = props?.japaneseLoadedContent;
+  const [japaneseLoadedContent, setJapaneseLoadedContent] = useState(
+    props?.japaneseLoadedContent,
+  );
   const japaneseLoadedWords = props?.japaneseLoadedWords;
   const japaneseLoadedSentences = props?.japaneseLoadedSentences;
   const japaneseLoadedContentFullMP3s = props?.japaneseLoadedContentFullMP3s;
@@ -94,6 +97,50 @@ export default function MyContentPage(props) {
 
   const handleNavigateTo = (param) => {
     router.push(param);
+  };
+
+  const handleUpdateContentSentence = async ({
+    sentenceId,
+    topicName,
+    fieldToUpdate,
+    withAudio,
+  }) => {
+    try {
+      const updateContentSentenceRes = await updateContentSentence({
+        ref: japaneseContent,
+        sentenceId,
+        topicName,
+        fieldToUpdate,
+        withAudio,
+      });
+      if (updateContentSentenceRes) {
+        const updatedContent = japaneseLoadedContent.map((contentData) => {
+          if (contentData.title !== topicName) {
+            return contentData;
+          }
+
+          const content = contentData.content.map((sentenceData) => {
+            if (sentenceData.id !== sentenceId) {
+              return sentenceData;
+            }
+
+            console.log('## updating sentence ', sentenceData.baseLang);
+            return {
+              ...sentenceData,
+              ...fieldToUpdate,
+            };
+          });
+
+          return {
+            ...contentData,
+            content,
+          };
+        });
+        setJapaneseLoadedContent(updatedContent);
+      }
+    } catch (error) {
+      console.error('## handleUpdateContentSentence ', error);
+    }
   };
 
   const getCorrespondingAudio = async (japaneseSentenceData, audio) => {
@@ -343,8 +390,6 @@ export default function MyContentPage(props) {
     return '';
   };
 
-  console.log('## ', loadedTopicData.content);
-
   if (
     !(
       japaneseLoadedContent.length > 0 ||
@@ -396,6 +441,7 @@ export default function MyContentPage(props) {
           handleAddToWordBank={handleAddToWordBank}
           getWordsContext={getWordsContext}
           japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
+          handleUpdateContentSentence={handleUpdateContentSentence}
         />
       ) : null}
       {showLoadedWords ? (

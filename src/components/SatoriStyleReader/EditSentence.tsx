@@ -1,12 +1,28 @@
 import { useState } from 'react';
 
-const EditSentence = ({ sentenceToEdit, setEditSentence }) => {
+const EditSentence = ({
+  sentenceToEdit,
+  setEditSentence,
+  topic,
+  handleUpdateContentSentence,
+  fetchDurationsAgainCB,
+}) => {
   const targetLang = sentenceToEdit.targetLang;
   const [inputText, setInputText] = useState(targetLang);
   const areSentencesTheSame = targetLang === inputText.trim();
 
   const handleUpdateSentence = () => {
     if (areSentencesTheSame) return;
+    handleUpdateContentSentence({
+      sentenceId: sentenceToEdit.id,
+      topicName: topic,
+      fieldToUpdate: {
+        targetLang: inputText,
+      },
+      withAudio: true,
+      fetchDurationsAgainCB,
+    });
+    setEditSentence('');
   };
 
   return (

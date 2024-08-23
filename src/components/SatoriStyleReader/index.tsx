@@ -19,6 +19,7 @@ const SatoriStyleReader = ({
   handleAddToWordBank,
   getWordsContext,
   japaneseLoadedContentFullMP3s,
+  handleUpdateContentSentence,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const unifiedAudioRef = useRef();
@@ -198,8 +199,11 @@ const SatoriStyleReader = ({
       </div>
       {editSentence && (
         <EditSentence
+          topic={topic}
           sentenceToEdit={sentenceToEdit}
           setEditSentence={setEditSentence}
+          handleUpdateContentSentence={handleUpdateContentSentence}
+          fetchDurationsAgainCB={fetchDurationsAgain}
         />
       )}
       <div style={{ fontSize: '20px' }}>
@@ -224,6 +228,7 @@ const SatoriStyleReader = ({
               handleMasterPlaySegment={handleMasterPlaySegment}
               showAllEnglish={showAllEnglish}
               setEditSentence={setEditSentence}
+              editSentence={editSentence}
             />
           );
         })}
