@@ -12,14 +12,12 @@ import SatoriAudioControls from './SatoriAudioControls';
 import EditSentence from './EditSentence';
 
 const SatoriStyleReader = ({
-  content,
-  topic,
   pureWordsUnique,
   selectedTopicWords,
   handleAddToWordBank,
   getWordsContext,
-  japaneseLoadedContentFullMP3s,
   handleUpdateContentSentence,
+  loadedTopicData,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const unifiedAudioRef = useRef();
@@ -29,13 +27,13 @@ const SatoriStyleReader = ({
   const [showAllEnglish, setShowAllEnglish] = useState(false);
   const [editSentence, setEditSentence] = useState('');
 
+  const content = loadedTopicData.content;
+  const topic = loadedTopicData.topic;
+  const hasUnifiedMP3File = loadedTopicData.hasAudio;
+
   const [thisSentenceStudyWordsIndex, setThisSentenceStudyWordsIndex] =
     useState();
   const selection = window?.getSelection();
-
-  const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
-    (item) => item.name === topic,
-  );
 
   const orderedContent = content.map((item, index) => {
     return {
@@ -116,7 +114,11 @@ const SatoriStyleReader = ({
   const handleUnifiedUrl = async () => {
     const audioFiles = content.map((item) => getFirebaseAudioURL(item.id));
     try {
-      const url = await combineMP3Urls({ mp3Name: topic, audioFiles });
+      const url = await combineMP3Urls({
+        mp3Name: topic,
+        audioFiles,
+        topicName: topic,
+      });
       if (url) {
         setHasUnifiedMP3API(true);
       }

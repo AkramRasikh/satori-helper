@@ -26,7 +26,6 @@ import updateContentSentence from '../api/update-content-sentence';
 const japaneseContent = 'japaneseContent';
 const japaneseWords = 'japaneseWords';
 const japaneseSentences = 'japaneseSentences';
-const japaneseContentFullMP3s = 'japaneseContentFullMP3s';
 
 export default function MyContentPage(props) {
   const [japaneseLoadedContent, setJapaneseLoadedContent] = useState(
@@ -34,7 +33,6 @@ export default function MyContentPage(props) {
   );
   const japaneseLoadedWords = props?.japaneseLoadedWords;
   const japaneseLoadedSentences = props?.japaneseLoadedSentences;
-  const japaneseLoadedContentFullMP3s = props?.japaneseLoadedContentFullMP3s;
   const wordsByTopics = props?.wordsByTopics;
 
   let pureWords = [];
@@ -62,10 +60,7 @@ export default function MyContentPage(props) {
   const [showLoadedWords, setShowLoadedWords] = useState(false);
   const [isBilingualContentMode, setIsBilingualContentMode] = useState(false);
 
-  const [loadedTopicData, setLoadedTopicData] = useState({
-    topic: '',
-    content: [],
-  });
+  const [loadedTopicData, setLoadedTopicData] = useState(null);
   const [translatedText, setTranslatedText] = useState([]);
 
   const selectedTopic = loadedTopicData?.topic;
@@ -215,12 +210,9 @@ export default function MyContentPage(props) {
   };
 
   const handleTopicLoad = (topic) => {
-    setLoadedTopicData({
-      topic,
-      content: japaneseLoadedContent.find(
-        (topicData) => topicData.title === topic,
-      ).content,
-    });
+    setLoadedTopicData(
+      japaneseLoadedContent.find((topicData) => topicData.title === topic),
+    );
   };
 
   const handleLoadWords = () => {
@@ -432,16 +424,14 @@ export default function MyContentPage(props) {
           isBilingualContentMode={isBilingualContentMode}
         />
       ) : null}
-      {loadedTopicData.content?.length > 0 ? (
+      {loadedTopicData ? (
         <SatoriStyleReader
-          content={loadedTopicData.content}
-          topic={loadedTopicData.topic}
           pureWordsUnique={pureWordsUnique}
           selectedTopicWords={selectedTopicWords}
           handleAddToWordBank={handleAddToWordBank}
           getWordsContext={getWordsContext}
-          japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
           handleUpdateContentSentence={handleUpdateContentSentence}
+          loadedTopicData={loadedTopicData}
         />
       ) : null}
       {showLoadedWords ? (
@@ -515,13 +505,6 @@ export async function getStaticProps() {
         })
       ).filter((item) => item !== null) || [];
 
-    const japaneseLoadedContentFullMP3s =
-      (
-        await loadInContent({
-          ref: japaneseContentFullMP3s,
-        })
-      ).filter((item) => item !== null) || [];
-
     const getAdditionalContexts = (wordFormsArr) => {
       const [baseWord, surfaceWord] = wordFormsArr;
 
@@ -571,7 +554,6 @@ export async function getStaticProps() {
         japaneseLoadedContent,
         japaneseLoadedWords,
         japaneseLoadedSentences,
-        japaneseLoadedContentFullMP3s,
         wordsByTopics,
       },
     };
@@ -583,7 +565,6 @@ export async function getStaticProps() {
         contextHelperData: [],
         wordsByTopics: [],
         japaneseLoadedSentences: [],
-        japaneseLoadedContentFullMP3s: [],
       },
     };
   }

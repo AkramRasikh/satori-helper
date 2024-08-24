@@ -1,4 +1,4 @@
-const combineMP3Urls = async ({ mp3Name, audioFiles }) => {
+const combineMP3Urls = async ({ mp3Name, audioFiles, topicName }) => {
   const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/combine-audio';
 
   try {
@@ -10,6 +10,7 @@ const combineMP3Urls = async ({ mp3Name, audioFiles }) => {
       body: JSON.stringify({
         audioFiles,
         mp3Name,
+        topicName,
       }),
     });
 
