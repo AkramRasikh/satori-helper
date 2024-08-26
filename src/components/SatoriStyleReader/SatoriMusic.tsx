@@ -16,7 +16,7 @@ const SatoriMusic = ({
   const unifiedAudioRef = useRef();
   const [masterPlay, setMasterPlay] = useState('');
   const [isInHighlightMode, setIsInHighlightMode] = useState(false);
-  const [seperateLinesMode, setSeperateLinesMode] = useState(false);
+  const [seperateLinesMode, setSeperateLinesMode] = useState(true);
   const [showAllEnglish, setShowAllEnglish] = useState(false);
   const [thisSentenceStudyWordsIndex, setThisSentenceStudyWordsIndex] =
     useState();

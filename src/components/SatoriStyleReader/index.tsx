@@ -23,7 +23,7 @@ const SatoriStyleReader = ({
   const unifiedAudioRef = useRef();
   const [isInHighlightMode, setIsInHighlightMode] = useState(false);
   const [hasUnifiedMP3API, setHasUnifiedMP3API] = useState(false);
-  const [seperateLinesMode, setSeperateLinesMode] = useState(false);
+  const [seperateLinesMode, setSeperateLinesMode] = useState(true);
   const [showAllEnglish, setShowAllEnglish] = useState(false);
   const [editSentence, setEditSentence] = useState('');
 
