@@ -36,11 +36,11 @@ const updateContentSentence = async ({
 export default updateContentSentence;
 
 // {
-//   "sentenceId": "73b0cd8d-18a3-46de-8f9a-7f0505f3fc7e",
-//   "topicName": "zzzy-01",
+//   "ref": "japaneseContent",
+//   "sentenceId": "03b8aa9c-a9ae-4719-96a2-873ab69f01d7",
+//   "topicName": "directions-01",
 //   "fieldToUpdate": {
-//       "targetLang": "道が左に曲がるのに従ってください",
-//       "baseLang": "When the road turns left, keep going until you reach the traffic lights"
+//       "targetLang": "道が左に曲がるところをそのまま進んで、信号まで行ってください"
 //   },
 //   "withAudio": true
 // }
