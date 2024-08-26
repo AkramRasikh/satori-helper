@@ -63,7 +63,7 @@ export default function MyContentPage(props) {
   const [loadedTopicData, setLoadedTopicData] = useState(null);
   const [translatedText, setTranslatedText] = useState([]);
 
-  const selectedTopic = loadedTopicData?.topic;
+  const selectedTopic = loadedTopicData?.title;
   const topics = japaneseLoadedContent.map((topicData) => topicData.title);
 
   const selectedTopicIndex = japaneseLoadedContent?.findIndex(

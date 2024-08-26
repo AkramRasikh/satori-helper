@@ -28,7 +28,7 @@ const SatoriStyleReader = ({
   const [editSentence, setEditSentence] = useState('');
 
   const content = loadedTopicData.content;
-  const topic = loadedTopicData.topic;
+  const topic = loadedTopicData.title;
   const hasUnifiedMP3File = loadedTopicData.hasAudio;
 
   const [thisSentenceStudyWordsIndex, setThisSentenceStudyWordsIndex] =
