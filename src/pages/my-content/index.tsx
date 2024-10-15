@@ -534,7 +534,7 @@ export async function getStaticProps() {
         filteredWordsThatHaveMatchingContext.map((japaneseWord) => {
           const contexts = japaneseWord.contexts;
           const originalContext = topic.content.find(
-            (contentWidget) => contentWidget.id === contexts[0],
+            (contentWidget) => contentWidget?.id === contexts[0],
           );
 
           return {

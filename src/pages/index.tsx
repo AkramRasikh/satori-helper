@@ -94,32 +94,7 @@ export default function Home(props) {
     router.push(param);
   };
 
-  const handleFlashCard = async (flashCardNumber, cardId) => {
-    const wordToBeRemoved = sentenceListState.find(
-      (el) => el.cardId === cardId,
-    );
-    try {
-      setLoadingResponse(true);
-      const flashcardResponse = await handleSatoriFlashcardAPI({
-        flashCardDifficulty: flashCardNumber,
-        cardId,
-      });
-      const flashcardResponseCardId = flashcardResponse.cardId;
-      if (flashcardResponseCardId === cardId) {
-        setSentenceListState((prev) =>
-          prev.filter((sentenceArr) => sentenceArr.cardId !== cardId),
-        );
-        setFlashCardWordDone(
-          `${wordToBeRemoved.textWithKanji} updated ✅ ` +
-            getFlashCardNumberToText(flashCardNumber),
-        );
-      }
-    } catch (error) {
-      console.log('## handleFlashCard Error: ', error);
-    } finally {
-      setLoadingResponse(false);
-    }
-  };
+  const handleFlashCard = async (flashCardNumber, cardId) => {};
 
   const handleRemoveFromBank = (wordToDelete) => {
     const filteredWordBank = wordBank.filter(
