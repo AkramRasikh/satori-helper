@@ -13,6 +13,8 @@ const ContentCreationSection = ({
   inputValue,
   setIsBilingualContentMode,
   isBilingualContentMode,
+  setContextInputValue,
+  contextInputValue,
 }) => {
   const parts = inputValue?.split('\n');
 
@@ -27,6 +29,8 @@ const ContentCreationSection = ({
         setInputValue={setInputValue}
         themeValue={themeValue}
         setThemeValue={setThemeValue}
+        setContextInputValue={setContextInputValue}
+        contextInputValue={contextInputValue}
       />
       <ContentActions
         handleMyTextTranslated={handleMyTextTranslated}

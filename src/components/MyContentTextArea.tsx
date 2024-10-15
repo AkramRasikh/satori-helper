@@ -3,12 +3,17 @@ const MyContentTextArea = ({
   setInputValue,
   themeValue,
   setThemeValue,
+  setContextInputValue,
+  contextInputValue,
 }) => {
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
   const handleThemeChange = (event) => {
     setThemeValue(event.target.value);
+  };
+  const handleContextChange = (event) => {
+    setContextInputValue(event.target.value);
   };
 
   return (
@@ -38,6 +43,26 @@ const MyContentTextArea = ({
           width: '80%',
           minHeight: '50px',
           margin: 'auto',
+          padding: '10px',
+        }}
+      />
+      <label
+        htmlFor='contextInput'
+        style={{
+          margin: '10px',
+        }}
+      >
+        Context for Chatgpt
+      </label>
+      <textarea
+        id='contextInput'
+        value={contextInputValue}
+        onChange={handleContextChange}
+        style={{
+          display: 'block',
+          width: '80%',
+          minHeight: '50px',
+          margin: '10px auto',
           padding: '10px',
         }}
       />

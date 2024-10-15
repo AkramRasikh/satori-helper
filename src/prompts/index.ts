@@ -16,15 +16,18 @@ const jsonReturnFormat = [
 
 const jsonReturnFormatWithNotes = [
   {
-    targetLang: '妹は小さめの靴を履いて、全速力で公園を走っています.',
-    baseLang:
-      'My younger sister is wearing small shoes and running at full speed in the park.',
-    notes: '',
-  },
-  {
     targetLang: 'そうだな、じゃあレンタカーでも借りて、箱根にでも行こう.',
     baseLang: "I know, then let's rent a car and go to Hakone",
-    notes: '',
+    notes:
+      'In this sentence, "じゃあ" is best understood as an informal equivalent to a “well then” in order to follow up with a suggestion for example',
+  },
+  {
+    targetLang:
+      '税関職員は僕をボックスの上に立たせて身体検査を行い、髪の毛の中まで手を入れて何かないか確認しました。',
+    baseLang:
+      'The customs officer made me stand on a box and searched me. He even put his hands in my hair to check for anything',
+    notes:
+      "In this sentence, 'made me stand on a box' is translated as '僕をボックスの上に立たせて', which carries the connotation of being compelled or forced to stand on a box. 'he even put his hands in my hair' is translated as '髪の毛の中まで手を入れて', indicating the thoroughness of the search. The phrase 'check for anything' is generalised as '何かないか確認しました', which could refer to anything unusual or out of place.",
   },
 ];
 
@@ -93,15 +96,29 @@ export const nonIndicativeIntensivePrompt = `
   ${JSON.stringify(jsonReturnFormat)}
   `;
 
-export const thoughtsToBilingualText = `
-  Translate in a way that is palatable to the Japanese language while still maintaining the meaning in to Japanese with bilingual text (with English) in Json format with each separate sentence. 
-  I want it to sound like a natural speaking style.
-  I want properties targetLang, baseLang and notes.
+// export const thoughtsToBilingualText = `
+//   Translate in a way that is palatable to the Japanese language while still maintaining the meaning in to Japanese with bilingual text (with English) in Json format with each separate sentence.
+//   I want it to sound like a natural speaking style.
+//   I want properties targetLang, baseLang and notes.
 
+//   The property ‘notes’ for each line that is there to explain any nuisance linguistic difference that may require explanation.
+
+//   Only respond in the below format of JSON as I will parse the response:
+
+//   ${JSON.stringify(jsonReturnFormatWithNotes)}
+// `;
+
+export const thoughtsToBilingualText = `
+  Here is some English text. Translate the entire text into Japanese so that it sounds natural. Do not do like for like translations if it doesn’t make sense. The main thing is fundamental meaning being conveyed in the totally of the entire base text. Therefore override my base language text where necessary and preferred if it makes sense in Japanese. Where more comprehensible, swap out of the orders, combine sentences, etc.
+
+  I want properties targetLang, baseLang and notes.
   The property ‘notes’ for each line that is there to explain any nuisance linguistic difference that may require explanation.
 
+  For example, the sentence “He taught me the value of competing against yourself and to never stop striving to be better" may “translate well into “彼は自分自身と競う価値と、決して良くなることを止めないことを私に教えてくれた" 
+
+  But a more refined and natural one like “彼は自分自身と競うことの価値と、決して成長を止めないことを私に教えてくれた“ is preferable. And you can add why its preferable in the "notes" section
   Only respond in the below format of JSON as I will parse the response:
-  
+
   ${JSON.stringify(jsonReturnFormatWithNotes)}
 `;
 

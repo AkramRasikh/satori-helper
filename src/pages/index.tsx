@@ -1,4 +1,3 @@
-import satoriCardsBulkAPI from './api/satori-cards-bulk';
 import LearningBase from '@/components/LearningBase';
 import { useState } from 'react';
 import ResponseSection from '@/components/ResponseSection';
@@ -6,7 +5,6 @@ import WordBankSection from '@/components/WordBankSection';
 import LoadingStatus from '@/components/LoadingStatus';
 import { v4 as uuidv4 } from 'uuid';
 import '../app/styles/globals.css';
-import FlashCardDoneToast from '@/components/FlashCardDoneToast';
 import chatGptAPI from './api/chatgpt';
 import getChatGptTTS from './api/tts-audio';
 import getNarakeetAudio from './api/narakeet';
@@ -340,12 +338,6 @@ export default function Home(props) {
           /music
         </button>
       </div>
-      {flashCardWordDone && (
-        <FlashCardDoneToast
-          text={flashCardWordDone}
-          setFlashCardWordDone={setFlashCardWordDone}
-        />
-      )}
       <LearningBase
         sentenceList={sentenceListState}
         handleAddToWordBank={handleAddToWordBank}
@@ -393,12 +385,10 @@ export default function Home(props) {
 
 export async function getStaticProps() {
   try {
-    const { satoriData, contextHelperData } = await satoriCardsBulkAPI();
-
     return {
       props: {
-        satoriData,
-        contextHelperData,
+        satoriData: [],
+        contextHelperData: [],
       },
     };
   } catch (error) {

@@ -5,6 +5,7 @@ export const getThoughtsToBilingualText = ({
   themeValue,
   prompt,
   bilingualJson,
+  contextInputValue,
 }) => {
   let resultText = (prompt || thoughtsToBilingualText) + '\n';
 
@@ -14,6 +15,17 @@ export const getThoughtsToBilingualText = ({
 
   if (inputValue && !bilingualJson) {
     resultText = resultText + inputValue;
+  }
+
+  if (contextInputValue) {
+    resultText =
+      resultText +
+      '\n' +
+      '\n' +
+      'Here is additional context to make sense of my text to translate:' +
+      '\n' +
+      contextInputValue +
+      '\n';
   }
 
   if (bilingualJson) {

@@ -48,6 +48,7 @@ export default function MyContentPage(props) {
 
   const [inputValue, setInputValue] = useState('');
   const [themeValue, setThemeValue] = useState('');
+  const [contextInputValue, setContextInputValue] = useState('');
 
   const [selectedPrompt, setSelectedPrompt] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
@@ -183,6 +184,7 @@ export default function MyContentPage(props) {
         themeValue,
         prompt,
         bilingualJson: pureJSON ? formatMyBilingualText : null,
+        contextInputValue,
       });
 
       const res = await chatGptAPI({
@@ -201,7 +203,6 @@ export default function MyContentPage(props) {
       );
 
       setTranslatedText(responseWithIdAndAudio);
-      setInputValue('');
     } catch (error) {
       console.log('## handleMyTextTranslated error: ', error);
     } finally {
@@ -422,6 +423,8 @@ export default function MyContentPage(props) {
           inputValue={inputValue}
           setIsBilingualContentMode={setIsBilingualContentMode}
           isBilingualContentMode={isBilingualContentMode}
+          setContextInputValue={setContextInputValue}
+          contextInputValue={contextInputValue}
         />
       ) : null}
       {loadedTopicData ? (
