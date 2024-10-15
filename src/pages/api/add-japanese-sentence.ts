@@ -1,4 +1,4 @@
-const japaneseSentences = 'japaneseSentences';
+import { japanese, sentences } from '@/refs';
 
 const addJapaneseSentenceAPI = async ({ contentEntry }) => {
   const url =
@@ -11,7 +11,8 @@ const addJapaneseSentenceAPI = async ({ contentEntry }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ref: japaneseSentences,
+        language: japanese,
+        ref: sentences,
         contentEntry,
       }),
     });

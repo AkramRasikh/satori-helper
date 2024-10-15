@@ -3,6 +3,7 @@ import { loadInContent } from '../api/load-content';
 import SatoriMusic from '@/components/SatoriStyleReader/SatoriMusic';
 import { makeArrayUnique } from '@/utils/makeArrayUnique';
 import { useRouter } from 'next/router';
+import { songs, words } from '@/refs';
 
 export default function MusicPage(props) {
   const japaneseSongsLoaded = props?.japaneseSongs;
@@ -94,8 +95,8 @@ export default function MusicPage(props) {
 
 export async function getStaticProps() {
   try {
-    const japaneseSongs = (await loadInContent({ ref: 'japaneseSongs' })) || [];
-    const japaneseWords = (await loadInContent({ ref: 'japaneseWords' })) || [];
+    const japaneseSongs = (await loadInContent({ ref: songs })) || [];
+    const japaneseWords = (await loadInContent({ ref: words })) || [];
 
     return {
       props: {

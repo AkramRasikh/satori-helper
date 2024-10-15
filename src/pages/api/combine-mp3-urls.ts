@@ -1,3 +1,5 @@
+import { japanese } from '@/refs';
+
 const combineMP3Urls = async ({ mp3Name, audioFiles, topicName }) => {
   const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/combine-audio';
 
@@ -8,6 +10,7 @@ const combineMP3Urls = async ({ mp3Name, audioFiles, topicName }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        language: japanese,
         audioFiles,
         mp3Name,
         topicName,

@@ -1,3 +1,5 @@
+import { japanese } from '@/refs';
+
 const updateContentSentence = async ({
   ref,
   sentenceId,
@@ -16,6 +18,7 @@ const updateContentSentence = async ({
       },
       body: JSON.stringify({
         ref,
+        language: japanese,
         sentenceId,
         topicName,
         fieldToUpdate,

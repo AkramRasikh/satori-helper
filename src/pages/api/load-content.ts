@@ -1,3 +1,5 @@
+import { japanese } from '@/refs';
+
 export const loadInContent = async ({ ref }) => {
   const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/firebase-data';
 
@@ -8,6 +10,7 @@ export const loadInContent = async ({ ref }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        language: japanese,
         ref,
       }),
     });

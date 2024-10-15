@@ -22,10 +22,9 @@ import SatoriStyleReader from '@/components/SatoriStyleReader';
 import ContentCreationSection from './ContentCreationSection';
 import HeaderCTAs from './HeaderCTAs';
 import updateContentSentence from '../api/update-content-sentence';
+import { content, sentences, words } from '@/refs';
 
 const japaneseContent = 'japaneseContent';
-const japaneseWords = 'japaneseWords';
-const japaneseSentences = 'japaneseSentences';
 
 export default function MyContentPage(props) {
   const [japaneseLoadedContent, setJapaneseLoadedContent] = useState(
@@ -103,7 +102,7 @@ export default function MyContentPage(props) {
   }) => {
     try {
       const updateContentSentenceRes = await updateContentSentence({
-        ref: japaneseContent,
+        ref: content,
         sentenceId,
         topicName,
         fieldToUpdate,
@@ -492,19 +491,19 @@ export async function getStaticProps() {
     const japaneseLoadedContent =
       (
         await loadInContent({
-          ref: japaneseContent,
+          ref: content,
         })
       ).filter((item) => item !== null) || [];
     const japaneseLoadedWords =
       (
         await loadInContent({
-          ref: japaneseWords,
+          ref: words,
         })
       ).filter((item) => item !== null) || [];
     const japaneseLoadedSentences =
       (
         await loadInContent({
-          ref: japaneseSentences,
+          ref: sentences,
         })
       ).filter((item) => item !== null) || [];
 
