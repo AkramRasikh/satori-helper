@@ -231,10 +231,6 @@ export default function Home(props) {
 
     try {
       setLoadingResponse(true);
-      await saveContentAPI({
-        ref,
-        contentEntry: finalEntryObject,
-      });
       // add to state to show its added
     } catch (error) {
       //

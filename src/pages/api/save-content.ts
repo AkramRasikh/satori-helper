@@ -1,8 +1,5 @@
-const satoriContent = 'satoriContent';
-
 const saveContentAPI = async ({ ref, contentEntry }) => {
-  const param =
-    ref === satoriContent ? '/satori-content-add' : '/update-content';
+  const param = '/update-content';
 
   const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + param;
   try {

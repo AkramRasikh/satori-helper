@@ -1,7 +1,8 @@
 const japaneseSentences = 'japaneseSentences';
 
 const addJapaneseSentenceAPI = async ({ contentEntry }) => {
-  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/satori-content-add';
+  const url =
+    process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/add-my-generated-content';
 
   try {
     const response = await fetch(url, {
