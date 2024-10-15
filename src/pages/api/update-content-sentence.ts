@@ -37,13 +37,3 @@ const updateContentSentence = async ({
 };
 
 export default updateContentSentence;
-
-// {
-//   "ref": "japaneseContent",
-//   "sentenceId": "03b8aa9c-a9ae-4719-96a2-873ab69f01d7",
-//   "topicName": "directions-01",
-//   "fieldToUpdate": {
-//       "targetLang": "道が左に曲がるところをそのまま進んで、信号まで行ってください"
-//   },
-//   "withAudio": true
-// }

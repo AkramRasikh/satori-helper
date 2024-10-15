@@ -5,7 +5,7 @@ const PersonalWordBankStudySection = () => {
   const [loadedData, setLoadedData] = useState([]);
   // const handleLoadPersonalStudyWords = async () => {
   //   try {
-  //     const res = await loadInContent({ ref: 'japaneseContent' });
+  //     const res = await loadInContent({ ref: 'content' });
   //     console.log('## handleLoadPersonalStudyWords res: ', res);
   //     const keys = Object.keys(res);
   //     const mappedResponse = keys.map((item) => {

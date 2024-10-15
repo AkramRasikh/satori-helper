@@ -24,8 +24,6 @@ import HeaderCTAs from './HeaderCTAs';
 import updateContentSentence from '../api/update-content-sentence';
 import { content, sentences, words } from '@/refs';
 
-const japaneseContent = 'japaneseContent';
-
 export default function MyContentPage(props) {
   const [japaneseLoadedContent, setJapaneseLoadedContent] = useState(
     props?.japaneseLoadedContent,
@@ -356,7 +354,7 @@ export default function MyContentPage(props) {
     try {
       setLoadingResponse(true);
       await saveContentAPI({
-        ref: japaneseContent,
+        ref: content,
         contentEntry,
       });
     } catch (error) {

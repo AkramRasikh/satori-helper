@@ -1,3 +1,5 @@
+import { japanese } from '@/refs';
+
 const saveContentAPI = async ({ ref, contentEntry }) => {
   const param = '/update-content';
 
@@ -10,6 +12,7 @@ const saveContentAPI = async ({ ref, contentEntry }) => {
       },
       body: JSON.stringify({
         ref,
+        language: japanese,
         contentEntry,
       }),
     });
