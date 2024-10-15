@@ -8,7 +8,6 @@ import '../app/styles/globals.css';
 import chatGptAPI from './api/chatgpt';
 import getChatGptTTS from './api/tts-audio';
 import getNarakeetAudio from './api/narakeet';
-import handleSatoriFlashcardAPI from './api/satori-flashcard';
 import underlineTargetWords from './api/underline-target-words';
 import GetContentActions from '@/components/GetContentActions';
 import saveContentAPI from './api/save-content';
@@ -24,7 +23,6 @@ export default function Home(props) {
     [],
   );
   const [response, setResponse] = useState([]);
-  const [flashCardWordDone, setFlashCardWordDone] = useState('');
   const [isLoadingResponse, setLoadingResponse] = useState(false);
   const [mp3Bank, setMp3Bank] = useState([]);
 
@@ -73,21 +71,6 @@ export default function Home(props) {
     } finally {
       setLoadingResponse(false);
     }
-  };
-
-  const getFlashCardNumberToText = (flashCardNumber) => {
-    if (flashCardNumber === 5) {
-      return 'Easy 👍🏽';
-    }
-
-    if (flashCardNumber === 4) {
-      return 'Medium 🤏🏾';
-    }
-
-    if (flashCardNumber === 3) {
-      return 'Hard 👎';
-    }
-    return '';
   };
 
   const handleNavigateTo = (param) => {
