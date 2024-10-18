@@ -1,6 +1,5 @@
-// /update-content
 const saveWordAPI = async ({ ref, contentEntry }) => {
-  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/update-content';
+  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/add-content';
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -8,7 +7,6 @@ const saveWordAPI = async ({ ref, contentEntry }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ref,
         contentEntry,
       }),
     });

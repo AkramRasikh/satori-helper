@@ -1,7 +1,7 @@
 import { japanese } from '@/refs';
 
-const saveContentAPI = async ({ ref, contentEntry }) => {
-  const param = '/update-content';
+const saveContentAPI = async ({ contentEntry }) => {
+  const param = '/add-content';
 
   const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + param;
   try {
@@ -11,7 +11,6 @@ const saveContentAPI = async ({ ref, contentEntry }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ref,
         language: japanese,
         contentEntry,
       }),
