@@ -8,7 +8,7 @@ import Header from './Header';
 import getNarakeetAudio from '../api/narakeet';
 import getChatGptTTS from '../api/tts-audio';
 import saveContentAPI from '../api/save-content';
-import { loadInContent } from '../api/load-content';
+import { loadInMultipleContent } from '../api/load-content';
 import LoadContentControls from './LoadContentControls';
 import { makeArrayUnique } from '@/utils/makeArrayUnique';
 import WordBankSection from '@/components/WordBankSection';
@@ -486,24 +486,22 @@ export default function MyContentPage(props) {
 
 export async function getStaticProps() {
   try {
-    const japaneseLoadedContent =
-      (
-        await loadInContent({
-          ref: content,
-        })
-      ).filter((item) => item !== null) || [];
-    const japaneseLoadedWords =
-      (
-        await loadInContent({
-          ref: words,
-        })
-      ).filter((item) => item !== null) || [];
-    const japaneseLoadedSentences =
-      (
-        await loadInContent({
-          ref: sentences,
-        })
-      ).filter((item) => item !== null) || [];
+    const contentSentencesWords = await loadInMultipleContent({
+      refs: [content, words, sentences],
+    });
+
+    const getNestedObjectData = (thisRef) => {
+      return contentSentencesWords.find((el) => {
+        const dataKeys = Object.keys(el);
+        if (dataKeys.includes(thisRef)) {
+          return el;
+        }
+      });
+    };
+
+    const japaneseLoadedContent = getNestedObjectData(content).content;
+    const japaneseLoadedSentences = getNestedObjectData(sentences).sentences;
+    const japaneseLoadedWords = getNestedObjectData(words).words;
 
     const getAdditionalContexts = (wordFormsArr) => {
       const [baseWord, surfaceWord] = wordFormsArr;
@@ -551,9 +549,9 @@ export async function getStaticProps() {
 
     return {
       props: {
-        japaneseLoadedContent,
-        japaneseLoadedWords,
-        japaneseLoadedSentences,
+        japaneseLoadedContent: japaneseLoadedContent,
+        japaneseLoadedWords: japaneseLoadedWords,
+        japaneseLoadedSentences: japaneseLoadedSentences,
         wordsByTopics,
       },
     };

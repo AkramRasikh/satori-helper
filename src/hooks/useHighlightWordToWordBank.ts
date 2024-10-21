@@ -33,7 +33,7 @@ const useHighlightWordToWordBank = ({ pureWordsUnique, selection }) => {
         },
         body: JSON.stringify({
           word: highlightedWord,
-          contexts: [highlightedWordSentenceId],
+          context: highlightedWordSentenceId,
         }),
       });
       const res = await response.json();

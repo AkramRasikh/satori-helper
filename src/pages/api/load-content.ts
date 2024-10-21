@@ -1,7 +1,7 @@
 import { japanese } from '@/refs';
 
-export const loadInContent = async ({ ref }) => {
-  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/firebase-data';
+export const loadInMultipleContent = async ({ refs }) => {
+  const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + '/on-load-data';
 
   try {
     const response = await fetch(url, {
@@ -11,7 +11,7 @@ export const loadInContent = async ({ ref }) => {
       },
       body: JSON.stringify({
         language: japanese,
-        ref,
+        refs,
       }),
     });
     if (!response.ok) {

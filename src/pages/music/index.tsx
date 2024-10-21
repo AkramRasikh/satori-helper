@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { loadInContent } from '../api/load-content';
+import { loadInMultipleContent } from '../api/load-content';
 import SatoriMusic from '@/components/SatoriStyleReader/SatoriMusic';
 import { makeArrayUnique } from '@/utils/makeArrayUnique';
 import { useRouter } from 'next/router';
@@ -95,13 +95,26 @@ export default function MusicPage(props) {
 
 export async function getStaticProps() {
   try {
-    const japaneseSongs = (await loadInContent({ ref: songs })) || [];
-    const japaneseWords = (await loadInContent({ ref: words })) || [];
+    const songsAndWords = await loadInMultipleContent({
+      refs: [songs, words],
+    });
+
+    const getNestedObjectData = (thisRef) => {
+      return songsAndWords.find((el) => {
+        const dataKeys = Object.keys(el);
+        if (dataKeys.includes(thisRef)) {
+          return el;
+        }
+      });
+    };
+
+    const japaneseLoadedSongs = getNestedObjectData(songs).songs;
+    const japaneseLoadedWords = getNestedObjectData(words).words;
 
     return {
       props: {
-        japaneseSongs: japaneseSongs.filter((item) => item !== null),
-        japaneseWords,
+        japaneseSongs: japaneseLoadedSongs,
+        japaneseWords: japaneseLoadedWords,
       },
     };
   } catch (error) {
