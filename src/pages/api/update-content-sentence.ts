@@ -7,7 +7,7 @@ const updateContentSentence = async ({
   fieldToUpdate,
   withAudio,
 }) => {
-  const param = '/update-content-item-correction';
+  const param = '/fix-content-item';
 
   const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + param;
   try {
@@ -17,7 +17,6 @@ const updateContentSentence = async ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ref,
         language: japanese,
         sentenceId,
         topicName,
