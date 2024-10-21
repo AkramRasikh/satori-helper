@@ -7,7 +7,7 @@ const updateContentSentence = async ({
   fieldToUpdate,
   withAudio,
 }) => {
-  const param = '/fix-content-item';
+  const param = '/update-sentence';
 
   const url = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT + param;
   try {
